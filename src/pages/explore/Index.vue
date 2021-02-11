@@ -1,19 +1,18 @@
 <template>
 	<div class="row">
 		<ExploreMap />
-		<QuestMap />
+		<QuestList />
 	</div>
 </template>
 
 <script>
-import ExploreMap from '../../components/ExploreMap.vue'
-import QuestMap from '../../components/QuestMap.vue'
+import ExploreMap from '../../components/explore/ExploreMap.vue'
+import QuestList from '../../components/explore/QuestList.vue'
 
 export default {
-	data() {},
 	components: {
 		ExploreMap,
-		QuestMap
+		QuestList
 	}
 }
 </script>

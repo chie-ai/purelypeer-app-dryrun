@@ -7,6 +7,20 @@ const routes = [
       { path: '', component: () => import('pages/explore/Index.vue') }
     ]
   },
+  {
+    path: '/bch-wallet-balance',
+    component: () => import('layouts/explore/ExploreLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/explore/bchwallet.vue') }
+    ]
+  },
+  {
+    path: '/setting',
+    component: () => import('layouts/setting/SettingLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/setting/Index.vue') }
+    ]
+  },
   /*{
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
