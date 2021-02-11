@@ -17,7 +17,7 @@ export default {}
 	src: url(../../assets/static/Comfortaa-Bold.ttf) format('truetype');
 }
 #setting {
-	height: 400px;
+	height: 450px;
 	width: 100%;
 	border-radius: 20px;
 	background: #B5ECDD;
