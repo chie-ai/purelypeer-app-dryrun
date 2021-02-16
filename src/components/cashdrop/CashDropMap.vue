@@ -1,14 +1,6 @@
 <template>
 	<div id="explore-map" class="q-mx-xs q-pa-none">
 		<div class="col-12">
-			<!-- <GmapMap ref="mapRef"
-			  :center="{lat:10, lng:10}"
-			  :zoom="4"
-			  map-type-id="terrain"
-			  class="map-layout"
-			>
-
-			</GmapMap> -->
 			<GmapMap ref="mapRef"
 			  :center="{lat: 12.8797, lng: 121.7740}"
 			  :zoom="6"
@@ -16,7 +8,6 @@
 			  class="map-layout"
 			>
 			</GmapMap>
-			<!-- <p>{{ coordinates.lat }} Latitude, {{ coordinates.lng }}, Longitude</p> -->
 		</div>
 	</div>
 </template>
@@ -33,9 +24,9 @@ export default {
 		}
 	},
 	mounted () {
-	    // this.$refs.mapRef.$mapPromise.then((map) => {
-	    // 	map.panTo({lat: 12.8797, lng: 121.7740})
-	    // })
+	    this.$refs.mapRef.$mapPromise.then((map) => {
+	    	map.panTo({lat: 12.8797, lng: 121.7740})
+	    })
 	},
 	created () {
 		this.$getLocation({})
@@ -45,16 +36,6 @@ export default {
 		})
 		.catch(error => console.log(error))
 	}
-	/*created () {
-		this.markers = [
-			{
-				position: { lat: 53.462118, lng: -2.249089 },
-			},
-			{
-				position: { lat: 53.464144, lng: -2.249828 },
-			},
-		]
-	}*/
 }
 </script>
 

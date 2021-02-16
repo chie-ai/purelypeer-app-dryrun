@@ -3,10 +3,10 @@
     <AppLogo />
     <div id="menu" class="q-mt-xs q-mr-xs">
       <ul>
-        <li><a href="#?" class="fs-2 active">📜</a></li>
-        <li><a href="#?" class="fs-2">💧</a></li>
-        <li><a href="#?" class="fs-2">💰</a></li>
-        <li><a href="#?" class="fs-2 color-b">⚙</a></li>
+        <li><router-link to="/" class="fs-2" :class="$route.path === '/' ? 'active' : ''">&#128220;</router-link></li>
+        <li><router-link to="/cash-drop" class="fs-2" :class="$route.path === '/cash-drop' ? 'active' : ''">&#128167;</router-link></li>
+        <li><router-link to="/collect" class="fs-2" :class="$route.path === '/collect' ? 'active' : ''">&#128176;</router-link></li>
+        <li><router-link to="/setting" class="fs-2" :class="$route.path === '/setting' ? 'active' : ''">&#9881;</router-link></li>
       </ul>
     </div>
   </div>

@@ -4,14 +4,13 @@ const routes = [
     path: '/',
     component: () => import('layouts/explore/ExploreLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/explore/Index.vue') }
-    ]
-  },
-  {
-    path: '/bch-wallet-balance',
-    component: () => import('layouts/explore/ExploreLayout.vue'),
-    children: [
-      { path: '', component: () => import('pages/explore/bchwallet.vue') }
+      { 
+        path: '', component: () => import('pages/explore/Index.vue')
+      },
+      {
+        path: '/bch-wallet-balance',
+        component: () => import('pages/explore/bchwallet.vue')
+      },
     ]
   },
   {
@@ -21,13 +20,13 @@ const routes = [
       { path: '', component: () => import('pages/setting/Index.vue') }
     ]
   },
-  /*{
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+  {
+    path: '/cash-drop',
+    component: () => import('layouts/cashdrop/CashDropLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Index.vue') }
+      { path: '', component: () => import('pages/cashdrop/Index.vue') }
     ]
-  },*/
+  },
 
   // Always leave this as last one,
   // but you can also remove it

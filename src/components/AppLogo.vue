@@ -1,7 +1,7 @@
 <template>
 	<div>
 	    <div id="logo" class="q-mt-xs q-ml-xs">
-	      <img src="PurelyPeer-icon.png" width="100%" class="q-ma-none">
+	      <img src="PurelyPeer-icon-inverse.png" width="100%" class="q-ma-none">
 	    </div>
 	</div>
 </template>

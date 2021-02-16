@@ -40,20 +40,19 @@
 					</div>
 				</div>
 			</div>
-			<div id="ratio-option" class="q-mt-md">
+			<div id="ratio-option" class="q-mt-lg">
 			    <ul>
-			        <li><a href="#?" class="fs-2">🕺</a></li>
-			        <li><a href="#?" class="fs-2">♿</a></li>
-			        <li><a href="#?" class="fs-2">💃</a></li>
-			        <li><a href="#?" class="fs-2 color-b">🏙️</a></li>
-			        <li><a href="#?" class="fs-2">🛣</a></li>
-			        <li><a href="#?" class="fs-2 color-b">🌐</a></li>
+			        <li>
+			        	<a href="#?" class="fs-2" @click="changeTier"><span v-html="purelyPeertier.options[purelyPeertier.number]"></span>&#128175;</a>
+			        </li>
+			        <li><a href="#?" class="fs-2" @click="changePhysicalPresence">&#129521;<span v-html="phyicalPresence.options[phyicalPresence.number]"></span></a></li>
+			        <li><a href="#?" class="fs-2" @click="changeQuestRadius"><span v-html="questRadius.options[questRadius.number]"></span></a></li>
 			    </ul>
 			</div>
 			<div class="q-mx-md">
 				<div class="row justify-center">
 					<div class="col-10">
-						<q-input color="teal" bg-color="white" outlined label="Search. . .">
+						<q-input color="grey-5" bg-color="white" outlined label="Search. . .">
 					        <template v-slot:append>
 					          <q-icon name="search" />
 					        </template>
@@ -68,8 +67,35 @@
 <script>
 export default {
 	data() {
-		return {}
+		return {
+			purelyPeertier: {
+				options: ['&#10084;', '&#128154;', '&#128155;', '&#128153;', '&#128420;'],
+				number: 0
+			},
+			questRadius: {
+				options: ['&#11093;&#128175;', '&#128378;&#9855;&#128131;', '&#127961;', '&#128739;', '&#127760;'],
+				number: 0
+			},
+			phyicalPresence: {
+				options: ['&#128175;', '&#10004;', '&#10060;'],
+				number: 0
+			}
+		}
 	},
+	methods: {
+		changeTier () {
+			this.purelyPeertier.number++
+			this.purelyPeertier.number = this.purelyPeertier.number == 5 ? 0 : this.purelyPeertier.number
+		},
+		changePhysicalPresence () {
+			this.phyicalPresence.number++
+			this.phyicalPresence.number = this.phyicalPresence.number == 3 ? 0 : this.phyicalPresence.number
+		},
+		changeQuestRadius () {
+			this.questRadius.number++
+			this.questRadius.number = this.questRadius.number == 5? 0 : this.questRadius.number
+		}
+	}
 }
 </script>
 
@@ -118,7 +144,7 @@ table tbody.quest-table tr.quest-row {
   display: inline-block;
   list-style: none;
   height: 60px;
-  padding: 0;
+  padding-left: 0;
   margin: 0;
   width: 100%;
   text-align: center
@@ -127,13 +153,18 @@ table tbody.quest-table tr.quest-row {
   display: inline-block;
   margin: -4px;
   padding: 4px 0 0 4px;
+  width: 34.48%;
+  margin-right: 0;
   text-align: center;
 }
 #ratio-option ul li a {
   display: block;
-  height: 60px;
+  line-height: 57px;
   color: #fff;
-  padding: 12px 12px 0 12px;
+  text-align: center;
+  vertical-align: middel;
+  border: 1px solid #B2B2B2;
+  border-width: 2px 1px 2px 1px !important;
   text-decoration: none;
 }
 </style>
