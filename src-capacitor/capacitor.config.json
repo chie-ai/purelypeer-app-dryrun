@@ -1,0 +1,7 @@
+{
+  "appId": "cash.purelypeer.app",
+  "appName": "PurelyPeeer App",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www"
+}
