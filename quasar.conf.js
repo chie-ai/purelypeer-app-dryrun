@@ -22,13 +22,14 @@ module.exports = function (/* ctx */) {
 
       'i18n',
       'axios',
-      'googlemap',
-      'vue-browser-geolocation'
+      'vue-browser-geolocation',
+      'googlemap'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: [
-      'app.sass'
+      'app.sass',
+      'custom.scss'
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
@@ -78,7 +79,7 @@ module.exports = function (/* ctx */) {
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
-      https: false,
+      https: true,
       port: 8080,
       open: true // opens browser window automatically
     },

@@ -1,18 +1,31 @@
 <template>
-	<div id="explore-map" class="q-mx-xs q-pa-none">
-		<div class="col-12">
-			<GmapMap ref="mapRef"
-			  :center="{lat: 12.8797, lng: 121.7740}"
-			  :zoom="6"
+	<div id="explore-map" class="row q-pa-md">
+		<div class="col-12" style="overflow: auto; border-radius: 10px">
+			<GmapMap
+			  ref="mapRef"
+			  :center="coordinates"
+			  :zoom="10"
 			  map-type-id="terrain"
 			  class="map-layout"
 			>
+				<GmapMarker ref="myMarker"
+				    :position="google && new google.maps.LatLng(coordinates)" />
+				<!-- <GmapMarker
+				    :key="index"
+				    v-for="(m, index) in markers"
+				    :position="m.position"
+				    :clickable="true"
+				    :draggable="true"
+				    @click="center=m.position"
+				/> -->
 			</GmapMap>
+			<!-- <p>{{ coordinates.lat }} Latitude, {{ coordinates.lng }}, Longitude</p> -->
 		</div>
 	</div>
 </template>
 
 <script>
+import { gmapApi } from 'gmap-vue'
 
 export default {
 	data () {
@@ -23,35 +36,27 @@ export default {
 			}
 		}
 	},
+	computed: {
+	    google: gmapApi
+	},
 	mounted () {
-	    this.$refs.mapRef.$mapPromise.then((map) => {
-	    	map.panTo({lat: 12.8797, lng: 121.7740})
-	    })
+	    // this.$refs.mapRef.$mapPromise.then((map) => {
+	    //   map.panTo({lat: 11.2543, lng: 124.9617})
+	    // })
 	},
 	created () {
 		this.$getLocation({})
 		.then(coordinates => {
 			this.coordinates = coordinates
-			alert('Coordinates: ', coordinates)
+			
+		    this.$refs.mapRef.$mapPromise.then((map) => {
+		      map.panTo(coordinates)
+		    })
 		})
 		.catch(error => console.log(error))
 	}
 }
 </script>
 
-<style>
-#explore-map {
-	height: 350px;
-	width: 100%;
-	border: 3px solid #B5C2BD;
-	border-radius: 20px;
-	background: #C0E5F9;
-	overflow: auto;
-	box-shadow: inset 6px 6px 12px #b3d5e8,
-	            inset -6px -6px 12px #cdf5ff;
-}
-.map-layout {
-	width: 100%;
-	height: 344px;
-}
+<style scoped>
 </style>

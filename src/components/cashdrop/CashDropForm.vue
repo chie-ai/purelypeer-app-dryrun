@@ -1,36 +1,28 @@
 <template>
-	<div id="quest-list" class="q-mx-xs">
+	<div id="quest-list">
 		<div class="col-12 quest-container">
-			<h5 class="text-center q-mt-lg q-mb-sm q-mx-lg">Add your tokens to the map!</h5>
+			<h5 class="text-center q-mt-md q-mb-sm">Cash Drop Form</h5>
 
 
 			<div class="q-mx-md q-mt-md">
-				<div class="row justify-center">
-					<div class="col-10">
+				<div class="row justify-center q-mb-md">
+					<div class="col-11">
 						<q-form
 					      class="q-gutter-y-sm"
 					    >
-							<q-input color="grey-5" dense="true" bg-color="white" outlined label="Merchant Name" />
-							<q-input color="grey-5" dense="true" bg-color="white" outlined label="Phone number" />
-							<q-input color="grey-5" dense="true" bg-color="white" outlined label="Contact URL" />
-							<q-input color="grey-5" dense="true" bg-color="white" outlined label="Custom field" />
-							<q-btn label="Submit" type="submit" class="full-width" color="primary"/>
+							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Merchant Name" />
+							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Phone number" />
+							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Contact URL" />
+							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Custom Field" />
+							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="tierModel" :options="tier.options" label="PurelyPeer Tier" />
+							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="presenceModel" :options="presence.options" label="Presence" />
+							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="radiusModel" :options="radius.options" label="Radius" />
+							<q-btn label="Submit" outline type="submit" class="full-width" color="grey-6"/>
 						</q-form>
 					</div>
 				</div>
 			</div>
 
-			<div class="q-mx-md q-mt-lg">
-				<div class="row justify-center">
-					<div class="col-10">
-						<q-input color="grey-5" bg-color="white" outlined label="Search. . .">
-					        <template v-slot:append>
-					          <q-icon name="search" />
-					        </template>
-					    </q-input>
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 </template>
@@ -38,41 +30,29 @@
 <script>
 export default {
 	data() {
-		return {}
+		return {
+			tierModel: null,
+			tier: {
+			    options: [
+			        '\u2764\uFE0F \uD83D\uDCAF', '\uD83D\uDC9A', '\uD83E\uDDE1', '\uD83D\uDC99', '\uD83D\uDDA4'
+			    ]
+			},
+			presenceModel: null,
+			presence: {
+				options: [
+					'\uD83E\uDDF1 \uD83D\uDCAF', '\uD83E\uDDF1 \u2714\uFE0F', '\uD83E\uDDF1 \u274C'
+				]
+			},
+			radiusModel: null,
+			radius: {
+				options: [
+					'\u2B55 \uD83D\uDCAF', '\uD83D\uDD7A \u267F \uD83D\uDC83', '\uD83C\uDFD9\uFE0F', '\uD83D\uDEE3\uFE0F', '\uD83C\uDF10'
+				]
+			}
+		}
 	},
 }
 </script>
 
-<style>
-@font-face {
-	font-family: PurelyPeer-Regular;
-	src: url(../../assets/static/Comfortaa-Regular.ttf) format('truetype');
-}
-@font-face {
-	font-family: PurelyPeer-Bold;
-	src: url(../../assets/static/Comfortaa-Bold.ttf) format('truetype');
-}
-h5 {
-	font-family: PurelyPeer-Bold;
-	color: #0AC18E;
-}
-p {
-	font-family: PurelyPeer-Regular;
-	color: #175477;
-}
-#quest-list {
-	height: 420px;
-	width: 100%;
-	border: 3px solid #B5C2BD;
-	border-radius: 20px;
-	background: #B5ECDD;
-	box-shadow: inset 6px 6px 12px #a8dbce,
-	            inset -6px -6px 12px #c2fdec;
-}
-.quest-container {
-}
-table tbody.quest-table tr.quest-row {
-	margin: 0px !important;
-	border: 1px solid green !important;
-}
+<style scoped>
 </style>

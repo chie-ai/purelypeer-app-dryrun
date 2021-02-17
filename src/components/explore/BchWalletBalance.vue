@@ -1,9 +1,21 @@
 <template>
-	<div id="bch-balance" class="q-mx-xs">
-		<div class="col-12 text-center">
-			<h5 class="text-white q-mt-md q-mb-sm">BCH Balance</h5>
-			<p class="text-white q-my-xs">0</p>
-			<p class="text-white q-my-none">USD</p>
+	<div id="bch-balance">
+		<div class="col-12 text-center q-py-sm">
+			<div class="bch-menu-list">
+				<ul>
+					<li>
+						<a href="#?">Receive</a>
+						<div class="divider"></div>
+					</li>
+					<li>
+						<a href="#?">Balance</a>
+						<div class="divider"></div>
+					</li>
+					<li><a href="#?">Send</a></li>
+				</ul>
+			</div>
+			<p class="bch-amount q-my-none q-mt-xs">#.######## USD</p>
+			<p class="bch-amount q-my-none">~ X.YZ fiat</p>
 		</div>
 	</div>
 </template>
@@ -13,20 +25,5 @@
 export default {}
 </script>
 
-<style>
-@font-face {
-	font-family: PurelyPeer-Bold;
-	src: url(../../assets/static/Comfortaa-Bold.ttf) format('truetype');
-}
-#bch-balance {
-	height: 114px;
-	width: 100%;
-	border-radius: 10px;
-	background: #0AC18E;
-	box-shadow: inset 6px 6px 12px #09b283,
-	            inset -6px -6px 12px #0bd099;
-}
-h5 {
-	font-family: PurelyPeer-Bold
-}
+<style scoped>
 </style>

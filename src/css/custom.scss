@@ -1,0 +1,209 @@
+
+@font-face {
+	font-family: PurelyPeer-Regular;
+	src: url(../assets/static/Comfortaa-Regular.ttf) format('truetype');
+}
+@font-face {
+	font-family: PurelyPeer-Bold;
+	src: url(../assets/static/Comfortaa-Bold.ttf) format('truetype');
+}
+
+// Navbar
+.wrapper {
+    display: flex;
+    width: 100%;
+    margin: auto;
+    align-items: stretch;
+	box-shadow: inset 6px 6px 12px #09b384,
+              inset -6px -6px 12px #0bcf98;
+}
+#menu {
+  width: 100%;
+  background: #0AC18E;
+}
+#menu ul {
+  display: inline-block;
+  list-style: none;
+  height: 60px;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  text-align: center
+}
+#menu ul li {
+  display: inline-block;
+  margin: -4px;
+  padding: 4px 0 0 4px;
+  text-align: center;
+}
+#menu ul li a {
+  display: block;
+  height: 60px;
+  color: #fff;
+  padding: 12px 20px 0 20px;
+  text-decoration: none;
+}
+#menu ul li a.active {
+  background: #0AAB7E;
+}
+.fs-2 {
+  font-size: 24px;
+}
+.color-b {
+  color: #fff;
+}
+
+// App Logo
+#logo {
+    min-width: 60px !important;
+    max-width: 60px !important;
+    max-height: 60px;
+    background: gray;
+	background: #0AC18E;
+	box-shadow: inset 6px 6px 12px #09b384,
+	            inset -6px -6px 12px #0bcf98;
+}
+
+// Explore mode
+#explore-map {
+	width: 100%;
+	// background: #C0E5F9;
+	overflow: auto;
+	// box-shadow: inset 6px 6px 12px #b3d5e8,
+	//             inset -6px -6px 12px #cdf5ff;
+}
+.map-layout {
+	width: 100%;
+	height: 334px;
+}
+h4 {
+	font-family: PurelyPeer-Bold;
+	color: #0AC18E;
+}
+p {
+	font-family: PurelyPeer-Regular;
+	color: #175477;
+}
+#quest-list {
+	width: 100%;
+	border: 3px solid #B5C2BD;
+	border-top-right-radius: 20px;
+	border-top-left-radius: 20px;
+	border-bottom: none;
+	background: #B5ECDD;
+	// box-shadow: inset 6px 6px 12px #a8dbce,
+	//             inset -6px -6px 12px #c2fdec;
+}
+table tbody.quest-table tr.quest-row {
+	margin: 0px !important;
+	border: 1px solid green !important;
+}
+.quest-main {
+	height: 200px;
+	overflow: auto;
+	border-top: 1px solid #B2B2B2;
+	border-bottom: 1px solid #B2B2B2;
+}
+#ratio-option ul {
+  display: inline-block;
+  list-style: none;
+  height: 66px;
+  padding-left: 0;
+  margin: 0;
+  width: 100%;
+  text-align: center;
+  overflow: auto;
+}
+#ratio-option ul li {
+  display: inline-block;
+  margin: -4px;
+  padding: 4px 0 0 4px;
+  width: 31%;
+  margin-right: 0;
+  text-align: center;
+}
+#ratio-option ul li a {
+  display: block;
+  line-height: 56px;
+  color: #fff;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid #B2B2B2;
+  border-width: 2px 1px 2px 1px !important;
+  text-decoration: none;
+  border-radius: 10px;
+  box-shadow: 0px 1px 3px 1px #7F7F7F;
+}
+#menu-list {
+	height: 450px;
+	width: 100%;
+	background: #0AC18E;
+	box-shadow: inset 6px 3px 12px #09b283,
+	            inset -6px -3px 12px #0bd099;
+}
+h5 {
+	font-family: PurelyPeer-Bold
+}
+
+// Setting
+#setting {
+	height: 450px;
+	width: 100%;
+	border-radius: 20px;
+	background: #B5ECDD;
+	box-shadow: inset 6px 6px 12px #a8dbce,
+	            inset -6px -6px 12px #c2fdec;
+}
+h5.setting-caption {
+	font-family: PurelyPeer-Bold;
+	color: #0AC18E !important;
+}
+
+// BCH Wallet
+#bch-balance {
+	// height: 114px;
+	width: 100%;
+	background: #0AC18E;
+	box-shadow: inset 6px 3px 12px #09b283,
+	            inset -6px -1px 12px #0bd099;
+}
+.bch-menu-list ul {
+  display: block;
+  list-style: none;
+  height: 30px;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  text-align: center;
+}
+.bch-menu-list ul li {
+  position: relative;
+  display: inline-block;
+  line-height: 24px;
+}
+.bch-menu-list ul li a {
+  display: block;
+  color: #03392A;
+  text-align: center;
+  text-decoration: none;
+  padding: 4px 24px 0 24px;
+  font-weight: bolder;
+}
+.divider {
+  position: absolute;
+  height: 14px;
+  border-left: 2px solid #056047;
+  right: -.45px;
+  top: 8px;
+  z-index: 11;
+}
+p.bch-amount {
+	color: #03392A;
+	font-weight: bolder;
+}
+
+// Cash Drop
+h5 {
+	font-family: PurelyPeer-Bold;
+	color: #0AC18E;
+}
