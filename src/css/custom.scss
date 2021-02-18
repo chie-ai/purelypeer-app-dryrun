@@ -60,8 +60,8 @@
     max-height: 60px;
     background: gray;
 	background: #0AC18E;
-	box-shadow: inset 6px 6px 12px #09b384,
-	            inset -6px -6px 12px #0bcf98;
+	// box-shadow: inset 6px 6px 12px #09b384,
+	//             inset -6px -6px 12px #0bcf98;
 }
 
 // Explore mode
@@ -86,13 +86,14 @@ p {
 }
 #quest-list {
 	width: 100%;
-	border: 3px solid #B5C2BD;
-	border-top-right-radius: 20px;
-	border-top-left-radius: 20px;
+	border: 1px solid #ACDED0;
 	border-bottom: none;
 	background: #B5ECDD;
 	// box-shadow: inset 6px 6px 12px #a8dbce,
 	//             inset -6px -6px 12px #c2fdec;
+}
+.quest-list {
+	border-bottom: 1px solid #B2B2B2;
 }
 table tbody.quest-table tr.quest-row {
 	margin: 0px !important;
@@ -132,7 +133,7 @@ table tbody.quest-table tr.quest-row {
   border-width: 2px 1px 2px 1px !important;
   text-decoration: none;
   border-radius: 10px;
-  box-shadow: 0px 1px 3px 1px #7F7F7F;
+  box-shadow: 0px 1px 3px 1px #C6C5C5;
 }
 #menu-list {
 	height: 450px;

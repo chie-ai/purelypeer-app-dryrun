@@ -1,55 +1,27 @@
 <template>
 	<div id="quest-list">
 		<div class="col-12 quest-container">
-			<h5 class="text-center q-mt-md q-mb-sm">QUESTS</h5>
+			<h5 class="text-center q-mt-md q-mb-sm">Cash Drops</h5>
 
 			<div class="quest-main q-mx-md">
 				<div class="column quest-body">
-					<div class="col-4 q-py-md quest-list">
+					<div class="col-12 q-py-md quest-list" v-for="(cashDrop, i) in cashDrops" :key="i">
 						<div class="row">
 							<div class="col-12 q-px-sm">
-								<p class="q-mb-xs"><span class="text-weight-bold">Merchant Name: </span><span class="text-subtitle2">Jollibee</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Phone Number: </span><span class="text-subtitle2">###-###-####</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Contact URL: </span><a href="www.facebook.com" class="text-caption">www.facebook.com/merchant-contact</a></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Custom field: </span><span class="text-subtitle2">xxxxxxxxx</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Tier: </span><span>&#10084;</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Presence: </span><span>&#129521;&#128175;</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Radius: </span><span>&#11093;&#128175;</span></p>
+								<p class="q-mb-xs"><span class="text-weight-bold">Merchant Name: </span><span class="text-subtitle2">{{ cashDrop.merchant }}</span></p>
+								<p class="q-mb-xs"><span class="text-weight-bold">Distance: </span><span class="text-subtitle2">{{ cashDrop.distance }}</span></p>
+								<p class="q-mb-xs"><span class="text-weight-bold">Price: </span><span>{{ cashDrop.price }}</span></p>
+
+								<div class="cashDropMoreInfo" :ref="i">
+									<p class="q-mb-xs"><span class="text-weight-bold">Phone Number: </span><span class="text-subtitle2">{{ cashDrop.phoneNumber }}</span></p>
+									<p class="q-mb-xs"><span class="text-weight-bold">Contact URL: </span><a href="www.facebook.com" class="text-caption">{{ cashDrop.contactUrl }}</a></p>
+									<p class="q-mb-xs"><span class="text-weight-bold">Tier: </span><span>{{ cashDrop.tier }}</span></p>
+									<p class="q-mb-xs"><span class="text-weight-bold">Presence: </span><span>{{ cashDrop.presence }}</span></p>
+									<p class="q-mb-xs"><span class="text-weight-bold">Radius: </span><span>{{ cashDrop.radius }}</span></p>
+								</div>
 							</div>
 							<div class="col-12 q-px-sm q-mt-sm text-center">
-								<q-btn size="sm" color="teal" label="Show on map" />
-							</div>
-						</div>
-					</div>
-					<div class="col-4 q-py-md quest-list">
-						<div class="row">
-							<div class="col-12 q-px-sm">
-								<p class="q-mb-xs"><span class="text-weight-bold">Merchant Name: </span><span class="text-subtitle2">Jollibee</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Phone Number: </span><span class="text-subtitle2">###-###-####</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Contact URL: </span><a href="www.facebook.com" class="text-caption">www.facebook.com/merchant-contact</a></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Custom field: </span><span class="text-subtitle2">xxxxxxxxx</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Tier: </span><span>&#10084;</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Presence: </span><span>&#129521;&#128175;</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Radius: </span><span>&#11093;&#128175;</span></p>
-							</div>
-							<div class="col-12 q-px-sm q-mt-sm text-center">
-								<q-btn size="sm" color="teal" label="Show on map" />
-							</div>
-						</div>
-					</div>
-					<div class="col-4 q-py-md quest-list">
-						<div class="row">
-							<div class="col-12 q-px-sm">
-								<p class="q-mb-xs"><span class="text-weight-bold">Merchant Name: </span><span class="text-subtitle2">Jollibee</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Phone Number: </span><span class="text-subtitle2">###-###-####</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Contact URL: </span><a href="www.facebook.com" class="text-caption">www.facebook.com/merchant-contact</a></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Custom field: </span><span class="text-subtitle2">xxxxxxxxx</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Tier: </span><span>&#10084;</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Presence: </span><span>&#129521;&#128175;</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Radius: </span><span>&#11093;&#128175;</span></p>
-							</div>
-							<div class="col-12 q-px-sm q-mt-sm text-center">
-								<q-btn size="sm" color="teal" label="Show on map" />
+								<q-btn size="sm" color="teal" :ref="'btn-'+i" label="Show more info" @click="showMoreCashDropInfo(i)"/>
 							</div>
 						</div>
 					</div>
@@ -57,9 +29,7 @@
 			</div>
 			<div id="ratio-option" class="q-mt-lg">
 			    <ul>
-			        <li>
-			        	<a href="#?" class="fs-2" @click="changeTier"><span v-html="purelyPeertier.options[purelyPeertier.number]"></span></a>
-			        </li>
+			        <li><a href="#?" class="fs-2" @click="changeTier"><span v-html="purelyPeertier.options[purelyPeertier.number]"></span></a></li>
 			        <li><a href="#?" class="fs-2" @click="changePhysicalPresence">&#129521;<span v-html="phyicalPresence.options[phyicalPresence.number]"></span></a></li>
 			        <li><a href="#?" class="fs-2" @click="changeQuestRadius"><span v-html="questRadius.options[questRadius.number]"></span></a></li>
 			    </ul>
@@ -94,10 +64,50 @@ export default {
 			phyicalPresence: {
 				options: ['&#128175;', '&#10004;', '&#10060;'],
 				number: 0
-			}
+			},
+			cashDrops: [
+				{
+					merchant: "Jollibee",
+					distance: "1000m",
+					price: "Mug",
+					phoneNumber: "###-###-####",
+					contactUrl: "www.facebook.com/merchant-contact",
+					tier: "\u2764\uFE0F \uD83D\uDCAF",
+					presence: "\uD83E\uDDF1 \uD83D\uDCAF",
+					radius: "\u2B55 \uD83D\uDCAF"
+				},
+				{
+					merchant: "McDo",
+					distance: "2000",
+					price: "Spaghetti",
+					phoneNumber: "###-###-####",
+					contactUrl: "www.facebook.com/merchant-contact",
+					tier: "\u2764\uFE0F \uD83D\uDCAF",
+					presence: "\uD83E\uDDF1 \uD83D\uDCAF",
+					radius: "\u2B55 \uD83D\uDCAF"
+				},
+				{
+					merchant: "Gaisano",
+					distance: "1500",
+					price: "50% less to all items",
+					phoneNumber: "###-###-####",
+					contactUrl: "www.facebook.com/merchant-contact",
+					tier: "\u2764\uFE0F \uD83D\uDCAF",
+					presence: "\uD83E\uDDF1 \uD83D\uDCAF",
+					radius: "\u2B55 \uD83D\uDCAF"
+				}
+			]
 		}
 	},
 	methods: {
+		showMoreCashDropInfo (ref) {
+			let classList = this.$refs[ref][0].classList
+			this.$refs[ref][0].classList.toggle('showMoreCashDropInfo')
+
+			classList.value.match(/showMoreCashDropInfo/gi) === null
+			? this.$refs['btn-'+ref][0].label = 'Show more info'
+			: this.$refs['btn-'+ref][0].label = 'Hide other info'
+		},
 		changeTier () {
 			this.purelyPeertier.number++
 			this.purelyPeertier.number = this.purelyPeertier.number == 5 ? 0 : this.purelyPeertier.number
@@ -109,10 +119,16 @@ export default {
 		changeQuestRadius () {
 			this.questRadius.number++
 			this.questRadius.number = this.questRadius.number == 5 ? 0 : this.questRadius.number
-		}
+		},
 	}
 }
 </script>
 
 <style>
+.cashDropMoreInfo {
+	display: none;
+}
+.showMoreCashDropInfo {
+	display: block;
+}
 </style>

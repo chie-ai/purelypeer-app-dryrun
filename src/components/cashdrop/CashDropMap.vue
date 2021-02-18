@@ -19,7 +19,6 @@
 				    @click="center=m.position"
 				/> -->
 			</GmapMap>
-			<!-- <p>{{ coordinates.lat }} Latitude, {{ coordinates.lng }}, Longitude</p> -->
 		</div>
 	</div>
 </template>
@@ -38,11 +37,6 @@ export default {
 	},
 	computed: {
 	    google: gmapApi
-	},
-	mounted () {
-	    // this.$refs.mapRef.$mapPromise.then((map) => {
-	    //   map.panTo({lat: 11.2543, lng: 124.9617})
-	    // })
 	},
 	created () {
 		this.$getLocation({})
