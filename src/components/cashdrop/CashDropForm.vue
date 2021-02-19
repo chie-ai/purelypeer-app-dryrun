@@ -13,10 +13,9 @@
 							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Merchant Name" />
 							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Phone number" />
 							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Contact URL" />
-							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Custom Field" />
 							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="tierModel" :options="tier.options" label="PurelyPeer Tier" />
-							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="presenceModel" :options="presence.options" label="Presence" />
-							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="radiusModel" :options="radius.options" label="Radius" />
+							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="presenceModel" :options="presence.options" label="Physical Presence" />
+							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="radiusModel" :options="radius.options" label="Quest Radius" />
 							<q-btn label="Submit" outline type="submit" class="full-width" color="grey-6"/>
 						</q-form>
 					</div>

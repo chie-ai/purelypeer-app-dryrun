@@ -9,18 +9,17 @@
 						<div class="row">
 							<div class="col-12 q-px-sm">
 								<p class="q-mb-xs"><span class="text-weight-bold">Merchant Name: </span><span class="text-subtitle2">{{ cashDrop.merchant }}</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Distance: </span><span class="text-subtitle2">{{ cashDrop.distance }}</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Price: </span><span>{{ cashDrop.price }}</span></p>
+								<p class="q-mb-xs"><span class="text-weight-bold">Cashdrops Count: </span><span class="text-subtitle2">{{ cashDrop.cashDropCount }}</span></p>
+								<p class="q-mb-xs"><span class="text-weight-bold">PurelyPeer Tier: </span><span>{{ cashDrop.tier }}</span></p>
 
 								<div class="cashDropMoreInfo" :ref="i">
 									<p class="q-mb-xs"><span class="text-weight-bold">Phone Number: </span><span class="text-subtitle2">{{ cashDrop.phoneNumber }}</span></p>
 									<p class="q-mb-xs"><span class="text-weight-bold">Contact URL: </span><a href="www.facebook.com" class="text-caption">{{ cashDrop.contactUrl }}</a></p>
-									<p class="q-mb-xs"><span class="text-weight-bold">Tier: </span><span>{{ cashDrop.tier }}</span></p>
 									<p class="q-mb-xs"><span class="text-weight-bold">Presence: </span><span>{{ cashDrop.presence }}</span></p>
 									<p class="q-mb-xs"><span class="text-weight-bold">Radius: </span><span>{{ cashDrop.radius }}</span></p>
 								</div>
 							</div>
-							<div class="col-12 q-px-sm q-mt-sm text-center">
+							<div class="col-12 q-px-sm q-mt-sm">
 								<q-btn size="sm" color="teal" :ref="'btn-'+i" label="Show more info" @click="showMoreCashDropInfo(i)"/>
 							</div>
 						</div>
@@ -68,7 +67,7 @@ export default {
 			cashDrops: [
 				{
 					merchant: "Jollibee",
-					distance: "1000m",
+					cashDropCount: "10",
 					price: "Mug",
 					phoneNumber: "###-###-####",
 					contactUrl: "www.facebook.com/merchant-contact",
@@ -78,7 +77,7 @@ export default {
 				},
 				{
 					merchant: "McDo",
-					distance: "2000",
+					cashDropCount: "14",
 					price: "Spaghetti",
 					phoneNumber: "###-###-####",
 					contactUrl: "www.facebook.com/merchant-contact",
@@ -88,7 +87,7 @@ export default {
 				},
 				{
 					merchant: "Gaisano",
-					distance: "1500",
+					cashDropCount: "20",
 					price: "50% less to all items",
 					phoneNumber: "###-###-####",
 					contactUrl: "www.facebook.com/merchant-contact",

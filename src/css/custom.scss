@@ -10,12 +10,15 @@
 
 // Navbar
 .wrapper {
+	top: 0px;
+	position: fixed;
     display: flex;
     width: 100%;
     margin: auto;
     align-items: stretch;
 	box-shadow: inset 6px 6px 12px #09b384,
               inset -6px -6px 12px #0bcf98;
+	z-index: 20;
 }
 #menu {
   width: 100%;
@@ -66,6 +69,7 @@
 
 // Explore mode
 #explore-map {
+	margin-top: 60px;
 	width: 100%;
 	// background: #C0E5F9;
 	overflow: auto;
@@ -150,7 +154,6 @@ h5 {
 #setting {
 	height: 450px;
 	width: 100%;
-	border-radius: 20px;
 	background: #B5ECDD;
 	box-shadow: inset 6px 6px 12px #a8dbce,
 	            inset -6px -6px 12px #c2fdec;
