@@ -61,7 +61,6 @@
     min-width: 60px !important;
     max-width: 60px !important;
     max-height: 60px;
-    background: gray;
 	background: #0AC18E;
 	// box-shadow: inset 6px 6px 12px #09b384,
 	//             inset -6px -6px 12px #0bcf98;
@@ -69,9 +68,9 @@
 
 // Explore mode
 #explore-map {
+	position: relative !important;
 	margin-top: 60px;
 	width: 100%;
-	// background: #C0E5F9;
 	overflow: auto;
 	// box-shadow: inset 6px 6px 12px #b3d5e8,
 	//             inset -6px -6px 12px #cdf5ff;
