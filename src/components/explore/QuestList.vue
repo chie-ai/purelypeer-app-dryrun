@@ -73,7 +73,11 @@ export default {
 					contactUrl: "www.facebook.com/merchant-contact",
 					tier: "\u2764\uFE0F\uD83D\uDCAF",
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					radius: "\u2B55\uD83D\uDCAF"
+					radius: "\u2B55\uD83D\uDCAF",
+					coordinates: {
+						lat: 11.182940631107073,
+						lng: 125.00853961893749
+					}
 				},
 				{
 					merchant: "McDo",
@@ -83,17 +87,39 @@ export default {
 					contactUrl: "www.facebook.com/merchant-contact",
 					tier: "\u2764\uFE0F\uD83D\uDCAF",
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					radius: "\u2B55\uD83D\uDCAF"
+					radius: "\u2B55\uD83D\uDCAF",
+					coordinates: {
+						lat: 11.177852556218607,
+						lng: 125.0017115736064
+					}
 				},
 				{
-					merchant: "Gaisano",
+					merchant: "J & F Department Store Palo",
 					cashDropCount: "20",
 					price: "50% less to all items",
 					phoneNumber: "###-###-####",
 					contactUrl: "www.facebook.com/merchant-contact",
 					tier: "\u2764\uFE0F\uD83D\uDCAF",
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					radius: "\u2B55\uD83D\uDCAF"
+					radius: "\u2B55\uD83D\uDCAF",
+					coordinates: {
+						lat: 11.18034797623956,
+						lng: 125.00271619971214
+					}
+				},
+				{
+					merchant: "Seafoods & Ribs Warehouse",
+					cashDropCount: "20",
+					price: "50% less to all items",
+					phoneNumber: "###-###-####",
+					contactUrl: "www.facebook.com/merchant-contact",
+					tier: "\u2764\uFE0F\uD83D\uDCAF",
+					presence: "\uD83E\uDDF1\uD83D\uDCAF",
+					radius: "\u2B55\uD83D\uDCAF",
+					coordinates: {
+						lat: 11.172544321838204,
+						lng: 124.99960748418974
+					}
 				}
 			]
 		}

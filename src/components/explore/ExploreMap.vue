@@ -12,19 +12,19 @@
 				<GmapCircle
 				    v-for="(pin, index) in markers"
 				    :key="index"
-				    :center="mapCoordinates"
-				    :radius="3000"
+				    :center="(pin.type !== 'quest' ? mapCoordinates : pin.coordinates)"
+				    :radius="(pin.type !== 'quest' ? 0 : pin.radius)"
 				    :visible="true"
 				    :options="{ strokeColor: '#0AC18E', strokeOpacity: 0.5, strokeWeight: 2, fillColor:'white', fillOpacity: 0 }">
 				</GmapCircle>
 
 				<GmapInfoWindow :options="infoOptions" :position="mapCoordinates" :opened="infoWinOpen" @closeclick="infoWinOpen=false"></GmapInfoWindow>
 
-				<GmapMarker ref="myMarker" :icon="{url: 'PurelyPeer-location-current-A.png', scaledSize: google && new google.maps.Size(80, 80), anchor: google && new google.maps.Point(40, 54)}"
-				    :position="google && new google.maps.LatLng(mapCoordinates)" @click="toggleInfoWindow" />
+				<GmapMarker ref="myMarker" v-for="(mark, indexMark) in markers" :icon="{url: (mark.type !== 'quest' ? 'PurelyPeer-location-current-A.png' : 'PurelyPeer-location-blue.png'), scaledSize: google && new google.maps.Size((mark.type !== 'quest' ? 80 : 30), (mark.type !== 'quest' ? 80 : 40)), anchor: google && new google.maps.Point(40, 54)}"
+				    :position="google && new google.maps.LatLng((mark.type !== 'quest' ? mapCoordinates : mark.coordinates))" @click="toggleInfoWindow" />
 
 			</GmapMap>
-			<!-- <p style="display: none">{{ mapCoordinates.lat }} Latitude, {{ mapCoordinates.lng }}, Longitude</p> -->
+			<!-- <p>{{ mapCoordinates.lat }} Latitude, {{ mapCoordinates.lng }}, Longitude</p> -->
 		</div>
 		<div class="adjust-map-height">
 			<button class="btn-google-maps-resizer" v-touch-pan.vertical.prevent.mouse="resizeMapHeight"><i class="mdi mdi-arrow-split-horizontal text-h4 resize-controller" ></i></button>
@@ -40,7 +40,73 @@ export default {
 		return {
 			zoomScale: 13, 
 		    markers: [
-		        { Id: 1 }
+		    	{
+		    		type: "user"
+		    	},
+				{
+					merchant: "Jollibee",
+					cashDropCount: "10",
+					price: "Mug",
+					phoneNumber: "###-###-####",
+					contactUrl: "www.facebook.com/merchant-contact",
+					tier: "\u2764\uFE0F\uD83D\uDCAF",
+					presence: "\uD83E\uDDF1\uD83D\uDCAF",
+					radius: "\u2B55\uD83D\uDCAF",
+					coordinates: {
+						lat: 11.182940631107073,
+						lng: 125.00853961893749
+					},
+					radius: 2800,
+					type: "quest"
+				},
+				{
+					merchant: "McDo",
+					cashDropCount: "14",
+					price: "Spaghetti",
+					phoneNumber: "###-###-####",
+					contactUrl: "www.facebook.com/merchant-contact",
+					tier: "\u2764\uFE0F\uD83D\uDCAF",
+					presence: "\uD83E\uDDF1\uD83D\uDCAF",
+					radius: "\u2B55\uD83D\uDCAF",
+					coordinates: {
+						lat: 11.177852556218607,
+						lng: 125.0017115736064
+					},
+					radius: 2800,
+					type: "quest"
+				},
+				{
+					merchant: "J & F Department Store Palo",
+					cashDropCount: "20",
+					price: "50% less to all items",
+					phoneNumber: "###-###-####",
+					contactUrl: "www.facebook.com/merchant-contact",
+					tier: "\u2764\uFE0F\uD83D\uDCAF",
+					presence: "\uD83E\uDDF1\uD83D\uDCAF",
+					radius: "\u2B55\uD83D\uDCAF",
+					coordinates: {
+						lat: 11.18034797623956,
+						lng: 125.00271619971214
+					},
+					radius: 2800,
+					type: "quest"
+				},
+				{
+					merchant: "Seafoods & Ribs Warehouse",
+					cashDropCount: "20",
+					price: "50% less to all items",
+					phoneNumber: "###-###-####",
+					contactUrl: "www.facebook.com/merchant-contact",
+					tier: "\u2764\uFE0F\uD83D\uDCAF",
+					presence: "\uD83E\uDDF1\uD83D\uDCAF",
+					radius: "\u2B55\uD83D\uDCAF",
+					coordinates: {
+						lat: 11.172544321838204,
+						lng: 124.99960748418974
+					},
+					radius: 2800,
+					type: "quest"
+				}
 		    ],
 			coordinates: {
 				lat: 0,

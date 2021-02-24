@@ -1,7 +1,7 @@
 <template>
 	<div id="explore-map" class="row">
 		<div class="col-12" style="position: relative;">
-			<GmapMap ref="mapRef" :center="coordinates" :zoom="13"
+			<GmapMap ref="mapRef" :center="coordinates" :zoom="zoomScale"
 			  :options="{
 			   styles: mapCustomStyle.styles, draggableCursor: true, gestureHandling: 'greedy',
 			   zoomControl: false, mapTypeControl: false, scaleControl: false, streetViewControl: false,
@@ -9,7 +9,7 @@
 			  map-type-id="roadmap" class="map-layout"
 			>
 				<GmapMarker ref="myMarker" :icon="{url: 'PurelyPeer-location-current-A.png', scaledSize: google && new google.maps.Size(80, 80), anchor: google && new google.maps.Point(40, 60)}"
-				    :position="google && new google.maps.LatLng(coordinates)" />
+				    :position="google && new google.maps.LatLng(mapCoordinates)" />
 			</GmapMap>
 		</div>
 		<div class="adjust-map-height">
@@ -24,72 +24,45 @@ import { gmapApi } from 'gmap-vue'
 export default {
 	data () {
 		return {
+			zoomScale: 13, 
 			coordinates: {
 				lat: 0,
 				lng: 0
 			},
         	mapCustomStyle: {
 				styles: [
-				    {
-				      elementType: "labels.icon",
-				      stylers: [{ color: "#A6ACAF" }],
-				    },
-				    {
-				      featureType: "administrative",
-				      elementType: "labels.text.fill",
-				      stylers: [{ color: "#A3A3A3" }],
-				    },
-				    {
-				      featureType: "landscape",
-				      elementType: "labels.text.fill",
-				      stylers: [{ color: "#939393" }],
-				    },
-				    {
-				      featureType: "poi",
-				      elementType: "labels.text.fill",
-				      stylers: [{ color: "#757575" }],
-				    },
-				    {
-				      featureType: "transit",
-				      elementType: "geometry",
-				      stylers: [{ color: "#e5e5e5" }],
-				    },
-				    {
-				      featureType: "transit",
-				      elementType: "labels.text.fill",
-				      stylers: [{ color: "#757575" }],
-				    },
-				    {
-				      featureType: "road",
-				      elementType: "geometry",
-				      stylers: [{ color: "#F4F6F7" }],
-				    },
-				    {
-				      featureType: "road",
-				      elementType: "labels.text.fill",
-				      stylers: [{ color: "#9B9A9A" }],
-				    },
-				    {
-				      featureType: "road.highway",
-				      elementType: "labels.icon",
-				      stylers: [{ visibility: "off" }],
-				    },
-				    {
-				      featureType: "road.highway",
-				      elementType: "geometry",
-				      stylers: [{ color: "#D7DBDD" }],
-				    },
-				    {
-				      featureType: "water",
-				      elementType: "labels.text.fill",
-				      stylers: [{ color: "#2980B9" }],
-				    },
+				    { elementType: "labels.icon", stylers: [{ color: "#A6ACAF" }]},
+				    { featureType: "administrative", elementType: "labels.text.fill", stylers: [{ color: "#A3A3A3" }] },
+				    { featureType: "landscape", elementType: "labels.text.fill", stylers: [{ color: "#939393" }] },
+				    { featureType: "poi", elementType: "labels.text.fill", stylers: [{ color: "#757575" }] },
+				    { featureType: "transit", elementType: "geometry", stylers: [{ color: "#e5e5e5" }] },
+				    { featureType: "transit", elementType: "labels.text.fill", stylers: [{ color: "#757575" }] },
+				    { featureType: "road", elementType: "geometry", stylers: [{ color: "#F4F6F7" }] },
+				    { featureType: "road", elementType: "labels.text.fill", stylers: [{ color: "#9B9A9A" }] },
+				    { featureType: "road.highway", elementType: "labels.icon", stylers: [{ visibility: "off" }] },
+				    { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#D7DBDD" }] },
+				    { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#2980B9" }] },
 				]
 			},
+			map: null
 		}
 	},
 	computed: {
-	    google: gmapApi
+	    google: gmapApi,
+	    mapCoordinates () {
+	    	if(!this.map) {
+	    		return {
+	    			lat: 0,
+	    			lng: 0
+	    		}
+	    	}
+
+	    	this.infoWinOpen = false
+	    	return {
+	    		lat: this.map.getCenter().lat(),
+	    		lng: this.map.getCenter().lng()
+	    	}
+	    }
 	},
 	methods: {
 		resizeMapHeight ({ evt, ...info }) {
@@ -152,6 +125,7 @@ export default {
 		let el2 = document.getElementsByClassName('vue-map')
 
 	    this.$refs.mapRef.$mapPromise.then((map) => {
+	    	this.map = map
 			setTimeout(() => {
 				el2[0].firstChild.firstChild.prepend(el)
 			}, 2000)
