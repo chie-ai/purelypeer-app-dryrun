@@ -3,17 +3,17 @@
 		<div class="col-12" style="position: relative;">
 			<GmapMap ref="mapRef" :center="coordinates" :zoom="13"
 			  :options="{
-			   styles: mapCustomStyle.styles,
-			   draggableCursor: true,
-			   gestureHandling: 'greedy',
-			   zoomControl: false, mapTypeControl: false,
-			   scaleControl: false, streetViewControl: false,
-			   rotateControl: false, fullscreenControl: true, disableDefaultUI: false }"
+			   styles: mapCustomStyle.styles, draggableCursor: true, gestureHandling: 'greedy',
+			   zoomControl: false, mapTypeControl: false, scaleControl: false, streetViewControl: false,
+			   rotateControl: false, fullscreenControl: false, disableDefaultUI: false }"
 			  map-type-id="roadmap" class="map-layout"
 			>
 				<GmapMarker ref="myMarker" :icon="{url: 'PurelyPeer-location-current-A.png', scaledSize: google && new google.maps.Size(80, 80), anchor: google && new google.maps.Point(40, 60)}"
 				    :position="google && new google.maps.LatLng(coordinates)" />
 			</GmapMap>
+		</div>
+		<div class="adjust-map-height">
+			<button class="btn-google-maps-resizer" v-touch-pan.vertical.prevent.mouse="resizeMapHeight"><i class="mdi mdi-arrow-split-horizontal text-h4 resize-controller" ></i></button>
 		</div>
 	</div>
 </template>
@@ -91,19 +91,104 @@ export default {
 	computed: {
 	    google: gmapApi
 	},
+	methods: {
+		resizeMapHeight ({ evt, ...info }) {
+			let map = document.getElementsByClassName('map-layout')
+
+		    if(this.counter == 0) {
+				this.mapHeight = parseInt(document.defaultView.getComputedStyle(map[0]).height, 10);
+		    	this.startY = (evt.type !== 'mousemove' ? Math.round(evt.changedTouches[0].screenY) : Math.round(evt.clientY))
+		    }
+		    if (!info.isFinal) {
+		    	this.counter++
+		    } else {
+		    	this.counter = 0
+		    }
+			this.doResize(event)
+	    },
+		doResize (e) {
+			let map = document.getElementsByClassName('map-layout')
+			let newHeight = this.mapHeight + (e.type !== 'mousemove' ? e.changedTouches[0].screenY : e.clientY) - this.startY
+
+			newHeight >= 334 ? map[0].style.height = newHeight + 'px' : ''
+		},
+	},
 	created () {
 		this.$getLocation({})
 		.then(coordinates => {
 			this.coordinates = coordinates
-			
-		    this.$refs.mapRef.$mapPromise.then((map) => {
-		      map.panTo(coordinates)
-		    })
 		})
 		.catch(error => console.log(error))
+	},
+	mounted () {
+		let el = document.createElement('div')
+		el.classList.add('q-mt-md')
+		el.style.position = "absolute"
+		el.style.zIndex = "20"
+		el.style.width =  "100%"
+		el.style.textAlign = "center"
+
+		let elSpan1 = document.createElement('span')
+		elSpan1.classList.add('q-mr-xs')
+		elSpan1.style.fontSize = "28px"
+		elSpan1.style.cursor = "pointer"
+		elSpan1.appendChild(document.createTextNode('\u23EB'))
+		elSpan1.addEventListener("click", () => {
+			this.zoomScale++
+		})
+
+		let elSpan2 = document.createElement('span')
+		elSpan2.classList.add('q-ml-xs')
+		elSpan2.style.fontSize = "28px"
+		elSpan2.style.cursor = "pointer"
+		elSpan2.appendChild(document.createTextNode('\u23EC'))
+		elSpan2.addEventListener("click", () => {
+			this.zoomScale--
+		})
+
+		el.appendChild(elSpan1)
+		el.appendChild(elSpan2)
+
+		let el2 = document.getElementsByClassName('vue-map')
+
+	    this.$refs.mapRef.$mapPromise.then((map) => {
+			setTimeout(() => {
+				el2[0].firstChild.firstChild.prepend(el)
+			}, 2000)
+	    })
 	}
 }
 </script>
 
 <style scoped>
+.adjust-map-height {
+	position: absolute;
+	text-align: center;
+	bottom: -17px;
+	width: 100%;
+	z-index: 30 !important;
+}
+.resize-controller {
+	cursor: pointer;
+	color: 
+}
+.btn-google-maps-resizer {
+	position: relative;
+	height: 35px;
+	width: 35px;
+	padding: 0;
+	border-radius: 100%;
+	border: none;
+	color: #fff;
+	background: #0AC18E;
+	outline: none;
+	box-shadow: inset -6px -6px 12px #09ae80,
+            inset 6px 6px 12px #0bd49c;
+}
+.btn-google-maps-resizer i {
+	position: absolute;
+	top: -2px;
+	left: 7.5px;
+	font-size: 20px !important;
+}
 </style>

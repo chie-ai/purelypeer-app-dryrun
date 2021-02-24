@@ -1,7 +1,7 @@
 <template>
 	<div id="quest-list">
-		<div class="col-12 quest-container">
-			<h5 class="text-center q-mt-md q-mb-sm">Cash Drop Form</h5>
+		<div class="col-12 quest-container q-mt-lg">
+			<h5 class="text-center q-mt-md q-mb-sm">Quest Form</h5>
 
 
 			<div class="q-mx-md q-mt-md">
@@ -33,19 +33,19 @@ export default {
 			tierModel: null,
 			tier: {
 			    options: [
-			        '\u2764\uFE0F \uD83D\uDCAF', '\uD83D\uDC9A', '\uD83E\uDDE1', '\uD83D\uDC99', '\uD83D\uDDA4'
+			        '\u2764\uFE0F\uD83D\uDCAF', '\uD83D\uDC9A', '\uD83E\uDDE1', '\uD83D\uDC99', '\uD83D\uDDA4'
 			    ]
 			},
 			presenceModel: null,
 			presence: {
 				options: [
-					'\uD83E\uDDF1 \uD83D\uDCAF', '\uD83E\uDDF1 \u2714\uFE0F', '\uD83E\uDDF1 \u274C'
+					'\uD83E\uDDF1\uD83D\uDCAF', '\uD83E\uDDF1\u2714\uFE0F', '\uD83E\uDDF1\u274C'
 				]
 			},
 			radiusModel: null,
 			radius: {
 				options: [
-					'\u2B55 \uD83D\uDCAF', '\uD83D\uDD7A \u267F \uD83D\uDC83', '\uD83C\uDFD9\uFE0F', '\uD83D\uDEE3\uFE0F', '\uD83C\uDF10'
+					'\u2B55\uD83D\uDCAF', '\uD83D\uDD7A\u267F\uD83D\uDC83', '\uD83C\uDFD9\uFE0F', '\uD83D\uDEE3\uFE0F', '\uD83C\uDF10'
 				]
 			}
 		}

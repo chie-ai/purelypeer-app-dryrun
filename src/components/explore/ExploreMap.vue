@@ -4,7 +4,7 @@
 			<GmapMap ref="mapRef" :center="coordinates" :zoom="zoomScale"
 			  :options="{
 			   styles: mapCustomStyle.styles, draggableCursor: true, gestureHandling: 'greedy',
-			   zoomControl: false, mapTypeControl: false, scaleControl: true, streetViewControl: false,
+			   zoomControl: false, mapTypeControl: false, scaleControl: false, streetViewControl: false,
 			   rotateControl: false, fullscreenControl: false, disableDefaultUI: false }"
 			  map-type-id="roadmap" class="map-layout"
 			>
@@ -12,23 +12,22 @@
 				<GmapCircle
 				    v-for="(pin, index) in markers"
 				    :key="index"
-				    :center="coordinates"
+				    :center="mapCoordinates"
 				    :radius="3000"
 				    :visible="true"
 				    :options="{ strokeColor: '#0AC18E', strokeOpacity: 0.5, strokeWeight: 2, fillColor:'white', fillOpacity: 0 }">
 				</GmapCircle>
 
-				<GmapInfoWindow :options="infoOptions" :position="coordinates" :opened="infoWinOpen" @closeclick="infoWinOpen=false"></GmapInfoWindow>
+				<GmapInfoWindow :options="infoOptions" :position="mapCoordinates" :opened="infoWinOpen" @closeclick="infoWinOpen=false"></GmapInfoWindow>
 
 				<GmapMarker ref="myMarker" :icon="{url: 'PurelyPeer-location-current-A.png', scaledSize: google && new google.maps.Size(80, 80), anchor: google && new google.maps.Point(40, 54)}"
-				    :position="google && new google.maps.LatLng(coordinates)" @click="toggleInfoWindow" />
+				    :position="google && new google.maps.LatLng(mapCoordinates)" @click="toggleInfoWindow" />
 
 			</GmapMap>
-			<!-- <p>{{ coordinates.lat }} Latitude, {{ coordinates.lng }}, Longitude</p> -->
+			<!-- <p style="display: none">{{ mapCoordinates.lat }} Latitude, {{ mapCoordinates.lng }}, Longitude</p> -->
 		</div>
 		<div class="adjust-map-height">
-			<q-btn round color="primary" size="sm" icon="height" v-touch-pan.vertical.prevent.mouse="resizeMapHeight" />
-			<!-- <i class="mdi mdi-arrow-split-horizontal text-h4 resize-controller" ></i> -->
+			<button class="btn-google-maps-resizer" v-touch-pan.vertical.prevent.mouse="resizeMapHeight"><i class="mdi mdi-arrow-split-horizontal text-h4 resize-controller" ></i></button>
 		</div>
 	</div>
 </template>
@@ -54,7 +53,7 @@ export default {
 							<p style='margin: 3px 0 3px 0'><strong>PurelyPeer Tier: </strong> \u2764\uFE0F\uD83D\uDCAF</p>",
 	            pixelOffset: {
 	              width: 0,
-	              height: -35
+	              height: -20
 	            }
 			},
         	infoWinOpen: false,
@@ -73,43 +72,52 @@ export default {
 				    { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#2980B9" }] },
 				]
 			},
-			startHeight: null,
+			mapHeight: null,
 			startY: null,
-			startYCtr: 0,
-			startY2: null
+			counter: 0,
+			map: null
 		}
 	},		
 	computed: {
-	    google: gmapApi
+	    google: gmapApi,
+	    mapCoordinates () {
+	    	if(!this.map) {
+	    		return {
+	    			lat: 0,
+	    			lng: 0
+	    		}
+	    	}
+
+	    	this.infoWinOpen = false
+	    	return {
+	    		lat: this.map.getCenter().lat(),
+	    		lng: this.map.getCenter().lng()
+	    	}
+	    }
 	},
 	methods: {
 		toggleInfoWindow () {
             this.infoWinOpen = !this.infoWinOpen;
 		},
 		resizeMapHeight ({ evt, ...info }) {
-			let elipsis = document.getElementsByClassName('resize-controller')
 			let map = document.getElementsByClassName('map-layout')
 
-		    if(this.startYCtr == 0) {
-				this.startHeight = parseInt(document.defaultView.getComputedStyle(map[0]).height, 10);
+		    if(this.counter == 0) {
+				this.mapHeight = parseInt(document.defaultView.getComputedStyle(map[0]).height, 10);
 		    	this.startY = (evt.type !== 'mousemove' ? Math.round(evt.changedTouches[0].screenY) : Math.round(evt.clientY))
 		    }
 		    if (!info.isFinal) {
-		    	this.startYCtr++
+		    	this.counter++
 		    } else {
-		    	this.startYCtr = 0
+		    	this.counter = 0
 		    }
 			this.doResize(event)
 	    },
 		doResize (e) {
 			let map = document.getElementsByClassName('map-layout')
-			let newHeight = this.startHeight + (e.type !== 'mousemove' ? e.changedTouches[0].screenY : e.clientY) - this.startY
+			let newHeight = this.mapHeight + (e.type !== 'mousemove' ? e.changedTouches[0].screenY : e.clientY) - this.startY
 
-		    console.log('Touch Start Y: ', this.startY)
-		    console.log('Touch Start Height: ', this.startHeight)
-			console.log('Touch Client Y: ', (e.type !== 'mousemove' ? e.changedTouches[0].screenY : e.clientY))
-
-			newHeight >= 334 ? map[0].style.height = (newHeight) + 'px' : ''
+			newHeight >= 334 ? map[0].style.height = newHeight + 'px' : ''
 		},
 	},
 	created () {
@@ -150,9 +158,12 @@ export default {
 
 		let el2 = document.getElementsByClassName('vue-map')
 
-		setTimeout(() => {
-			el2[0].firstChild.firstChild.prepend(el)
-		}, 2000)
+	    this.$refs.mapRef.$mapPromise.then((map) => {
+	    	this.map = map
+			setTimeout(() => {
+				el2[0].firstChild.firstChild.prepend(el)
+			}, 2000)
+	    })
 	}
 }
 </script>
@@ -161,12 +172,31 @@ export default {
 .adjust-map-height {
 	position: absolute;
 	text-align: center;
-	bottom: -16px;
+	bottom: -17px;
 	width: 100%;
 	z-index: 30 !important;
 }
 .resize-controller {
 	cursor: pointer;
 	color: 
+}
+.btn-google-maps-resizer {
+	position: relative;
+	height: 35px;
+	width: 35px;
+	padding: 0;
+	border-radius: 100%;
+	border: none;
+	color: #fff;
+	background: #0AC18E;
+	outline: none;
+	box-shadow: inset -6px -6px 12px #09ae80,
+            inset 6px 6px 12px #0bd49c;
+}
+.btn-google-maps-resizer i {
+	position: absolute;
+	top: -2px;
+	left: 7.5px;
+	font-size: 20px !important;
 }
 </style>
