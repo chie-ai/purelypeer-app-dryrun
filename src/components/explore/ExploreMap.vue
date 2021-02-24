@@ -24,19 +24,17 @@
 				    :position="google && new google.maps.LatLng(coordinates)" @click="toggleInfoWindow" />
 
 			</GmapMap>
-
-			<div class="adjust-map-height">
-				<i class="mdi mdi-dots-horizontal text-h4 resize-controller" v-touch-pan.vertical.prevent.mouse="handlePan" v-on:click="resizeMapHeight"></i>
-			</div>
 			<!-- <p>{{ coordinates.lat }} Latitude, {{ coordinates.lng }}, Longitude</p> -->
+		</div>
+		<div class="adjust-map-height">
+			<q-btn round color="primary" size="sm" icon="height" v-touch-pan.vertical.prevent.mouse="resizeMapHeight" />
+			<!-- <i class="mdi mdi-arrow-split-horizontal text-h4 resize-controller" ></i> -->
 		</div>
 	</div>
 </template>
 
 <script>
 import { gmapApi } from 'gmap-vue'
-
-const start = 334
 
 export default {
 	data () {
@@ -53,7 +51,7 @@ export default {
 				content: "<p><strong>Sample Quest Info</strong></p>\
 							<p style='margin: 3px 0 3px 0'><strong>Quest Name: </strong> Trump Card Collection</p>\
 							<p style='margin: 3px 0 3px 0'><strong>Cashdrops Count: </strong> 10</p>\
-							<p style='margin: 3px 0 3px 0'><strong>PurelyPeer Tier: </strong> \u2764\uFE0F \uD83D\uDCAF</p>",
+							<p style='margin: 3px 0 3px 0'><strong>PurelyPeer Tier: </strong> \u2764\uFE0F\uD83D\uDCAF</p>",
 	            pixelOffset: {
 	              width: 0,
 	              height: -35
@@ -76,9 +74,11 @@ export default {
 				]
 			},
 			startHeight: null,
-			startY: null
+			startY: null,
+			startYCtr: 0,
+			startY2: null
 		}
-	},
+	},		
 	computed: {
 	    google: gmapApi
 	},
@@ -86,53 +86,36 @@ export default {
 		toggleInfoWindow () {
             this.infoWinOpen = !this.infoWinOpen;
 		},
-		resizeMapHeight (e) {
+		resizeMapHeight ({ evt, ...info }) {
 			let elipsis = document.getElementsByClassName('resize-controller')
 			let map = document.getElementsByClassName('map-layout')
 
-			this.startHeight = parseInt(document.defaultView.getComputedStyle(map[0]).height, 10);
-			this.startY = e.clientY
-
-			elipsis[0].addEventListener('mousedown', this.initResize, false)
-		},
-		initResize () {
-			document.documentElement.addEventListener('mousemove', this.doResize, false)
-			document.documentElement.addEventListener('mouseup', this.stopResize, false)
-		},
+		    if(this.startYCtr == 0) {
+				this.startHeight = parseInt(document.defaultView.getComputedStyle(map[0]).height, 10);
+		    	this.startY = (evt.type !== 'mousemove' ? Math.round(evt.changedTouches[0].screenY) : Math.round(evt.clientY))
+		    }
+		    if (!info.isFinal) {
+		    	this.startYCtr++
+		    } else {
+		    	this.startYCtr = 0
+		    }
+			this.doResize(event)
+	    },
 		doResize (e) {
 			let map = document.getElementsByClassName('map-layout')
-			let newHeight = this.startHeight + e.clientY - this.startY
+			let newHeight = this.startHeight + (e.type !== 'mousemove' ? e.changedTouches[0].screenY : e.clientY) - this.startY
+
+		    console.log('Touch Start Y: ', this.startY)
+		    console.log('Touch Start Height: ', this.startHeight)
+			console.log('Touch Client Y: ', (e.type !== 'mousemove' ? e.changedTouches[0].screenY : e.clientY))
 
 			newHeight >= 334 ? map[0].style.height = (newHeight) + 'px' : ''
 		},
-		stopResize () {
-			document.documentElement.removeEventListener('mousemove', this.doResize, false);
-			document.documentElement.removeEventListener('mouseup', this.stopResize, false);
-		},
-		handlePan ({ evt, ...info }) {
-		    console.log(info.position.top)
-		    console.log(document.getElementsByClassName('map-layout')[0])
-
-			let map = document.getElementsByClassName('map-layout')
-		    this.startHeight = parseInt(document.defaultView.getComputedStyle(map[0]).height, 10);
-
-		    console.log('Height: ', this.startHeight)
-
-			let newHeight = this.startHeight + info.position.top - start
-
-		    console.log('New Height: ', newHeight)
-
-		    newHeight >= 334 ? map[0].style.height = (newHeight) + 'px' : ''
-	    }
 	},
 	created () {
 		this.$getLocation({})
 		.then(coordinates => {
 			this.coordinates = coordinates
-			
-		    this.$refs.mapRef.$mapPromise.then((map) => {
-		      map.panTo(coordinates)
-		    })
 		})
 		.catch(error => console.log(error))
 	},
@@ -178,11 +161,12 @@ export default {
 .adjust-map-height {
 	position: absolute;
 	text-align: center;
-	bottom: 0px;
+	bottom: -16px;
 	width: 100%;
 	z-index: 30 !important;
 }
 .resize-controller {
 	cursor: pointer;
+	color: 
 }
 </style>

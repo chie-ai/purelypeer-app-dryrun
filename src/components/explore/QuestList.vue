@@ -53,7 +53,7 @@ export default {
 	data() {
 		return {
 			purelyPeertier: {
-				options: ['&#10084; &#128175;', '&#128154;', '&#128155;', '&#128153;', '&#128420;'],
+				options: ['&#10084;&#128175;', '&#128154;', '&#128155;', '&#128153;', '&#128420;'],
 				number: 0
 			},
 			questRadius: {
@@ -71,9 +71,9 @@ export default {
 					price: "Mug",
 					phoneNumber: "###-###-####",
 					contactUrl: "www.facebook.com/merchant-contact",
-					tier: "\u2764\uFE0F \uD83D\uDCAF",
-					presence: "\uD83E\uDDF1 \uD83D\uDCAF",
-					radius: "\u2B55 \uD83D\uDCAF"
+					tier: "\u2764\uFE0F\uD83D\uDCAF",
+					presence: "\uD83E\uDDF1\uD83D\uDCAF",
+					radius: "\u2B55\uD83D\uDCAF"
 				},
 				{
 					merchant: "McDo",
@@ -81,9 +81,9 @@ export default {
 					price: "Spaghetti",
 					phoneNumber: "###-###-####",
 					contactUrl: "www.facebook.com/merchant-contact",
-					tier: "\u2764\uFE0F \uD83D\uDCAF",
-					presence: "\uD83E\uDDF1 \uD83D\uDCAF",
-					radius: "\u2B55 \uD83D\uDCAF"
+					tier: "\u2764\uFE0F\uD83D\uDCAF",
+					presence: "\uD83E\uDDF1\uD83D\uDCAF",
+					radius: "\u2B55\uD83D\uDCAF"
 				},
 				{
 					merchant: "Gaisano",
@@ -91,9 +91,9 @@ export default {
 					price: "50% less to all items",
 					phoneNumber: "###-###-####",
 					contactUrl: "www.facebook.com/merchant-contact",
-					tier: "\u2764\uFE0F \uD83D\uDCAF",
-					presence: "\uD83E\uDDF1 \uD83D\uDCAF",
-					radius: "\u2B55 \uD83D\uDCAF"
+					tier: "\u2764\uFE0F\uD83D\uDCAF",
+					presence: "\uD83E\uDDF1\uD83D\uDCAF",
+					radius: "\u2B55\uD83D\uDCAF"
 				}
 			]
 		}
