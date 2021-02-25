@@ -23,7 +23,8 @@
 
 				<GmapMarker ref="myMarker" v-for="(mark, indexMark) in markers"
 					:icon="{
-							url: (mark.type !== 'quest' ? 'PurelyPeer-location-current-A.png' : (mark.questStatus === 'active' ? 'PurelyPeer-location-blue.png' : 'PurelyPeer-icon-black.png')),
+							url: (mark.type !== 'quest' ? 'PurelyPeer-location-current-A.png'
+								: (mark.questStatus === 'active' ? (mark.level === 'upcoming' ? 'PurelyPeer-location-blue.png' : (mark.level === 'direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')),
 
 							scaledSize: google && new google.maps.Size((mark.type !== 'quest' ? 80 : (mark.questStatus === 'active' ? 30 : 50)), (mark.type !== 'quest' ? 80 : (mark.questStatus === 'active' ? 40 : 50))),
 
@@ -66,7 +67,8 @@ export default {
 					},
 					radius: 2800,
 					type: "quest",
-					questStatus: "inactive"
+					questStatus: "active",
+					level: 'upcoming'
 				},
 				{
 					merchant: "McDo",
@@ -83,7 +85,8 @@ export default {
 					},
 					radius: 2800,
 					type: "quest",
-					questStatus: "active"
+					questStatus: "active",
+					level: 'direct'
 				},
 				{
 					merchant: "J & F Department Store Palo",
@@ -100,7 +103,8 @@ export default {
 					},
 					radius: 2800,
 					type: "quest",
-					questStatus: "active"
+					questStatus: "active",
+					level: 'indirect'
 				},
 				{
 					merchant: "Seafoods & Ribs Warehouse",
@@ -117,7 +121,8 @@ export default {
 					},
 					radius: 2800,
 					type: "quest",
-					questStatus: "inactive"
+					questStatus: "inactive",
+					level: 'direct'
 				}
 		    ],
 			coordinates: {
