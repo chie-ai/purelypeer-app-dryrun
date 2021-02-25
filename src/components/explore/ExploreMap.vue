@@ -6,7 +6,7 @@
 			   styles: mapCustomStyle.styles, draggableCursor: true, gestureHandling: 'greedy',
 			   zoomControl: false, mapTypeControl: false, scaleControl: false, streetViewControl: false,
 			   rotateControl: false, fullscreenControl: false, disableDefaultUI: false }"
-			  map-type-id="roadmap" class="map-layout"
+			   @center_changed="removeWinInfo" map-type-id="roadmap" class="map-layout"
 			>
 
 				<GmapCircle
@@ -14,14 +14,36 @@
 				    v-for="(pin, index) in markers"
 				    :key="index"
 				    :center="(pin.type !== 'quest' ? mapCoordinates : pin.coordinates)"
-				    :radius="(pin.type !== 'quest' ? 0 : pin.radius)"
-				    :visible="true"
-				    :options="{ strokeColor: '#0AC18E', strokeOpacity: 0.5, strokeWeight: 2, fillColor:'white', fillOpacity: 0 }">
+				    :radius="(pin.type !== 'quest' ? 0 : pin.questRadius)"
+				    :options="{ strokeColor: '#0AC18E', strokeOpacity: 0.5, strokeWeight: 2, fillColor:'white', fillOpacity: 0, visible: pin.radiusVisibility }">
 				</GmapCircle>
 
-				<GmapInfoWindow :options="infoOptions" :position="mapCoordinates" :opened="infoWinOpen" @closeclick="infoWinOpen=false"></GmapInfoWindow>
+				<GmapInfoWindow v-if="info.type === 'quest'"
+					v-for="(info, infoIndex) in markers"
+					:options="{
+								content: '<div>\
+											<p><strong>Quest Info</strong></p>\
+											<span><strong>Merchant: </strong>'+info.merchant+'</span><br/>\
+											<span><strong>Quest Name: </strong>'+info.questName+'</span><br/>\
+											<span><strong>Level: </strong>'+(info.level).charAt(0).toUpperCase()+(info.level).slice(1)+'</span><br/>\
+											<span><strong>Cash Drop Count: </strong>'+info.cashDropCount+'</span><br/>\
+											<span><strong>PurelyPeer Tier: </strong>'+info.tier+'</span>\
+										</div>',
+								pixelOffset: {
+									width: 12,
+									height: -25
+								},
+								disableAutoPan: true,
+								minWidth: 300
+					}"
+					:position="info.coordinates"
+					:opened="info.infoWinOpen"
+					@closeclick="toggleInfoWindow(infoIndex)">
+				</GmapInfoWindow>
 
-				<GmapMarker ref="myMarker" v-for="(mark, indexMark) in markers"
+				<!-- <GmapInfoWindow :options="infoOptions" :position="mapCoordinates" :opened="infoWinOpen" @closeclick="infoWindow()"></GmapInfoWindow> -->
+
+				<GmapMarker ref="myMarker" v-for="(mark, markerIndex) in markers"
 					:icon="{
 							url: (mark.type !== 'quest' ? 'PurelyPeer-location-current-A.png'
 								: (mark.questStatus === 'active' ? (mark.level === 'upcoming' ? 'PurelyPeer-location-blue.png' : (mark.level === 'direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')),
@@ -30,7 +52,7 @@
 
 							anchor: google && new google.maps.Point((mark.type !== 'quest' ? 40 : (mark.questStatus === 'active' ? 1 : 12)), (mark.type !== 'quest' ? 54 : (mark.questStatus === 'active' ? 40 : 44)))
 							}"
-				    :position="google && new google.maps.LatLng((mark.type !== 'quest' ? mapCoordinates : mark.coordinates))" @click="toggleInfoWindow" />
+				    :position="google && new google.maps.LatLng((mark.type !== 'quest' ? mapCoordinates : mark.coordinates))" @click="toggleInfoWindow(markerIndex)" />
 
 			</GmapMap>
 			<!-- <p>{{ mapCoordinates.lat }} Latitude, {{ mapCoordinates.lng }}, Longitude</p> -->
@@ -54,6 +76,7 @@ export default {
 		    	},
 				{
 					merchant: "Jollibee",
+					questName: "Start Card Collection",
 					cashDropCount: "10",
 					price: "Mug",
 					phoneNumber: "###-###-####",
@@ -65,13 +88,16 @@ export default {
 						lat: 11.17783410449158,
 						lng: 125.0017081909703
 					},
-					radius: 2800,
+					questRadius: 1900,
 					type: "quest",
 					questStatus: "active",
-					level: 'upcoming'
+					level: 'upcoming',
+					infoWinOpen: false,
+					radiusVisibility: false
 				},
 				{
-					merchant: "McDo",
+					merchant: "McDonalds",
+					questName: "Half Moon Card Collection",
 					cashDropCount: "14",
 					price: "Spaghetti",
 					phoneNumber: "###-###-####",
@@ -83,13 +109,16 @@ export default {
 						lat: 11.176572907648463,
 						lng: 125.00093244003742
 					},
-					radius: 2800,
+					questRadius: 1000,
 					type: "quest",
 					questStatus: "active",
-					level: 'direct'
+					level: 'direct',
+					infoWinOpen: false,
+					radiusVisibility: false
 				},
 				{
 					merchant: "J & F Department Store Palo",
+					questName: "Sale Card Collection",
 					cashDropCount: "20",
 					price: "50% less to all items",
 					phoneNumber: "###-###-####",
@@ -101,13 +130,16 @@ export default {
 						lat: 11.180325256142286,
 						lng: 125.00271409774162
 					},
-					radius: 2800,
+					questRadius: 1300,
 					type: "quest",
 					questStatus: "active",
-					level: 'indirect'
+					level: 'indirect',
+					infoWinOpen: false,
+					radiusVisibility: false
 				},
 				{
 					merchant: "Seafoods & Ribs Warehouse",
+					questName: "Coupon Card Collection",
 					cashDropCount: "20",
 					price: "50% less to all items",
 					phoneNumber: "###-###-####",
@@ -119,27 +151,18 @@ export default {
 						lat: 11.172492400856424,
 						lng: 124.9996134948425
 					},
-					radius: 2800,
+					questRadius: 1200,
 					type: "quest",
 					questStatus: "inactive",
-					level: 'direct'
+					level: 'direct',
+					infoWinOpen: false,
+					radiusVisibility: false
 				}
 		    ],
 			coordinates: {
 				lat: 0,
 				lng: 0
 			},
-			infoOptions: {
-				content: "<p><strong>Sample Quest Info</strong></p>\
-							<p style='margin: 3px 0 3px 0'><strong>Quest Name: </strong>Trump Card Collection</p>\
-							<p style='margin: 3px 0 3px 0'><strong>Cashdrops Count: </strong>10</p>\
-							<p style='margin: 3px 0 3px 0'><strong>PurelyPeer Tier: </strong>\u2764\uFE0F\uD83D\uDCAF</p>",
-	            pixelOffset: {
-	              width: 0,
-	              height: -20
-	            }
-			},
-        	infoWinOpen: false,
         	mapCustomStyle: {
 				styles: [
 				    { elementType: "labels.icon", stylers: [{ color: "#A6ACAF" }]},
@@ -158,7 +181,8 @@ export default {
 			mapHeight: null,
 			startY: null,
 			counter: 0,
-			map: null
+			map: null,
+			activeIndex: 0
 		}
 	},		
 	computed: {
@@ -171,7 +195,6 @@ export default {
 	    		}
 	    	}
 
-	    	this.infoWinOpen = false
 	    	return {
 	    		lat: this.map.getCenter().lat(),
 	    		lng: this.map.getCenter().lng()
@@ -179,8 +202,17 @@ export default {
 	    }
 	},
 	methods: {
-		toggleInfoWindow () {
-            this.infoWinOpen = !this.infoWinOpen;
+		removeWinInfo () {
+			this.markers[this.activeIndex].infoWinOpen = false
+			this.markers[this.activeIndex].radiusVisibility = false
+		},
+		toggleInfoWindow (infoIndex) {
+
+			this.activeIndex !== infoIndex ? this.markers[this.activeIndex].infoWinOpen = false : ''
+			this.activeIndex !== infoIndex ? this.markers[this.activeIndex].radiusVisibility = false : ''
+			this.markers[infoIndex].infoWinOpen = !this.markers[infoIndex].infoWinOpen
+			this.markers[infoIndex].radiusVisibility = !this.markers[infoIndex].radiusVisibility
+			this.activeIndex = infoIndex
 		},
 		resizeMapHeight ({ evt, ...info }) {
 			let map = document.getElementsByClassName('map-layout')
