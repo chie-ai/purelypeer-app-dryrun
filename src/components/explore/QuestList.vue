@@ -5,22 +5,24 @@
 
 			<div class="quest-main q-mx-md">
 				<div class="column quest-body">
-					<div class="col-12 q-py-md quest-list" v-for="(cashDrop, i) in cashDrops" :key="i">
+					<div class="col-12 q-py-md quest-list" v-for="(quest, i) in quests" :key="i">
 						<div class="row">
 							<div class="col-12 q-px-sm">
-								<p class="q-mb-xs"><span class="text-weight-bold">Merchant Name: </span><span class="text-subtitle2">{{ cashDrop.merchant }}</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Cashdrops Count: </span><span class="text-subtitle2">{{ cashDrop.cashDropCount }}</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">PurelyPeer Tier: </span><span>{{ cashDrop.tier }}</span></p>
+								<p class="q-mb-xs"><span class="text-weight-bold">Merchant Name: </span><span class="text-subtitle2">{{ quest.merchant }}</span></p>
+								<p class="q-mb-xs"><span class="text-weight-bold">Cash Drop Count: </span><span class="text-subtitle2">{{ quest.questCount }}</span></p>
+								<p class="q-mb-xs"><span class="text-weight-bold">PurelyPeer Tier: </span><span>{{ quest.tier }}</span></p>
 
-								<div class="cashDropMoreInfo" :ref="i">
-									<p class="q-mb-xs"><span class="text-weight-bold">Phone Number: </span><span class="text-subtitle2">{{ cashDrop.phoneNumber }}</span></p>
-									<p class="q-mb-xs"><span class="text-weight-bold">Contact URL: </span><a href="www.facebook.com" class="text-caption">{{ cashDrop.contactUrl }}</a></p>
-									<p class="q-mb-xs"><span class="text-weight-bold">Presence: </span><span>{{ cashDrop.presence }}</span></p>
-									<p class="q-mb-xs"><span class="text-weight-bold">Radius: </span><span>{{ cashDrop.radius }}</span></p>
+								<div class="questMoreInfo" :ref="i">
+									<p class="q-mb-xs"><span class="text-weight-bold">Level: </span><span>{{ (quest.level).charAt(0).toUpperCase() + (quest.level).slice(1) }}</span></p>
+									<p class="q-mb-xs"><span class="text-weight-bold">Radius: </span><span>{{ quest.radius }}</span></p>
+									<p class="q-mb-xs"><span class="text-weight-bold">Phone Number: </span><span class="text-subtitle2">{{ quest.phoneNumber }}</span></p>
+									<p class="q-mb-xs"><span class="text-weight-bold">Contact URL: </span><a href="www.facebook.com" class="text-caption">{{ quest.contactUrl }}</a></p>
+									<p class="q-mb-xs"><span class="text-weight-bold">Presence: </span><span>{{ quest.presence }}</span></p>
+									<p class="q-mb-xs"><span class="text-weight-bold">Radius: </span><span>{{ quest.radius }}</span></p>
 								</div>
 							</div>
 							<div class="col-12 q-px-sm q-mt-sm">
-								<q-btn size="sm" color="teal" :ref="'btn-'+i" label="Show more info" @click="showMoreCashDropInfo(i)"/>
+								<q-btn size="sm" color="teal" :ref="'btn-'+i" label="Show more info" @click="showMorequestInfo(i,quest.coordinates)"/>
 							</div>
 						</div>
 					</div>
@@ -64,10 +66,10 @@ export default {
 				options: ['&#128175;', '&#10004;', '&#10060;'],
 				number: 0
 			},
-			cashDrops: [
+			quests: [
 				{
 					merchant: "Jollibee",
-					cashDropCount: "10",
+					questCount: "10",
 					price: "Mug",
 					phoneNumber: "###-###-####",
 					contactUrl: "www.facebook.com/merchant-contact",
@@ -75,13 +77,14 @@ export default {
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
 					radius: "\u2B55\uD83D\uDCAF",
 					coordinates: {
-						lat: 11.182940631107073,
-						lng: 125.00853961893749
-					}
+						lat: 11.17783410449158,
+						lng: 125.0017081909703
+					},
+					level: "upcoming",
 				},
 				{
 					merchant: "McDo",
-					cashDropCount: "14",
+					questCount: "14",
 					price: "Spaghetti",
 					phoneNumber: "###-###-####",
 					contactUrl: "www.facebook.com/merchant-contact",
@@ -89,13 +92,14 @@ export default {
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
 					radius: "\u2B55\uD83D\uDCAF",
 					coordinates: {
-						lat: 11.177852556218607,
-						lng: 125.0017115736064
-					}
+						lat: 11.176572907648463,
+						lng: 125.00093244003742
+					},
+					level: "direct"
 				},
 				{
 					merchant: "J & F Department Store Palo",
-					cashDropCount: "20",
+					questCount: "20",
 					price: "50% less to all items",
 					phoneNumber: "###-###-####",
 					contactUrl: "www.facebook.com/merchant-contact",
@@ -103,13 +107,14 @@ export default {
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
 					radius: "\u2B55\uD83D\uDCAF",
 					coordinates: {
-						lat: 11.18034797623956,
-						lng: 125.00271619971214
-					}
+						lat: 11.180325256142286,
+						lng: 125.00271409774162
+					},
+					level: "indirect"
 				},
 				{
 					merchant: "Seafoods & Ribs Warehouse",
-					cashDropCount: "20",
+					questCount: "20",
 					price: "50% less to all items",
 					phoneNumber: "###-###-####",
 					contactUrl: "www.facebook.com/merchant-contact",
@@ -117,21 +122,24 @@ export default {
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
 					radius: "\u2B55\uD83D\uDCAF",
 					coordinates: {
-						lat: 11.172544321838204,
-						lng: 124.99960748418974
-					}
+						lat: 11.172492400856424,
+						lng: 124.9996134948425
+					},
+					level: "direct"
 				}
 			]
 		}
 	},
 	methods: {
-		showMoreCashDropInfo (ref) {
+		showMorequestInfo (ref, coordinates) {
 			let classList = this.$refs[ref][0].classList
-			this.$refs[ref][0].classList.toggle('showMoreCashDropInfo')
+			this.$refs[ref][0].classList.toggle('showMorequestInfo')
 
-			classList.value.match(/showMoreCashDropInfo/gi) === null
+			classList.value.match(/showMorequestInfo/gi) === null
 			? this.$refs['btn-'+ref][0].label = 'Show more info'
 			: this.$refs['btn-'+ref][0].label = 'Hide other info'
+
+			this.$emit('moveToTheQuest', coordinates)
 		},
 		changeTier () {
 			this.purelyPeertier.number++
@@ -150,10 +158,10 @@ export default {
 </script>
 
 <style>
-.cashDropMoreInfo {
+.questMoreInfo {
 	display: none;
 }
-.showMoreCashDropInfo {
+.showMorequestInfo {
 	display: block;
 }
 </style>

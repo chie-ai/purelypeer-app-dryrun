@@ -11,7 +11,7 @@
 
 				<GmapCircle
 					v-if="pin.type === 'quest'"
-				    v-for="(pin, index) in markers"
+				    v-for="(pin, index) in quest"
 				    :key="index"
 				    :center="(pin.type !== 'quest' ? mapCoordinates : pin.coordinates)"
 				    :radius="(pin.type !== 'quest' ? 0 : pin.questRadius)"
@@ -19,7 +19,7 @@
 				</GmapCircle>
 
 				<GmapInfoWindow v-if="info.type === 'quest'"
-					v-for="(info, infoIndex) in markers"
+					v-for="(info, infoIndex) in quest"
 					:options="{
 								content: '<div>\
 											<p><strong>Quest Info</strong></p>\
@@ -43,7 +43,7 @@
 
 				<!-- <GmapInfoWindow :options="infoOptions" :position="mapCoordinates" :opened="infoWinOpen" @closeclick="infoWindow()"></GmapInfoWindow> -->
 
-				<GmapMarker ref="myMarker" v-for="(mark, markerIndex) in markers"
+				<GmapMarker ref="myMarker" v-for="(mark, markerIndex) in quest"
 					:icon="{
 							url: (mark.type !== 'quest' ? 'PurelyPeer-location-current-A.png'
 								: (mark.questStatus === 'active' ? (mark.level === 'upcoming' ? 'PurelyPeer-location-blue.png' : (mark.level === 'direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')),
@@ -55,7 +55,7 @@
 				    :position="google && new google.maps.LatLng((mark.type !== 'quest' ? mapCoordinates : mark.coordinates))" @click="toggleInfoWindow(markerIndex)" />
 
 			</GmapMap>
-			<!-- <p>{{ mapCoordinates.lat }} Latitude, {{ mapCoordinates.lng }}, Longitude</p> -->
+			<!-- <p>{{ mapCoordinates.lat }} Latitude, {{ mapCoordinates.lng }}, Longitude  new coordinates: {{ moveToTheQuestCoordinates }}</p> -->
 		</div>
 		<div class="adjust-map-height">
 			<button class="btn-google-maps-resizer" v-touch-pan.vertical.prevent.mouse="resizeMapHeight"><i class="mdi mdi-arrow-split-horizontal text-h4 resize-controller" ></i></button>
@@ -70,7 +70,7 @@ export default {
 	data () {
 		return {
 			zoomScale: 13, 
-		    markers: [
+		    quest: [
 		    	{
 		    		type: "user"
 		    	},
@@ -184,7 +184,8 @@ export default {
 			map: null,
 			activeIndex: 0
 		}
-	},		
+	},
+	props: ['moveToTheQuestCoor'],	
 	computed: {
 	    google: gmapApi,
 	    mapCoordinates () {
@@ -199,19 +200,23 @@ export default {
 	    		lat: this.map.getCenter().lat(),
 	    		lng: this.map.getCenter().lng()
 	    	}
+	    },
+	    moveToTheQuestCoordinates () {
+	    	console.log('coordinates updated')
+	    	return this.coordinates = this.moveToTheQuestCoor
 	    }
 	},
 	methods: {
 		removeWinInfo () {
-			this.markers[this.activeIndex].infoWinOpen = false
-			this.markers[this.activeIndex].radiusVisibility = false
+			this.quest[this.activeIndex].infoWinOpen = false
+			this.quest[this.activeIndex].radiusVisibility = false
 		},
 		toggleInfoWindow (infoIndex) {
 
-			this.activeIndex !== infoIndex ? this.markers[this.activeIndex].infoWinOpen = false : ''
-			this.activeIndex !== infoIndex ? this.markers[this.activeIndex].radiusVisibility = false : ''
-			this.markers[infoIndex].infoWinOpen = !this.markers[infoIndex].infoWinOpen
-			this.markers[infoIndex].radiusVisibility = !this.markers[infoIndex].radiusVisibility
+			this.activeIndex !== infoIndex ? this.quest[this.activeIndex].infoWinOpen = false : ''
+			this.activeIndex !== infoIndex ? this.quest[this.activeIndex].radiusVisibility = false : ''
+			this.quest[infoIndex].infoWinOpen = !this.quest[infoIndex].infoWinOpen
+			this.quest[infoIndex].radiusVisibility = !this.quest[infoIndex].radiusVisibility
 			this.activeIndex = infoIndex
 		},
 		resizeMapHeight ({ evt, ...info }) {
@@ -277,7 +282,7 @@ export default {
 	    	this.map = map
 			setTimeout(() => {
 				el2[0].firstChild.firstChild.prepend(el)
-			}, 2000)
+			}, 3000)
 	    })
 	}
 }

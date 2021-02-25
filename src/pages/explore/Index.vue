@@ -1,7 +1,7 @@
 <template>
 	<div class="row">
-		<ExploreMap />
-		<QuestList />
+		<ExploreMap :move-to-the-quest-coor="coordinates" />
+		<QuestList v-on:moveToTheQuest="hello" />
 	</div>
 </template>
 
@@ -10,9 +10,19 @@ import ExploreMap from '../../components/explore/ExploreMap.vue'
 import QuestList from '../../components/explore/QuestList.vue'
 
 export default {
+	data () {
+		return {
+			coordinates: null
+		}
+	},
 	components: {
 		ExploreMap,
 		QuestList
+	},
+	methods: {
+		hello (coordinates) {
+			this.coordinates = coordinates
+		}
 	}
 }
 </script>
