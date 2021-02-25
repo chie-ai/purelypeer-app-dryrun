@@ -10,6 +10,7 @@
 			>
 
 				<GmapCircle
+					v-if="pin.type === 'quest'"
 				    v-for="(pin, index) in markers"
 				    :key="index"
 				    :center="(pin.type !== 'quest' ? mapCoordinates : pin.coordinates)"
@@ -20,7 +21,14 @@
 
 				<GmapInfoWindow :options="infoOptions" :position="mapCoordinates" :opened="infoWinOpen" @closeclick="infoWinOpen=false"></GmapInfoWindow>
 
-				<GmapMarker ref="myMarker" v-for="(mark, indexMark) in markers" :icon="{url: (mark.type !== 'quest' ? 'PurelyPeer-location-current-A.png' : 'PurelyPeer-location-blue.png'), scaledSize: google && new google.maps.Size((mark.type !== 'quest' ? 80 : 30), (mark.type !== 'quest' ? 80 : 40)), anchor: google && new google.maps.Point(40, 54)}"
+				<GmapMarker ref="myMarker" v-for="(mark, indexMark) in markers"
+					:icon="{
+							url: (mark.type !== 'quest' ? 'PurelyPeer-location-current-A.png' : (mark.questStatus === 'active' ? 'PurelyPeer-location-blue.png' : 'PurelyPeer-icon-black.png')),
+
+							scaledSize: google && new google.maps.Size((mark.type !== 'quest' ? 80 : (mark.questStatus === 'active' ? 30 : 50)), (mark.type !== 'quest' ? 80 : (mark.questStatus === 'active' ? 40 : 50))),
+
+							anchor: google && new google.maps.Point((mark.type !== 'quest' ? 40 : (mark.questStatus === 'active' ? 1 : 12)), (mark.type !== 'quest' ? 54 : (mark.questStatus === 'active' ? 40 : 44)))
+							}"
 				    :position="google && new google.maps.LatLng((mark.type !== 'quest' ? mapCoordinates : mark.coordinates))" @click="toggleInfoWindow" />
 
 			</GmapMap>
@@ -53,11 +61,12 @@ export default {
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
 					radius: "\u2B55\uD83D\uDCAF",
 					coordinates: {
-						lat: 11.182940631107073,
-						lng: 125.00853961893749
+						lat: 11.17783410449158,
+						lng: 125.0017081909703
 					},
 					radius: 2800,
-					type: "quest"
+					type: "quest",
+					questStatus: "inactive"
 				},
 				{
 					merchant: "McDo",
@@ -69,11 +78,12 @@ export default {
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
 					radius: "\u2B55\uD83D\uDCAF",
 					coordinates: {
-						lat: 11.177852556218607,
-						lng: 125.0017115736064
+						lat: 11.176572907648463,
+						lng: 125.00093244003742
 					},
 					radius: 2800,
-					type: "quest"
+					type: "quest",
+					questStatus: "active"
 				},
 				{
 					merchant: "J & F Department Store Palo",
@@ -85,11 +95,12 @@ export default {
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
 					radius: "\u2B55\uD83D\uDCAF",
 					coordinates: {
-						lat: 11.18034797623956,
-						lng: 125.00271619971214
+						lat: 11.180325256142286,
+						lng: 125.00271409774162
 					},
 					radius: 2800,
-					type: "quest"
+					type: "quest",
+					questStatus: "active"
 				},
 				{
 					merchant: "Seafoods & Ribs Warehouse",
@@ -101,11 +112,12 @@ export default {
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
 					radius: "\u2B55\uD83D\uDCAF",
 					coordinates: {
-						lat: 11.172544321838204,
-						lng: 124.99960748418974
+						lat: 11.172492400856424,
+						lng: 124.9996134948425
 					},
 					radius: 2800,
-					type: "quest"
+					type: "quest",
+					questStatus: "inactive"
 				}
 		    ],
 			coordinates: {
@@ -114,9 +126,9 @@ export default {
 			},
 			infoOptions: {
 				content: "<p><strong>Sample Quest Info</strong></p>\
-							<p style='margin: 3px 0 3px 0'><strong>Quest Name: </strong> Trump Card Collection</p>\
-							<p style='margin: 3px 0 3px 0'><strong>Cashdrops Count: </strong> 10</p>\
-							<p style='margin: 3px 0 3px 0'><strong>PurelyPeer Tier: </strong> \u2764\uFE0F\uD83D\uDCAF</p>",
+							<p style='margin: 3px 0 3px 0'><strong>Quest Name: </strong>Trump Card Collection</p>\
+							<p style='margin: 3px 0 3px 0'><strong>Cashdrops Count: </strong>10</p>\
+							<p style='margin: 3px 0 3px 0'><strong>PurelyPeer Tier: </strong>\u2764\uFE0F\uD83D\uDCAF</p>",
 	            pixelOffset: {
 	              width: 0,
 	              height: -20
