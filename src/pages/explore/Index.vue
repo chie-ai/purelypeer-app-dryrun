@@ -1,7 +1,7 @@
 <template>
 	<div class="row">
-		<ExploreMap :move-to-the-quest-coor="coordinates" />
-		<QuestList v-on:moveToTheQuest="hello" />
+		<ExploreMap :move-to-the-quest-coordinates="coordinates" />
+		<QuestList v-on:moveToTheQuestCoordinates="questCoordinates" />
 	</div>
 </template>
 
@@ -20,7 +20,7 @@ export default {
 		QuestList
 	},
 	methods: {
-		hello (coordinates) {
+		questCoordinates (coordinates) {
 			this.coordinates = coordinates
 		}
 	}

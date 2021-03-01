@@ -6,7 +6,8 @@
 			   styles: mapCustomStyle.styles, draggableCursor: true, gestureHandling: 'greedy',
 			   zoomControl: false, mapTypeControl: false, scaleControl: false, streetViewControl: false,
 			   rotateControl: false, fullscreenControl: false, disableDefaultUI: false }"
-			   @center_changed="removeWinInfo" map-type-id="roadmap" class="map-layout"
+			   @center_changed="removeWindowInfo" map-type-id="roadmap" class="map-layout"
+			   @click="removeWindowInfo"
 			>
 
 				<GmapCircle
@@ -38,12 +39,12 @@
 					}"
 					:position="info.coordinates"
 					:opened="info.infoWinOpen"
-					@closeclick="toggleInfoWindow(infoIndex)">
+					@closeclick="toggleWindowInfo(infoIndex)">
 				</GmapInfoWindow>
 
 				<!-- <GmapInfoWindow :options="infoOptions" :position="mapCoordinates" :opened="infoWinOpen" @closeclick="infoWindow()"></GmapInfoWindow> -->
 
-				<GmapMarker ref="myMarker" v-for="(mark, markerIndex) in quest"
+				<GmapMarker v-for="(mark, markerIndex) in quest"
 					:icon="{
 							url: (mark.type !== 'quest' ? 'PurelyPeer-location-current-A.png'
 								: (mark.questStatus === 'active' ? (mark.level === 'upcoming' ? 'PurelyPeer-location-blue.png' : (mark.level === 'direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')),
@@ -52,10 +53,10 @@
 
 							anchor: google && new google.maps.Point((mark.type !== 'quest' ? 40 : (mark.questStatus === 'active' ? 1 : 12)), (mark.type !== 'quest' ? 54 : (mark.questStatus === 'active' ? 40 : 44)))
 							}"
-				    :position="google && new google.maps.LatLng((mark.type !== 'quest' ? mapCoordinates : mark.coordinates))" @click="toggleInfoWindow(markerIndex)" />
+				    :position="google && new google.maps.LatLng((mark.type !== 'quest' ? mapCoordinates : mark.coordinates))" @click="toggleWindowInfo(markerIndex)" />
 
 			</GmapMap>
-			<!-- <p>{{ mapCoordinates.lat }} Latitude, {{ mapCoordinates.lng }}, Longitude  new coordinates: {{ moveToTheQuestCoordinates }}</p> -->
+			<!-- <p>{{ mapCoordinates.lat }} Latitude, {{ mapCoordinates.lng }}, Longitude</p> -->
 		</div>
 		<div class="adjust-map-height">
 			<button class="btn-google-maps-resizer" v-touch-pan.vertical.prevent.mouse="resizeMapHeight"><i class="mdi mdi-arrow-split-horizontal text-h4 resize-controller" ></i></button>
@@ -185,7 +186,7 @@ export default {
 			activeIndex: 0
 		}
 	},
-	props: ['moveToTheQuestCoor'],	
+	props: ['moveToTheQuestCoordinates'],	
 	computed: {
 	    google: gmapApi,
 	    mapCoordinates () {
@@ -201,18 +202,19 @@ export default {
 	    		lng: this.map.getCenter().lng()
 	    	}
 	    },
+	},
+	watch: {
 	    moveToTheQuestCoordinates () {
-	    	console.log('coordinates updated')
-	    	return this.coordinates = this.moveToTheQuestCoor
+	    	this.removeWindowInfo()
+	    	this.coordinates = this.moveToTheQuestCoordinates
 	    }
 	},
 	methods: {
-		removeWinInfo () {
+		removeWindowInfo () {
 			this.quest[this.activeIndex].infoWinOpen = false
 			this.quest[this.activeIndex].radiusVisibility = false
 		},
-		toggleInfoWindow (infoIndex) {
-
+		toggleWindowInfo (infoIndex) {
 			this.activeIndex !== infoIndex ? this.quest[this.activeIndex].infoWinOpen = false : ''
 			this.activeIndex !== infoIndex ? this.quest[this.activeIndex].radiusVisibility = false : ''
 			this.quest[infoIndex].infoWinOpen = !this.quest[infoIndex].infoWinOpen
@@ -220,10 +222,12 @@ export default {
 			this.activeIndex = infoIndex
 		},
 		resizeMapHeight ({ evt, ...info }) {
-			let map = document.getElementsByClassName('map-layout')
+			let map = this.$refs.mapRef.$el
+
+			console.log('Map Promise: ', this.$refs.mapRef)
 
 		    if(this.counter == 0) {
-				this.mapHeight = parseInt(document.defaultView.getComputedStyle(map[0]).height, 10);
+				this.mapHeight = parseInt(document.defaultView.getComputedStyle(map).height, 10);
 		    	this.startY = (evt.type !== 'mousemove' ? Math.round(evt.changedTouches[0].screenY) : Math.round(evt.clientY))
 		    }
 		    if (!info.isFinal) {
@@ -234,10 +238,10 @@ export default {
 			this.doResize(event)
 	    },
 		doResize (e) {
-			let map = document.getElementsByClassName('map-layout')
+			let map = this.$refs.mapRef
 			let newHeight = this.mapHeight + (e.type !== 'mousemove' ? e.changedTouches[0].screenY : e.clientY) - this.startY
 
-			newHeight >= 334 ? map[0].style.height = newHeight + 'px' : ''
+			newHeight >= 334 ? map.$el.style.height = newHeight + 'px' : ''
 		},
 	},
 	created () {

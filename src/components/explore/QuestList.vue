@@ -139,7 +139,7 @@ export default {
 			? this.$refs['btn-'+ref][0].label = 'Show more info'
 			: this.$refs['btn-'+ref][0].label = 'Hide other info'
 
-			this.$emit('moveToTheQuest', coordinates)
+			this.$emit('moveToTheQuestCoordinates', coordinates)
 		},
 		changeTier () {
 			this.purelyPeertier.number++
