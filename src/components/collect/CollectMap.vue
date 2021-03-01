@@ -1,5 +1,5 @@
 <template>
-	<div id="explore-map" class="row">
+	<div id="collect-map" class="row">
 		<div class="col-12" style="position: relative;">
 			<GmapMap ref="mapRef" :center="coordinates" :zoom="zoomScale"
 			  :options="{
@@ -156,11 +156,11 @@ export default {
 					},
 					questRadius: 1200,
 					type: "quest",
-					questStatus: "inactive",
-					level: 'direct',
+					questStatus: "active",
+					level: 'indirect',
 					infoWinOpen: false,
 					radiusVisibility: false
-				}
+				},
 		    ],
 			coordinates: {
 				lat: 0,
@@ -189,7 +189,6 @@ export default {
 			isLocationShared: false
 		}
 	},
-	props: ['moveToTheQuestCoordinates'],	
 	computed: {
 	    google: gmapApi,
 	    mapCoordinates () {
@@ -205,12 +204,6 @@ export default {
 	    		lng: this.map.getCenter().lng()
 	    	}
 	    },
-	},
-	watch: {
-	    moveToTheQuestCoordinates () {
-	    	this.removeWindowInfo()
-	    	this.coordinates = this.moveToTheQuestCoordinates
-	    }
 	},
 	methods: {
 		removeWindowInfo () {
@@ -251,7 +244,10 @@ export default {
 			this.coordinates = coordinates
 			this.isLocationShared = true
 		})
-		.catch(error => console.log('Unable to retreive your location: ', error))
+		.catch(function(error) {
+			// this.$router.push({ name: '/' })
+			console.log('Unable to retreive your location: ', error)
+		})
 	},
 	mounted () {
 		let el = document.createElement('div')

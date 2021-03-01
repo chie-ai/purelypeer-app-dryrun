@@ -1,18 +1,28 @@
 <template>
 	<div class="row">
-		<ExploreMap />
-		<QuestList />
+		<CashDropMap :change-quest-radius="radius" />
+		<CashDrop v-on:changeQuestRadius="changeQuestRadius" />
 	</div>
 </template>
 
 <script>
-import ExploreMap from '../../components/cashdrop/CashDropMap.vue'
-import QuestList from '../../components/cashdrop/CashDropForm.vue'
+import CashDropMap from '../../components/cashdrop/CashDropMap.vue'
+import CashDrop from '../../components/cashdrop/CashDropForm.vue'
 
 export default {
+	data () {
+		return {
+			radius: 1000
+		}
+	},
 	components: {
-		ExploreMap,
-		QuestList
+		CashDropMap,
+		CashDrop
+	},
+	methods: {
+		changeQuestRadius (radius) {
+			this.radius = radius
+		}
 	}
 }
 </script>

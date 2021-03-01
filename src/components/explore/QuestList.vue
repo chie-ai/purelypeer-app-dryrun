@@ -5,14 +5,14 @@
 
 			<div class="quest-main q-mx-md">
 				<div class="column quest-body">
-					<div class="col-12 q-py-md quest-list" v-for="(quest, i) in quests" :key="i">
+					<div class="col-12 q-py-md quest-list" v-for="(quest, questIndex) in quests" :key="questIndex" @click="showQuestCoordinatesOnMap(quest.coordinates)">
 						<div class="row">
 							<div class="col-12 q-px-sm">
 								<p class="q-mb-xs"><span class="text-weight-bold">Merchant Name: </span><span class="text-subtitle2">{{ quest.merchant }}</span></p>
 								<p class="q-mb-xs"><span class="text-weight-bold">Cash Drop Count: </span><span class="text-subtitle2">{{ quest.questCount }}</span></p>
 								<p class="q-mb-xs"><span class="text-weight-bold">PurelyPeer Tier: </span><span>{{ quest.tier }}</span></p>
 
-								<div class="questMoreInfo" :ref="i">
+								<div class="questMoreInfo" :ref="questIndex">
 									<p class="q-mb-xs"><span class="text-weight-bold">Level: </span><span>{{ (quest.level).charAt(0).toUpperCase() + (quest.level).slice(1) }}</span></p>
 									<p class="q-mb-xs"><span class="text-weight-bold">Radius: </span><span>{{ quest.radius }}</span></p>
 									<p class="q-mb-xs"><span class="text-weight-bold">Phone Number: </span><span class="text-subtitle2">{{ quest.phoneNumber }}</span></p>
@@ -22,7 +22,7 @@
 								</div>
 							</div>
 							<div class="col-12 q-px-sm q-mt-sm">
-								<q-btn size="sm" color="teal" :ref="'btn-'+i" label="Show more info" @click="showMorequestInfo(i,quest.coordinates)"/>
+								<q-btn size="sm" color="teal" :ref="'btn-'+questIndex" label="Show more info" @click="showMorequestInfo(questIndex)"/>
 							</div>
 						</div>
 					</div>
@@ -131,15 +131,16 @@ export default {
 		}
 	},
 	methods: {
-		showMorequestInfo (ref, coordinates) {
+		showQuestCoordinatesOnMap (coordinates) {
+			this.$emit('moveToTheQuestCoordinates', coordinates)
+		},
+		showMorequestInfo (ref) {
 			let classList = this.$refs[ref][0].classList
 			this.$refs[ref][0].classList.toggle('showMorequestInfo')
 
 			classList.value.match(/showMorequestInfo/gi) === null
 			? this.$refs['btn-'+ref][0].label = 'Show more info'
 			: this.$refs['btn-'+ref][0].label = 'Hide other info'
-
-			this.$emit('moveToTheQuestCoordinates', coordinates)
 		},
 		changeTier () {
 			this.purelyPeertier.number++

@@ -3,7 +3,6 @@
 		<div class="col-12 quest-container q-mt-lg">
 			<h5 class="text-center q-mt-md q-mb-sm">Quest Form</h5>
 
-
 			<div class="q-mx-md q-mt-md">
 				<div class="row justify-center q-mb-md">
 					<div class="col-11">
@@ -16,7 +15,8 @@
 							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="tierModel" :options="tier.options" label="PurelyPeer Tier" />
 							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="presenceModel" :options="presence.options" label="Physical Presence" />
 							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="radiusModel" :options="radius.options" label="Quest Radius" />
-							<q-btn label="Submit" outline type="submit" class="full-width" color="grey-6"/>
+							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="cashDropCountModel" :options="cashDropCount" label="Cash Drop Count" />
+							<q-btn :label="'Cash Drop \uD83D\uDCA7'" outline type="submit" class="full-width" color="grey-6"/>
 						</q-form>
 					</div>
 				</div>
@@ -47,9 +47,47 @@ export default {
 				options: [
 					'\u2B55\uD83D\uDCAF', '\uD83D\uDD7A\u267F\uD83D\uDC83', '\uD83C\uDFD9\uFE0F', '\uD83D\uDEE3\uFE0F', '\uD83C\uDF10'
 				]
-			}
+			},
+			cashDropCountModel: null,
+			cashDropCount: []
 		}
 	},
+	watch: {
+		radiusModel (newRadius, oldRadius) {
+			this.changeRadius()
+		}
+	},
+	methods: {
+		changeRadius () {
+			let radius = 1000
+			if(this.radius.options.indexOf(this.radiusModel) === 0)
+			{
+				radius = 1000
+			}
+			else if (this.radius.options.indexOf(this.radiusModel) === 1)
+			{
+				radius = 1500
+			}
+			else if (this.radius.options.indexOf(this.radiusModel) === 2)
+			{
+				radius = 2000
+			}
+			else if (this.radius.options.indexOf(this.radiusModel) === 3)
+			{
+				radius = 2500
+			}
+			else
+			{
+				radius = 3000
+			}
+			this.$emit('changeQuestRadius', radius)
+		}
+	},
+	created () {
+		for (let i=10;i<=100;i++) {
+			this.cashDropCount.push(i)
+		}
+	}
 }
 </script>
 

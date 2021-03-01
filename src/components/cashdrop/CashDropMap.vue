@@ -8,7 +8,17 @@
 			   rotateControl: false, fullscreenControl: false, disableDefaultUI: false }"
 			  map-type-id="roadmap" class="map-layout"
 			>
-				<GmapMarker ref="myMarker" :icon="{url: 'PurelyPeer-location-current-A.png', scaledSize: google && new google.maps.Size(80, 80), anchor: google && new google.maps.Point(40, 60)}"
+				<GmapCircle
+				    :center="mapCoordinates"
+				    :radius="questRadius"
+				    :options="{ strokeColor: '#0AC18E', strokeOpacity: 0.5, strokeWeight: 2, fillColor:'white', fillOpacity: 0 }">
+				</GmapCircle>
+
+				<GmapMarker ref="myMarker"
+					:icon="{
+							url: markerIcon,
+							scaledSize: google && new google.maps.Size(50, 50),
+							anchor: google && new google.maps.Point(12, 44)}"
 				    :position="google && new google.maps.LatLng(mapCoordinates)" />
 			</GmapMap>
 		</div>
@@ -44,9 +54,13 @@ export default {
 				    { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#2980B9" }] },
 				]
 			},
-			map: null
+			map: null,
+			isLocationShared: false,
+			questRadius: 1000,
+			markerIcon: 'PurelyPeer-icon-black.png'
 		}
 	},
+	props: ['changeQuestRadius'],
 	computed: {
 	    google: gmapApi,
 	    mapCoordinates () {
@@ -64,12 +78,17 @@ export default {
 	    	}
 	    }
 	},
+	watch: {
+		changeQuestRadius (newRadius, oldRadius) {
+			this.questRadius = this.changeQuestRadius
+		}
+	},
 	methods: {
 		resizeMapHeight ({ evt, ...info }) {
-			let map = document.getElementsByClassName('map-layout')
+			let map = this.$refs.mapRef.$el
 
 		    if(this.counter == 0) {
-				this.mapHeight = parseInt(document.defaultView.getComputedStyle(map[0]).height, 10);
+				this.mapHeight = parseInt(document.defaultView.getComputedStyle(map).height, 10);
 		    	this.startY = (evt.type !== 'mousemove' ? Math.round(evt.changedTouches[0].screenY) : Math.round(evt.clientY))
 		    }
 		    if (!info.isFinal) {
@@ -80,16 +99,17 @@ export default {
 			this.doResize(event)
 	    },
 		doResize (e) {
-			let map = document.getElementsByClassName('map-layout')
+			let map = this.$refs.mapRef
 			let newHeight = this.mapHeight + (e.type !== 'mousemove' ? e.changedTouches[0].screenY : e.clientY) - this.startY
 
-			newHeight >= 334 ? map[0].style.height = newHeight + 'px' : ''
+			newHeight >= 334 ? map.$el.style.height = newHeight + 'px' : ''
 		},
 	},
 	created () {
 		this.$getLocation({})
 		.then(coordinates => {
 			this.coordinates = coordinates
+			this.isLocationShared = true
 		})
 		.catch(error => console.log(error))
 	},
@@ -140,7 +160,7 @@ export default {
 	text-align: center;
 	bottom: -17px;
 	width: 100%;
-	z-index: 30 !important;
+	z-index: 2 !important;
 }
 .resize-controller {
 	cursor: pointer;
