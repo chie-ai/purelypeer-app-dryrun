@@ -57,10 +57,11 @@ export default {
 			map: null,
 			isLocationShared: false,
 			questRadius: 1000,
+			questTier: 'inactive',
 			markerIcon: 'PurelyPeer-icon-black.png'
 		}
 	},
-	props: ['changeQuestRadius'],
+	props: ['changeQuestRadius','changeQuestTier'],
 	computed: {
 	    google: gmapApi,
 	    mapCoordinates () {
@@ -81,6 +82,19 @@ export default {
 	watch: {
 		changeQuestRadius (newRadius, oldRadius) {
 			this.questRadius = this.changeQuestRadius
+		},
+		changeQuestTier (newTier, oldTier) {
+			if (this.changeQuestTier === 'uknown') {
+				this.markerIcon = 'PurelyPeer-location-green.png'
+			} else if (this.changeQuestTier === 'direct') {
+				this.markerIcon = 'PurelyPeer-location-green.png'
+			} else if (this.changeQuestTier === 'indirect') {
+				this.markerIcon = 'PurelyPeer-location-orange.png'
+			} else if (this.changeQuestTier === 'upcoming') {
+				this.markerIcon = 'PurelyPeer-location-blue.png'
+			} else {
+				this.markerIcon = 'PurelyPeer-icon-black.png'
+			}
 		}
 	},
 	methods: {

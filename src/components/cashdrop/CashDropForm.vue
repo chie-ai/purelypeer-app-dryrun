@@ -55,29 +55,47 @@ export default {
 	watch: {
 		radiusModel (newRadius, oldRadius) {
 			this.changeRadius()
+		},
+		tierModel (newTier, oldTier) {
+			this.changeTier()
 		}
 	},
 	methods: {
+		changeTier () {
+			let tier = null
+			if(this.tier.options.indexOf(this.tierModel) === 0) {
+				tier = 'unknown'
+			}
+			else if (this.tier.options.indexOf(this.tierModel) === 1) {
+				tier = 'direct'
+			}
+			else if (this.tier.options.indexOf(this.tierModel) === 2) {
+				tier = 'indirect'
+			}
+			else if (this.tier.options.indexOf(this.tierModel) === 3) {
+				tier = 'upcoming'
+			}
+			else {
+				tier = 'inactive'
+			}
+			this.$emit('changeQuestTier', tier)
+
+		},
 		changeRadius () {
 			let radius = 1000
-			if(this.radius.options.indexOf(this.radiusModel) === 0)
-			{
+			if(this.radius.options.indexOf(this.radiusModel) === 0) {
 				radius = 1000
 			}
-			else if (this.radius.options.indexOf(this.radiusModel) === 1)
-			{
+			else if (this.radius.options.indexOf(this.radiusModel) === 1) {
 				radius = 1500
 			}
-			else if (this.radius.options.indexOf(this.radiusModel) === 2)
-			{
+			else if (this.radius.options.indexOf(this.radiusModel) === 2) {
 				radius = 2000
 			}
-			else if (this.radius.options.indexOf(this.radiusModel) === 3)
-			{
+			else if (this.radius.options.indexOf(this.radiusModel) === 3) {
 				radius = 2500
 			}
-			else
-			{
+			else {
 				radius = 3000
 			}
 			this.$emit('changeQuestRadius', radius)
