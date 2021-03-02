@@ -33,19 +33,19 @@ export default {
 			tierModel: null,
 			tier: {
 			    options: [
-			        '\u2764\uFE0F\uD83D\uDCAF', '\uD83D\uDC9A', '\uD83E\uDDE1', '\uD83D\uDC99', '\uD83D\uDDA4'
+			        '\uD83D\uDC9A', '\uD83E\uDDE1', '\uD83D\uDC99', '\uD83D\uDDA4'
 			    ]
 			},
 			presenceModel: null,
 			presence: {
 				options: [
-					'\uD83E\uDDF1\uD83D\uDCAF', '\uD83E\uDDF1\u2714\uFE0F', '\uD83E\uDDF1\u274C'
+					'\uD83E\uDDF1\u2714\uFE0F', '\uD83E\uDDF1\u274C'
 				]
 			},
 			radiusModel: null,
 			radius: {
 				options: [
-					'\u2B55\uD83D\uDCAF', '\uD83D\uDD7A\u267F\uD83D\uDC83', '\uD83C\uDFD9\uFE0F', '\uD83D\uDEE3\uFE0F', '\uD83C\uDF10'
+					'\uD83D\uDD7A\u267F\uD83D\uDC83', '\uD83C\uDFD9\uFE0F', '\uD83D\uDEE3\uFE0F', '\uD83C\uDF10'
 				]
 			},
 			cashDropCountModel: null,
@@ -62,27 +62,29 @@ export default {
 	},
 	methods: {
 		changeTier () {
-			let tier = null
-			if(this.tier.options.indexOf(this.tierModel) === 0) {
-				tier = 'unknown'
-			}
-			else if (this.tier.options.indexOf(this.tierModel) === 1) {
+			let tierIcon = 'PurelyPeer-icon-black.png'
+			let tier = 'inactive'
+			if (this.tier.options.indexOf(this.tierModel) === 0) {
+				tierIcon = 'PurelyPeer-location-green.png'
 				tier = 'direct'
 			}
-			else if (this.tier.options.indexOf(this.tierModel) === 2) {
+			else if (this.tier.options.indexOf(this.tierModel) === 1) {
+				tierIcon = 'PurelyPeer-location-orange.png'
 				tier = 'indirect'
 			}
-			else if (this.tier.options.indexOf(this.tierModel) === 3) {
+			else if (this.tier.options.indexOf(this.tierModel) === 2) {
+				tierIcon = 'PurelyPeer-location-blue.png'
 				tier = 'upcoming'
 			}
-			else {
-				tier = 'inactive'
+			let tierObject = {
+				tierIcon,
+				tier
 			}
-			this.$emit('changeQuestTier', tier)
+			this.$emit('changeQuestTier', tierObject)
 
 		},
 		changeRadius () {
-			let radius = 1000
+			let radius = 3000
 			if(this.radius.options.indexOf(this.radiusModel) === 0) {
 				radius = 1000
 			}
@@ -94,9 +96,6 @@ export default {
 			}
 			else if (this.radius.options.indexOf(this.radiusModel) === 3) {
 				radius = 2500
-			}
-			else {
-				radius = 3000
 			}
 			this.$emit('changeQuestRadius', radius)
 		}

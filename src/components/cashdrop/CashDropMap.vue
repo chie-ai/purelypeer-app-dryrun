@@ -17,8 +17,8 @@
 				<GmapMarker ref="myMarker"
 					:icon="{
 							url: markerIcon,
-							scaledSize: google && new google.maps.Size(50, 50),
-							anchor: google && new google.maps.Point(12, 44)}"
+							scaledSize: google && new google.maps.Size((tierVariation !== 'inactive' ? 30 : 50), (tierVariation !== 'inactive' ? 40 : 51)),
+							anchor: google && new google.maps.Point((tierVariation !== 'inactive' ? 2 : 12), (tierVariation !== 'inactive' ? 39 : 45))}"
 				    :position="google && new google.maps.LatLng(mapCoordinates)" />
 			</GmapMap>
 		</div>
@@ -58,7 +58,8 @@ export default {
 			isLocationShared: false,
 			questRadius: 1000,
 			questTier: 'inactive',
-			markerIcon: 'PurelyPeer-icon-black.png'
+			markerIcon: 'PurelyPeer-icon-black.png',
+			tierVariation: 'inactive'
 		}
 	},
 	props: ['changeQuestRadius','changeQuestTier'],
@@ -81,20 +82,11 @@ export default {
 	},
 	watch: {
 		changeQuestRadius (newRadius, oldRadius) {
-			this.questRadius = this.changeQuestRadius
+			this.questRadius = newRadius
 		},
 		changeQuestTier (newTier, oldTier) {
-			if (this.changeQuestTier === 'uknown') {
-				this.markerIcon = 'PurelyPeer-location-green.png'
-			} else if (this.changeQuestTier === 'direct') {
-				this.markerIcon = 'PurelyPeer-location-green.png'
-			} else if (this.changeQuestTier === 'indirect') {
-				this.markerIcon = 'PurelyPeer-location-orange.png'
-			} else if (this.changeQuestTier === 'upcoming') {
-				this.markerIcon = 'PurelyPeer-location-blue.png'
-			} else {
-				this.markerIcon = 'PurelyPeer-icon-black.png'
-			}
+			this.markerIcon = newTier.tierIcon
+			this.tierVariation = newTier.tier
 		}
 	},
 	methods: {
