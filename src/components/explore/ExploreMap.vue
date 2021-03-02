@@ -57,6 +57,13 @@
 				    :visible="mark.type === 'quest' ? true : isLocationShared ? true : false"
 				    @click="toggleWindowInfo(markerIndex)" />
 
+				<GmapMarker ref="myMarker"
+					:icon="{
+							url: 'PurelyPeer-location-current-B.png',
+							scaledSize: google && new google.maps.Size(40, 40),
+							anchor: google && new google.maps.Point(40, 54)}"
+				    :position="google && new google.maps.LatLng(11.1584, 124.9919)" />
+
 			</GmapMap>
 			<!-- <p>{{ mapCoordinates.lat }} Latitude, {{ mapCoordinates.lng }}, Longitude</p> -->
 		</div>

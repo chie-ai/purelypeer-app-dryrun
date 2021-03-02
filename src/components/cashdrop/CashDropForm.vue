@@ -6,16 +6,25 @@
 			<div class="q-mx-md q-mt-md">
 				<div class="row justify-center q-mb-md">
 					<div class="col-11">
-						<q-form
-					      class="q-gutter-y-sm"
-					    >
-							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Merchant Name" />
-							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Phone number" />
-							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Contact URL" />
-							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="tierModel" :options="tier.options" label="PurelyPeer Tier" />
-							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="presenceModel" :options="presence.options" label="Physical Presence" />
-							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="radiusModel" :options="radius.options" label="Quest Radius" />
-							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="cashDropCountModel" :options="cashDropCount" label="Cash Drop Count" />
+						<q-form ref="questForm" class="q-gutter-y-sm" action="https://some-url.com" method="post" @submit="onSubmitQuest" >
+							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Merchant Name" v-model="merchantName"
+								:rules="[val => !!val || 'Merchant name is required']" />
+							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Phone number" v-model="phoneNumber"
+								:rules="[val => !!val || 'Phone number is required']" />
+							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Contact URL" v-model="contactUrl"
+								:rules="[val => !!val || 'Contact URL is required']" />
+							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="tierModel"
+								:options="tier.options" label="PurelyPeer Tier"
+								:rules="[val => !!val || 'PurelyPeer tier is required']" />
+							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="presenceModel"
+								:options="presence.options" label="Physical Presence"
+								:rules="[val => !!val || 'Physical presence is required']" />
+							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="radiusModel"
+								:options="radius.options" label="Quest Radius"
+								:rules="[val => !!val || 'Quest radius is required']" />
+							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="cashDropCountModel"
+								:options="cashDropCount" label="Cash Drop Count"
+								:rules="[val => !!val || 'Cash drop count is required']" />
 							<q-btn :label="'Cash Drop \uD83D\uDCA7'" outline type="submit" class="full-width" color="grey-6"/>
 						</q-form>
 					</div>
@@ -30,6 +39,9 @@
 export default {
 	data() {
 		return {
+			merchantName: null,
+			phoneNumber: null,
+			contactUrl: null,
 			tierModel: null,
 			tier: {
 			    options: [
@@ -61,6 +73,36 @@ export default {
 		}
 	},
 	methods: {
+		onSubmitQuest (evt) {
+			this.$refs.questForm.validate().then(success => {
+				if (success) {
+					// console.log('@submit - do something here', evt)
+					let questCreate = {
+						user: '76f62a58-5404-486d-9afc-07bded328704',
+						token: '-',
+						name: 'Merchant',
+						phone_no: '09934222342',
+						contact_url: 'www.gmail.com',
+						memo: null,
+						acceptance_tier: 10,
+						coor: [ 11.1584,124.9919 ],
+						radius: 1500,
+						total_cashdrops: 10,
+						amount: 1500,
+						address: 'bitcoincash:pp8skudq3x5hzw8ew7vzsw8tn4k8wxsqsv0lt0mf3g'
+					}
+					this.$axios.post('https://staging.purelypeer.cash/api/quests/', questCreate)
+					.then(response => {
+						console.log('Success :', response)
+					})
+					.catch(error => console.log('Error: ', error))
+				}
+				else {
+					// oh no, user has filled in
+					// at least one invalid value
+				}
+			})
+		},
 		changeTier () {
 			let tierIcon = 'PurelyPeer-icon-black.png'
 			let tier = 'inactive'
@@ -104,6 +146,26 @@ export default {
 		for (let i=10;i<=100;i++) {
 			this.cashDropCount.push(i)
 		}
+
+		// let questCreate = {
+		// 	user: '76f62a58-5404-486d-9afc-07bded328704',
+		// 	token: '-',
+		// 	name: 'Merchant',
+		// 	phone_no: '09934222342',
+		// 	contact_url: 'www.gmail.com',
+		// 	memo: null,
+		// 	acceptance_tier: 10,
+		// 	coor: [ 11.1584, 124.9919 ],
+		// 	radius: 1500,
+		// 	total_cashdrops: 10,
+		// 	amount: 1500,
+		// 	address: 'bitcoincash:pp8skudq3x5hzw8ew7vzsw8tn4k8wxsqsv0lt0mf3g'
+		// }
+		// this.$axios.post('https://staging.purelypeer.cash/api/quests/', questCreate)
+		// .then(response => {
+		// 	console.log('Success :', response)
+		// })
+		// .catch(error => console.log('Error: ', error))
 	}
 }
 </script>

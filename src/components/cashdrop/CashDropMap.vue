@@ -18,7 +18,7 @@
 					:icon="{
 							url: markerIcon,
 							scaledSize: google && new google.maps.Size((tierVariation !== 'inactive' ? 30 : 50), (tierVariation !== 'inactive' ? 40 : 51)),
-							anchor: google && new google.maps.Point((tierVariation !== 'inactive' ? 2 : 12), (tierVariation !== 'inactive' ? 39 : 45))}"
+							anchor: google && new google.maps.Point((tierVariation !== 'inactive' ? 2 : 12), (tierVariation !== 'inactive' ? 39 : 46))}"
 				    :position="google && new google.maps.LatLng(mapCoordinates)" />
 			</GmapMap>
 		</div>
