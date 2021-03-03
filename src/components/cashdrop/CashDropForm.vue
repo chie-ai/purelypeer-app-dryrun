@@ -7,11 +7,12 @@
 				<div class="row justify-center q-mb-md">
 					<div class="col-11">
 						<q-form ref="questForm" class="q-gutter-y-sm" action="https://some-url.com" method="post" @submit="onSubmitQuest" >
-							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Merchant Name" v-model="merchantName"
+							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Merchant Name" type="text" v-model="merchantName"
 								:rules="[val => !!val || 'Merchant name is required']" />
-							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Phone number" v-model="phoneNumber"
-								:rules="[val => !!val || 'Phone number is required']" />
-							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Contact URL" v-model="contactUrl"
+							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Phone number" type="number" v-model="phoneNumber"
+								:rules="[val => !!val || 'Phone number is required', val => val.length == 11 || 'Phone number must be valid',]"
+								mask="(###) #### - ####" fill-mask unmasked-value />
+							<q-input color="grey-5" :dense="true" bg-color="white" outlined label="Contact URL" type="url" v-model="contactUrl"
 								:rules="[val => !!val || 'Contact URL is required']" />
 							<q-select outlined color="grey-5" :dense="true" bg-color="white" v-model="tierModel"
 								:options="tier.options" label="PurelyPeer Tier"
@@ -61,9 +62,15 @@ export default {
 				]
 			},
 			cashDropCountModel: null,
-			cashDropCount: []
+			cashDropCount: [],
+			cashDropFormModels: {
+				tier: null,
+				radius: null
+			}
+
 		}
 	},
+	props: ['questCoordinates'],
 	watch: {
 		radiusModel (newRadius, oldRadius) {
 			this.changeRadius()
@@ -74,23 +81,32 @@ export default {
 	},
 	methods: {
 		onSubmitQuest (evt) {
+
 			this.$refs.questForm.validate().then(success => {
 				if (success) {
-					// console.log('@submit - do something here', evt)
-					let questCreate = {
-						user: '76f62a58-5404-486d-9afc-07bded328704',
-						token: '-',
-						name: 'Merchant',
-						phone_no: '09934222342',
-						contact_url: 'www.gmail.com',
-						memo: null,
-						acceptance_tier: 10,
-						coor: [ 11.1584,124.9919 ],
-						radius: 1500,
-						total_cashdrops: 10,
-						amount: 1500,
-						address: 'bitcoincash:pp8skudq3x5hzw8ew7vzsw8tn4k8wxsqsv0lt0mf3g'
+					let coordinates = []
+					for (let i=0; Object.keys(this.questCoordinates).length>i; i++) {
+						coordinates.push(Object.values(this.questCoordinates)[i])
 					}
+
+					let questCreate = {
+						"user": "c55303c0-9da3-4152-8eee-48f8acb28d69",
+						"token": "-",
+						"name": this.merchantName,
+						"phone_no": "+63"+(this.phoneNumber).slice(1),
+						"contact_url": "https://www.facebook.com/LEYECOIII/",
+						"memo": "string",
+						"acceptance_tier": this.cashDropFormModels.tier,
+						"coors": coordinates,
+						"radius": this.cashDropFormModels.radius,
+						"total_cashdrops": this.cashDropCountModel,
+						"amount": 3.0,
+						"payment_address": "bitcoincash:pp8skudq3x5hzw8ew7vzsw8tn4k8wxsqsv0lt0mf3g",
+						"pubkey": "dddddddd"
+					}
+
+					// console.log('Quest create: ', questCreate)
+
 					this.$axios.post('https://staging.purelypeer.cash/api/quests/', questCreate)
 					.then(response => {
 						console.log('Success :', response)
@@ -106,17 +122,24 @@ export default {
 		changeTier () {
 			let tierIcon = 'PurelyPeer-icon-black.png'
 			let tier = 'inactive'
+			this.cashDropFormModels.tier = 'Inactive'
 			if (this.tier.options.indexOf(this.tierModel) === 0) {
 				tierIcon = 'PurelyPeer-location-green.png'
 				tier = 'direct'
+
+				this.cashDropFormModels.tier = 'Direct'
 			}
 			else if (this.tier.options.indexOf(this.tierModel) === 1) {
 				tierIcon = 'PurelyPeer-location-orange.png'
 				tier = 'indirect'
+
+				this.cashDropFormModels.tier = 'Indirect'
 			}
 			else if (this.tier.options.indexOf(this.tierModel) === 2) {
 				tierIcon = 'PurelyPeer-location-blue.png'
 				tier = 'upcoming'
+
+				this.cashDropFormModels.tier = 'Upcoming'
 			}
 			let tierObject = {
 				tierIcon,
@@ -126,18 +149,22 @@ export default {
 
 		},
 		changeRadius () {
-			let radius = 3000
+			let radius = 1500000
+			this.cashDropFormModels.radius = radius
 			if(this.radius.options.indexOf(this.radiusModel) === 0) {
-				radius = 1000
+				radius = 1500
+
+				this.cashDropFormModels.radius = radius
 			}
 			else if (this.radius.options.indexOf(this.radiusModel) === 1) {
-				radius = 1500
+				radius = 15000
+
+				this.cashDropFormModels.radius = radius
 			}
 			else if (this.radius.options.indexOf(this.radiusModel) === 2) {
-				radius = 2000
-			}
-			else if (this.radius.options.indexOf(this.radiusModel) === 3) {
-				radius = 2500
+				radius = 150000
+
+				this.cashDropFormModels.radius = radius
 			}
 			this.$emit('changeQuestRadius', radius)
 		}
@@ -146,26 +173,6 @@ export default {
 		for (let i=10;i<=100;i++) {
 			this.cashDropCount.push(i)
 		}
-
-		// let questCreate = {
-		// 	user: '76f62a58-5404-486d-9afc-07bded328704',
-		// 	token: '-',
-		// 	name: 'Merchant',
-		// 	phone_no: '09934222342',
-		// 	contact_url: 'www.gmail.com',
-		// 	memo: null,
-		// 	acceptance_tier: 10,
-		// 	coor: [ 11.1584, 124.9919 ],
-		// 	radius: 1500,
-		// 	total_cashdrops: 10,
-		// 	amount: 1500,
-		// 	address: 'bitcoincash:pp8skudq3x5hzw8ew7vzsw8tn4k8wxsqsv0lt0mf3g'
-		// }
-		// this.$axios.post('https://staging.purelypeer.cash/api/quests/', questCreate)
-		// .then(response => {
-		// 	console.log('Success :', response)
-		// })
-		// .catch(error => console.log('Error: ', error))
 	}
 }
 </script>

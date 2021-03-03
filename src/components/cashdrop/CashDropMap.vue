@@ -73,6 +73,11 @@ export default {
 	    		}
 	    	}
 
+	    	this.deliverTheCoordinates({
+	    		lat: this.map.getCenter().lat(),
+	    		lng: this.map.getCenter().lng()
+	    	})
+
 	    	this.infoWinOpen = false
 	    	return {
 	    		lat: this.map.getCenter().lat(),
@@ -90,6 +95,9 @@ export default {
 		}
 	},
 	methods: {
+		deliverTheCoordinates (coors) {
+			this.$emit('deliverTheCoordinates', coors)
+		},
 		resizeMapHeight ({ evt, ...info }) {
 			let map = this.$refs.mapRef.$el
 

@@ -1,6 +1,7 @@
 <template>
 	<div id="collect-map" class="row">
 		<div class="col-12" style="position: relative;">
+
 			<GmapMap ref="mapRef" :center="coordinates" :zoom="zoomScale"
 			  :options="{
 			   styles: mapCustomStyle.styles, draggableCursor: true, gestureHandling: 'greedy',
@@ -11,15 +12,14 @@
 			>
 
 				<GmapCircle
-					v-if="pin.type === 'quest'"
 				    v-for="(pin, index) in quest"
 				    :key="index"
-				    :center="(pin.type !== 'quest' ? mapCoordinates : pin.coordinates)"
-				    :radius="(pin.type !== 'quest' ? 0 : pin.questRadius)"
+				    :center="pin.coordinates"
+				    :radius="pin.questRadius"
 				    :options="{ strokeColor: '#0AC18E', strokeOpacity: 0.5, strokeWeight: 2, fillColor:'white', fillOpacity: 0, visible: pin.radiusVisibility }">
 				</GmapCircle>
 
-				<GmapInfoWindow v-if="info.type === 'quest'"
+				<GmapInfoWindow
 					v-for="(info, infoIndex) in quest" :key="infoIndex+'windowinfo'"
 					:options="{
 								content: '<div>\
@@ -42,20 +42,31 @@
 					@closeclick="toggleWindowInfo(infoIndex)">
 				</GmapInfoWindow>
 
-				<!-- <GmapInfoWindow :options="infoOptions" :position="mapCoordinates" :opened="infoWinOpen" @closeclick="infoWindow()"></GmapInfoWindow> -->
+				<GmapMarker ref="userLocation"
+					:icon="{
+							url: 'PurelyPeer-location-current-A.png',
+							scaledSize: google && new google.maps.Size(80, 80),
+							anchor: google && new google.maps.Point(40, 54)}"
+				    :position="google && new google.maps.LatLng(mapCoordinates)"
+				    :visible="isLocationShared ? true : false" />
 
 				<GmapMarker v-for="(mark, markerIndex) in quest" :key="markerIndex+'marker'"
 					:icon="{
-							url: (mark.type !== 'quest' ? 'PurelyPeer-location-current-A.png'
-								: (mark.questStatus === 'active' ? (mark.level === 'upcoming' ? 'PurelyPeer-location-blue.png' : (mark.level === 'direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')),
+							url: (mark.questStatus === 'active' ? (mark.level === 'upcoming' ? 'PurelyPeer-location-blue.png' : (mark.level === 'direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png'),
 
-							scaledSize: google && new google.maps.Size((mark.type !== 'quest' ? 80 : (mark.questStatus === 'active' ? 30 : 50)), (mark.type !== 'quest' ? 80 : (mark.questStatus === 'active' ? 40 : 50))),
+							scaledSize: google && new google.maps.Size((mark.questStatus === 'active' ? 30 : 50), (mark.questStatus === 'active' ? 40 : 50)),
 
-							anchor: google && new google.maps.Point((mark.type !== 'quest' ? 40 : (mark.questStatus === 'active' ? 1 : 12)), (mark.type !== 'quest' ? 54 : (mark.questStatus === 'active' ? 40 : 44)))
+							anchor: google && new google.maps.Point((mark.questStatus === 'active' ? 1 : 12), (mark.questStatus === 'active' ? 40 : 44))
 							}"
-				    :position="google && new google.maps.LatLng((mark.type !== 'quest' ? mapCoordinates : mark.coordinates))"
-				    :visible="mark.type === 'quest' ? true : isLocationShared ? true : false"
+				    :position="google && new google.maps.LatLng(mark.coordinates)"
 				    @click="toggleWindowInfo(markerIndex)" />
+
+				<GmapMarker ref="cashDrops" v-for="(cashDropCoor, cashDropsIndex) in cashDropsCoordinates"
+					:icon="{
+							url: 'PurelyPeer-location-current-B.png',
+							scaledSize: google && new google.maps.Size(30, 30),
+							anchor: google && new google.maps.Point(40, 54)}"
+				    :position="google && new google.maps.LatLng(cashDropCoor)" />
 
 			</GmapMap>
 			<!-- <p>{{ mapCoordinates.lat }} Latitude, {{ mapCoordinates.lng }}, Longitude</p> -->
@@ -72,11 +83,9 @@ import { gmapApi } from 'gmap-vue'
 export default {
 	data () {
 		return {
+			cashDropsCoordinates: null,
 			zoomScale: 13, 
 		    quest: [
-		    	{
-		    		type: "user"
-		    	},
 				{
 					merchant: "Jollibee",
 					questName: "Star Card Collection",
@@ -91,8 +100,21 @@ export default {
 						lat: 11.17783410449158,
 						lng: 125.0017081909703
 					},
+					cashDropsCoordinates: [
+						{
+							lat: 11.170425256142286,
+							lng: 125.00371409774162
+						},
+						{
+							lat: 11.170225256142286,
+							lng: 125.00471409774162
+						},
+						{
+							lat: 11.170525256142286,
+							lng: 125.00171409774162
+						}
+					],
 					questRadius: 1900,
-					type: "quest",
 					questStatus: "active",
 					level: 'upcoming',
 					infoWinOpen: false,
@@ -112,8 +134,21 @@ export default {
 						lat: 11.176572907648463,
 						lng: 125.00093244003742
 					},
+					cashDropsCoordinates: [
+						{
+							lat: 11.170425256142286,
+							lng: 125.00071409774162
+						},
+						{
+							lat: 11.170225256142286,
+							lng: 125.00071409774162
+						},
+						{
+							lat: 11.170525256142286,
+							lng: 125.00071409774162
+						}
+					],
 					questRadius: 1000,
-					type: "quest",
 					questStatus: "active",
 					level: 'direct',
 					infoWinOpen: false,
@@ -133,8 +168,21 @@ export default {
 						lat: 11.180325256142286,
 						lng: 125.00271409774162
 					},
+					cashDropsCoordinates: [
+						{
+							lat: 11.180425256142286,
+							lng: 125.00371409774162
+						},
+						{
+							lat: 11.180225256142286,
+							lng: 125.00471409774162
+						},
+						{
+							lat: 11.180525256142286,
+							lng: 125.00171409774162
+						}
+					],
 					questRadius: 1300,
-					type: "quest",
 					questStatus: "active",
 					level: 'indirect',
 					infoWinOpen: false,
@@ -154,13 +202,26 @@ export default {
 						lat: 11.172492400856424,
 						lng: 124.9996134948425
 					},
+					cashDropsCoordinates: [
+						{
+							lat: 11.170425256142286,
+							lng: 125.99171409774162
+						},
+						{
+							lat: 11.170225256142286,
+							lng: 125.99271409774162
+						},
+						{
+							lat: 11.170525256142286,
+							lng: 125.99571409774162
+						}
+					],
 					questRadius: 1200,
-					type: "quest",
-					questStatus: "active",
-					level: 'indirect',
+					questStatus: "inactive",
+					level: 'direct',
 					infoWinOpen: false,
 					radiusVisibility: false
-				},
+				}
 		    ],
 			coordinates: {
 				lat: 0,
@@ -209,12 +270,14 @@ export default {
 		removeWindowInfo () {
 			this.quest[this.activeIndex].infoWinOpen = false
 			this.quest[this.activeIndex].radiusVisibility = false
+			this.cashDropsCoordinates = null
 		},
 		toggleWindowInfo (infoIndex) {
 			this.activeIndex !== infoIndex ? this.quest[this.activeIndex].infoWinOpen = false : ''
 			this.activeIndex !== infoIndex ? this.quest[this.activeIndex].radiusVisibility = false : ''
 			this.quest[infoIndex].infoWinOpen = !this.quest[infoIndex].infoWinOpen
 			this.quest[infoIndex].radiusVisibility = !this.quest[infoIndex].radiusVisibility
+			this.cashDropsCoordinates = this.quest[infoIndex].infoWinOpen === true ? this.quest[infoIndex].cashDropsCoordinates : null
 			this.activeIndex = infoIndex
 		},
 		resizeMapHeight ({ evt, ...info }) {
