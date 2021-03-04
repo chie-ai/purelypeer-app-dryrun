@@ -154,6 +154,24 @@ export default {
 			this.questRadius.number++
 			this.questRadius.number = this.questRadius.number == 5 ? 0 : this.questRadius.number
 		},
+		createWallet () {
+			createWallet()
+			.then(response => {
+				console.log('Response: ', response)
+				localStorage.setItem("secretKey", response.mnemonic);
+			})
+			.catch(error => {
+				console.log('Error: ', error)
+			})
+		}
+	},
+	created () {
+		for (let i=10;i<=100;i++) {
+			this.cashDropCount.push(i)
+		}
+
+		if (localStorage.getItem("secretKey") === null) this.createWallet()
+		else console.log("Has an existing secret key")
 	}
 }
 </script>

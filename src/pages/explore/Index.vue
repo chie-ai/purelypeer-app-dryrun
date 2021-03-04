@@ -23,7 +23,7 @@ export default {
 		questCoordinates (coordinates) {
 			this.coordinates = coordinates
 		}
-	}
+	},
 }
 </script>
 
