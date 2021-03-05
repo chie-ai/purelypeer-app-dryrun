@@ -18,9 +18,9 @@ export default async function createWallet (walletIndex = 0) {
 		const seedHash = sha256(mnemonic);
 		const masterHDNode = NETWORK === 'mainnet' ? bchjs.HDNode.fromSeed(seedBuffer) : bchjs.HDNode.fromSeed(seedBuffer, 'testnet');
 		const xPubKey = bchjs.HDNode.toXPub(masterHDNode);
-		const childNode = masterHDNode.derivePath("m/44'/145'/0'/" + walletIndex);
-		const bchAddress = bchjs.HDNode.toCashAddress(childNode);
-		const publicKey = bchjs.HDNode.toPublicKey(childNode);
+		// const childNode = masterHDNode.derivePath("m/44'/145'/0'/" + walletIndex);
+		// const bchAddress = bchjs.HDNode.toCashAddress(childNode);
+		// const publicKey = bchjs.HDNode.toPublicKey(childNode);
 
 		const returnValues = {
 			mnemonic,
@@ -28,9 +28,9 @@ export default async function createWallet (walletIndex = 0) {
 			seedHash,
 			masterHDNode,
 			xPubKey,
-			childNode,
-			bchAddress,
-			publicKey
+			// childNode,
+			// bchAddress,
+			// publicKey
 		}
 
 		console.log('Created wallet')

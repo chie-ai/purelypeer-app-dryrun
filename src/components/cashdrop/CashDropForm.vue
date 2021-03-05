@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import createWallet from '../../utils/create_wallet.js'
 
 export default {
 	data() {
@@ -95,9 +94,9 @@ export default {
 						"user": "c55303c0-9da3-4152-8eee-48f8acb28d69",
 						"token": "-",
 						"name": this.merchantName,
-						"phone_no": "+63"+(this.phoneNumber).slice(1),
-						"contact_url": "https://www.facebook.com/LEYECOIII/",
-						"memo": "string",
+						"phone_no": null,
+						"contact_url": null,
+						"memo": null,
 						"acceptance_tier": this.cashDropFormModels.tier,
 						"coors": coordinates,
 						"radius": this.cashDropFormModels.radius,
@@ -182,6 +181,11 @@ export default {
 				this.cashDropFormModels.radius = radius
 			}
 			this.$emit('changeQuestRadius', radius)
+		}
+	},
+	created () {
+		for (let i=10;i<=100;i++) {
+			this.cashDropCount.push(i)
 		}
 	}
 }

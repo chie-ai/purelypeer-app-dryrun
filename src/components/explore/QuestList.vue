@@ -51,6 +51,8 @@
 </template>
 
 <script>
+import createWallet from '../../utils/create_wallet.js'
+
 export default {
 	data() {
 		return {
@@ -154,24 +156,45 @@ export default {
 			this.questRadius.number++
 			this.questRadius.number = this.questRadius.number == 5 ? 0 : this.questRadius.number
 		},
-		createWallet () {
+		createWalletAndUser () {
 			createWallet()
 			.then(response => {
 				console.log('Response: ', response)
-				localStorage.setItem("secretKey", response.mnemonic);
+				localStorage.setItem("seedPhrase", response.mnemonic);
+
+				let wallet = {
+					seed_hash: response.seedHash,
+					xpubkey: response.xPubKey
+				}
+
+				this.$store.dispatch('wallet/createUser', wallet)
 			})
 			.catch(error => {
 				console.log('Error: ', error)
 			})
+		},
+		importWallet () {
+
+			let wallet = {
+				seed_hash: localStorage.getItem('seed_hash'),
+				xpubkey: localStorage.getItem('xpubkey')
+			}
+
+			this.$axios.post("https://staging.purelypeer.cash/api/wallet/import_wallet/", wallet)
+			.then(response => {
+				console.log('Mutate Addresses', response)
+				this.$store.commit('wallet/mutateAddresses', response.data.addresses)
+
+				console.log('BCH address: ', this.$store.state.wallet.wallet.addresses[0].bch)
+				console.log('SLP address: ', this.$store.state.wallet.wallet.addresses[0].slp)
+			})
+			.catch(error => console.log('Failed importing'))
 		}
 	},
 	created () {
-		for (let i=10;i<=100;i++) {
-			this.cashDropCount.push(i)
-		}
-
-		if (localStorage.getItem("secretKey") === null) this.createWallet()
-		else console.log("Has an existing secret key")
+		if (localStorage.getItem("seedPhrase") === null) this.createWalletAndUser()
+		// else localStorage.removeItem("secretKey") /*console.log("Has an existing secret key") */
+		else this.importWallet()
 	}
 }
 </script>

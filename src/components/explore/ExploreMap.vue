@@ -353,13 +353,13 @@ export default {
 			}, 3000)
 	    })
 
-	    this.$axios.get('https://staging.purelypeer.cash/api/quests/')
-	    .then(response => {
-	    	console.log('Success quest: ', response)
-	    })
-	    .catch(error => {
-	    	console.log('Error: ', error)
-	    })
+	    // this.$axios.get('https://staging.purelypeer.cash/api/quests/')
+	    // .then(response => {
+	    // 	console.log('Success quest: ', response)
+	    // })
+	    // .catch(error => {
+	    // 	console.log('Error: ', error)
+	    // })
 	}
 }
 </script>
