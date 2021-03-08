@@ -8,13 +8,13 @@ export function createUser ({dispatch}, wallet) {
 		.then(response => {
 			dispatch('createWallet', wallet)
 			.then(res => {
-				return resolve(res)
+				resolve(res)
 			})
 			.catch(err => console.log('error: ', err))
 		})
 		.catch(error => {
 			console.log('Failed to create UUID.')
-			return reject(error)
+			reject(error)
 		})
 	})
 }
@@ -37,7 +37,7 @@ export function createWallet ({commit}, wallet) {
 			localStorage.setItem("addresses", addresses)
 			localStorage.setItem("seed_hash", response.data.seed_hash)
 			localStorage.setItem("xpubkey", response.data.xpubkey)
-			return resolve(response)
+			resolve(response)
 		})
 		.catch(error => {
 

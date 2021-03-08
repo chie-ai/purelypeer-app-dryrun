@@ -10,10 +10,9 @@
 							<q-input ref="merchantName" color="grey-5" :dense="true" bg-color="white" outlined label="Merchant Name" type="text" v-model="merchantName"
 								:rules="[val => !!val || 'Merchant name is required']" />
 							<q-input ref="phoneNumber" color="grey-5" :dense="true" bg-color="white" outlined label="Phone number" type="number" v-model="phoneNumber"
-								:rules="[val => !!val || 'Phone number is required', val => val.length == 11 || 'Phone number must be valid',]"
-								mask="(###) #### - ####" fill-mask unmasked-value />
-							<q-input ref="contactUrl" color="grey-5" :dense="true" bg-color="white" outlined label="Contact URL" type="url" v-model="contactUrl"
-								:rules="[val => !!val || 'Contact URL is required']" />
+								mask="(###) #### - ####" fill-mask unmasked-value class="q-mb-lg" />
+							<q-input ref="contactUrl" color="grey-5" :dense="true" bg-color="white" outlined label="Contact URL" type="url" v-model="contactUrl" class="q-mb-lg" />
+							<q-input ref="memo" color="grey-5" :dense="true" bg-color="white" outlined label="Memo" type="text" v-model="memo" class="q-mb-lg" />
 							<q-select ref="tierModel" outlined color="grey-5" :dense="true" bg-color="white" v-model="tierModel"
 								:options="tier.options" label="PurelyPeer Tier"
 								:rules="[val => !!val || 'PurelyPeer tier is required']" />
@@ -41,10 +40,11 @@
 export default {
 	data() {
 		return {
-			refModels: ['merchantName','phoneNumber','contactUrl','tierModel','presenceModel','radiusModel','cashDropCountModel'],
+			refModels: ['merchantName','phoneNumber','contactUrl','memo','tierModel','presenceModel','radiusModel','cashDropCountModel'],
 			merchantName: null,
-			phoneNumber: "09972702824",
-			contactUrl: "https://www.facebook.com/",
+			phoneNumber: null,
+			contactUrl: null,
+			memo: null,
 			tierModel: null,
 			tier: {
 			    options: [
@@ -83,6 +83,10 @@ export default {
 	methods: {
 		onSubmitQuest (evt) {
 
+			this.$q.loading.show({
+		        message: 'Creating of quest is in progress. <br/><span class="text-white">Hang on...</span>'
+		    })
+
 			this.$refs.questForm.validate().then(success => {
 				if (success) {
 					let coordinates = []
@@ -91,7 +95,7 @@ export default {
 					}
 
 					let questCreate = {
-						"user": "c55303c0-9da3-4152-8eee-48f8acb28d69",
+						"user": "a8b163ef-1149-448d-99b0-0fbbc45a76b3",
 						"token": "-",
 						"name": this.merchantName,
 						"phone_no": null,
@@ -113,7 +117,12 @@ export default {
 						for (let i=0;this.refModels.length>i;i++) {
 							this[this.refModels[i]] = null
 						}
-						this.onReset()
+
+					    this.timer = setTimeout(() => {
+					        this.$q.loading.hide()
+					        this.timer = void 0
+							this.onReset()
+					    }, 0)
 					})
 					.catch(error => {
 						console.log('Error: ', error)
@@ -121,16 +130,19 @@ export default {
 						for (let i=0;this.refModels.length>i;i++) {
 							this[this.refModels[i]] = null
 						}
-						this.onReset()
+
+					    this.timer = setTimeout(() => {
+					        this.$q.loading.hide()
+					        this.timer = void 0
+							this.onReset()
+					    }, 0)
 					})
 				}
 			})
 		},
 		onReset () {
 			for (let i=0;this.refModels.length>i;i++) {
-				setTimeout(() => {
-					this.$refs[this.refModels[i]].resetValidation()
-				}, 0)
+				this.$refs[this.refModels[i]].resetValidation()
 			}
 		},
 		changeTier () {

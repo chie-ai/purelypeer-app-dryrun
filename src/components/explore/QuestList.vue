@@ -5,17 +5,17 @@
 
 			<div class="quest-main q-mx-md">
 				<div class="column quest-body">
-					<div class="col-12 q-py-md quest-list" v-for="(quest, questIndex) in quests" :key="questIndex" @click="showQuestCoordinatesOnMap(quest.coordinates)">
+					<div class="col-12 q-py-md quest-list" v-for="(quest, questIndex) in quests" :key="questIndex" @click="showQuestCoordinatesOnMap(quest.coors)">
 						<div class="row">
 							<div class="col-12 q-px-sm">
-								<p class="q-mb-xs"><span class="text-weight-bold">Merchant Name: </span><span class="text-subtitle2">{{ quest.merchant }}</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Cash Drop Count: </span><span class="text-subtitle2">{{ quest.questCount }}</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">PurelyPeer Tier: </span><span>{{ quest.tier }}</span></p>
+								<p class="q-mb-xs"><span class="text-weight-bold">Merchant Name: </span><span class="text-subtitle2">{{ quest.name }}</span></p>
+								<p class="q-mb-xs"><span class="text-weight-bold">Cash Drop Count: </span><span class="text-subtitle2">{{ quest.total_cashdrops }}</span></p>
+								<p class="q-mb-xs"><span class="text-weight-bold">PurelyPeer Tier: </span><span>{{ quest.acceptance_tier }}</span></p>
 
 								<div class="questMoreInfo" :ref="questIndex">
 									<p class="q-mb-xs"><span class="text-weight-bold">Level: </span><span>{{ (quest.level).charAt(0).toUpperCase() + (quest.level).slice(1) }}</span></p>
 									<p class="q-mb-xs"><span class="text-weight-bold">Radius: </span><span>{{ quest.radius }}</span></p>
-									<p class="q-mb-xs"><span class="text-weight-bold">Phone Number: </span><span class="text-subtitle2">{{ quest.phoneNumber }}</span></p>
+									<p class="q-mb-xs"><span class="text-weight-bold">Phone Number: </span><span class="text-subtitle2">{{ quest.phone_no }}</span></p>
 									<p class="q-mb-xs"><span class="text-weight-bold">Contact URL: </span><a href="www.facebook.com" class="text-caption">{{ quest.contactUrl }}</a></p>
 									<p class="q-mb-xs"><span class="text-weight-bold">Presence: </span><span>{{ quest.presence }}</span></p>
 									<p class="q-mb-xs"><span class="text-weight-bold">Radius: </span><span>{{ quest.radius }}</span></p>
@@ -70,60 +70,60 @@ export default {
 			},
 			quests: [
 				{
-					merchant: "Jollibee",
-					questCount: "10",
+					name: "Jollibee",
+					total_cashdrops: "10",
 					price: "Mug",
-					phoneNumber: "###-###-####",
-					contactUrl: "www.facebook.com/merchant-contact",
-					tier: "\u2764\uFE0F\uD83D\uDCAF",
+					phone_no: "###-###-####",
+					contact_url: "www.facebook.com/merchant-contact",
+					acceptance_tier: "\u2764\uFE0F\uD83D\uDCAF",
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
 					radius: "\u2B55\uD83D\uDCAF",
-					coordinates: {
+					coors: {
 						lat: 11.17783410449158,
 						lng: 125.0017081909703
 					},
 					level: "upcoming",
 				},
 				{
-					merchant: "McDo",
-					questCount: "14",
+					name: "McDo",
+					total_cashdrops: "14",
 					price: "Spaghetti",
-					phoneNumber: "###-###-####",
-					contactUrl: "www.facebook.com/merchant-contact",
-					tier: "\u2764\uFE0F\uD83D\uDCAF",
+					phone_no: "###-###-####",
+					contact_url: "www.facebook.com/merchant-contact",
+					acceptance_tier: "\u2764\uFE0F\uD83D\uDCAF",
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
 					radius: "\u2B55\uD83D\uDCAF",
-					coordinates: {
+					coors: {
 						lat: 11.176572907648463,
 						lng: 125.00093244003742
 					},
 					level: "direct"
 				},
 				{
-					merchant: "J & F Department Store Palo",
-					questCount: "20",
+					name: "J & F Department Store Palo",
+					total_cashdrops: "20",
 					price: "50% less to all items",
-					phoneNumber: "###-###-####",
-					contactUrl: "www.facebook.com/merchant-contact",
-					tier: "\u2764\uFE0F\uD83D\uDCAF",
+					phone_no: "###-###-####",
+					contact_url: "www.facebook.com/merchant-contact",
+					acceptance_tier: "\u2764\uFE0F\uD83D\uDCAF",
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
 					radius: "\u2B55\uD83D\uDCAF",
-					coordinates: {
+					coors: {
 						lat: 11.180325256142286,
 						lng: 125.00271409774162
 					},
 					level: "indirect"
 				},
 				{
-					merchant: "Seafoods & Ribs Warehouse",
-					questCount: "20",
+					name: "Seafoods & Ribs Warehouse",
+					total_cashdrops: "20",
 					price: "50% less to all items",
 					phoneNumber: "###-###-####",
-					contactUrl: "www.facebook.com/merchant-contact",
-					tier: "\u2764\uFE0F\uD83D\uDCAF",
+					contact_url: "www.facebook.com/merchant-contact",
+					acceptance_tier: "\u2764\uFE0F\uD83D\uDCAF",
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
 					radius: "\u2B55\uD83D\uDCAF",
-					coordinates: {
+					coors: {
 						lat: 11.172492400856424,
 						lng: 124.9996134948425
 					},
@@ -168,6 +168,8 @@ export default {
 				}
 
 				this.$store.dispatch('wallet/createUser', wallet)
+
+				// this.fetchQuestList()
 			})
 			.catch(error => {
 				console.log('Error: ', error)
@@ -185,16 +187,28 @@ export default {
 				console.log('Mutate Addresses', response)
 				this.$store.commit('wallet/mutateAddresses', response.data.addresses)
 
+				// this.fetchQuestList()
+
 				console.log('BCH address: ', this.$store.state.wallet.wallet.addresses[0].bch)
 				console.log('SLP address: ', this.$store.state.wallet.wallet.addresses[0].slp)
 			})
 			.catch(error => console.log('Failed importing'))
+		},
+		fetchQuestList () {
+			this.$store.dispatch('cashdrop/fetchQuestList')
+			.then(response => {
+				console.log('Hello quest: ', response)
+			})
 		}
 	},
 	created () {
-		if (localStorage.getItem("seedPhrase") === null) this.createWalletAndUser()
-		// else localStorage.removeItem("secretKey") /*console.log("Has an existing secret key") */
-		else this.importWallet()
+		if (localStorage.getItem("seedPhrase") === null) {
+			this.createWalletAndUser()
+		} 
+		// else localStorage.removeItem("seedPhrase") /*console.log("Has an existing secret key") */
+		else {
+			this.importWallet()
+		}
 	}
 }
 </script>

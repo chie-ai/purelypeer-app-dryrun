@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 // import example from './module-example'
 
 import wallet from './wallet'
+import cashdrop from './cashdrop'
 
 Vue.use(Vuex)
 
@@ -20,7 +21,8 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
       // example
-      wallet
+      wallet,
+      cashdrop
     },
 
     // enable strict mode (adds overhead!)

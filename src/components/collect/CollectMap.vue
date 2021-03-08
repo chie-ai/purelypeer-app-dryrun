@@ -8,14 +8,13 @@
 			   zoomControl: false, mapTypeControl: false, scaleControl: false, streetViewControl: false,
 			   rotateControl: false, fullscreenControl: false, disableDefaultUI: false }"
 			   @center_changed="removeWindowInfo" map-type-id="roadmap" class="map-layout"
-			   @click="removeWindowInfo"
-			>
+			   @click="removeWindowInfo" >
 
 				<GmapCircle
 				    v-for="(pin, index) in quest"
 				    :key="index"
-				    :center="pin.coordinates"
-				    :radius="pin.questRadius"
+				    :center="pin.coors"
+				    :radius="pin.radius"
 				    :options="{ strokeColor: '#0AC18E', strokeOpacity: 0.5, strokeWeight: 2, fillColor:'white', fillOpacity: 0, visible: pin.radiusVisibility }">
 				</GmapCircle>
 
@@ -24,11 +23,10 @@
 					:options="{
 								content: '<div>\
 											<p><strong>Quest Info</strong></p>\
-											<span><strong>Merchant: </strong>'+info.merchant+'</span><br/>\
-											<span><strong>Quest Name: </strong>'+info.questName+'</span><br/>\
-											<span><strong>Level: </strong>'+(info.level).charAt(0).toUpperCase()+(info.level).slice(1)+'</span><br/>\
-											<span><strong>Cash Drop Count: </strong>'+info.cashDropCount+'</span><br/>\
-											<span><strong>PurelyPeer Tier: </strong>'+info.tier+'</span>\
+											<span><strong>Quest Name: </strong>'+info.name+'</span><br/>\
+											<span><strong>PurelyPeer Tier: </strong>'+(info.acceptance_tier).charAt(0).toUpperCase()+(info.acceptance_tier).slice(1)+'</span><br/>\
+											<span><strong>Remaining Cash Drop: </strong>'+info.cashdrops_remaining+'</span><br/>\
+											<span><strong>Cash Drop Count: </strong>'+info.total_cashdrops+'</span><br/>\
 										</div>',
 								pixelOffset: {
 									width: 12,
@@ -37,7 +35,7 @@
 								disableAutoPan: true,
 								minWidth: 300
 					}"
-					:position="info.coordinates"
+					:position="info.coors"
 					:opened="info.infoWinOpen"
 					@closeclick="toggleWindowInfo(infoIndex)">
 				</GmapInfoWindow>
@@ -52,13 +50,13 @@
 
 				<GmapMarker v-for="(mark, markerIndex) in quest" :key="markerIndex+'marker'"
 					:icon="{
-							url: (mark.questStatus === 'active' ? (mark.level === 'upcoming' ? 'PurelyPeer-location-blue.png' : (mark.level === 'direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png'),
+							url: (mark.active === 'active' ? (mark.acceptance_tier === 'upcoming' ? 'PurelyPeer-location-blue.png' : (mark.acceptance_tier === 'direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png'),
 
-							scaledSize: google && new google.maps.Size((mark.questStatus === 'active' ? 30 : 50), (mark.questStatus === 'active' ? 40 : 50)),
+							scaledSize: google && new google.maps.Size((mark.active === 'active' ? 30 : 50), (mark.active === 'active' ? 40 : 50)),
 
-							anchor: google && new google.maps.Point((mark.questStatus === 'active' ? 1 : 12), (mark.questStatus === 'active' ? 40 : 44))
+							anchor: google && new google.maps.Point((mark.active === 'active' ? 1 : 12), (mark.active === 'active' ? 40 : 44))
 							}"
-				    :position="google && new google.maps.LatLng(mark.coordinates)"
+				    :position="google && new google.maps.LatLng(mark.coors)"
 				    @click="toggleWindowInfo(markerIndex)" />
 
 				<GmapMarker ref="cashDrops" v-for="(cashDropCoor, cashDropsIndex) in cashDropsCoordinates"
@@ -66,7 +64,7 @@
 							url: 'PurelyPeer-location-current-B.png',
 							scaledSize: google && new google.maps.Size(30, 30),
 							anchor: google && new google.maps.Point(40, 54)}"
-				    :position="google && new google.maps.LatLng(cashDropCoor)" />
+				    :position="google && new google.maps.LatLng(cashDropCoor.coors)" />
 
 			</GmapMap>
 			<!-- <p>{{ mapCoordinates.lat }} Latitude, {{ mapCoordinates.lng }}, Longitude</p> -->
@@ -84,141 +82,155 @@ export default {
 	data () {
 		return {
 			cashDropsCoordinates: null,
-			zoomScale: 13, 
+			zoomScale: 13,
 		    quest: [
 				{
-					merchant: "Jollibee",
-					questName: "Star Card Collection",
-					cashDropCount: "10",
-					price: "Mug",
-					phoneNumber: "###-###-####",
-					contactUrl: "www.facebook.com/merchant-contact",
-					tier: "\u2764\uFE0F\uD83D\uDCAF",
+					name: "Star Card Collection",
+					total_cashdrops: 10,
+					cashdrops_remaining: 10,
+					phone_no: null,
+					contact_url: "www.facebook.com/merchant-contact",
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					radius: "\u2B55\uD83D\uDCAF",
-					coordinates: {
+					coors: {
 						lat: 11.17783410449158,
 						lng: 125.0017081909703
 					},
-					cashDropsCoordinates: [
+					cashdrops: [
 						{
-							lat: 11.170425256142286,
-							lng: 125.00371409774162
+							coors: {
+								lat: 11.170425256142286,
+								lng: 125.00371409774162
+							}
 						},
 						{
-							lat: 11.170225256142286,
-							lng: 125.00471409774162
+							coors: {
+								lat: 11.170225256142286,
+								lng: 125.00471409774162
+							}
 						},
 						{
-							lat: 11.170525256142286,
-							lng: 125.00171409774162
+							coors: {
+								lat: 11.170525256142286,
+								lng: 125.00171409774162
+							}
 						}
 					],
-					questRadius: 1900,
-					questStatus: "active",
-					level: 'upcoming',
+					radius: 1900,
+					active: "active",
+					acceptance_tier: 'upcoming',
 					infoWinOpen: false,
 					radiusVisibility: false
 				},
 				{
-					merchant: "McDonalds",
-					questName: "Half Moon Card Collection",
-					cashDropCount: "14",
-					price: "Spaghetti",
-					phoneNumber: "###-###-####",
-					contactUrl: "www.facebook.com/merchant-contact",
-					tier: "\u2764\uFE0F\uD83D\uDCAF",
+					name: "Half Moon Card Collection",
+					total_cashdrops: 10,
+					cashdrops_remaining: 10,
+					phone_no: null,
+					contact_url: "www.facebook.com/merchant-contact",
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					radius: "\u2B55\uD83D\uDCAF",
-					coordinates: {
+					coors: {
 						lat: 11.176572907648463,
 						lng: 125.00093244003742
 					},
-					cashDropsCoordinates: [
+					cashdrops: [
 						{
-							lat: 11.170425256142286,
-							lng: 125.00071409774162
+							coors: {
+								lat: 11.170425256142286,
+								lng: 125.00071409774162
+							}
 						},
 						{
-							lat: 11.170225256142286,
-							lng: 125.00071409774162
+							coors: {
+								lat: 11.170225256142286,
+								lng: 125.00071409774162
+							}
 						},
 						{
-							lat: 11.170525256142286,
-							lng: 125.00071409774162
+							coors: {
+								lat: 11.170525256142286,
+								lng: 125.00071409774162
+							}
 						}
 					],
-					questRadius: 1000,
-					questStatus: "active",
-					level: 'direct',
+					radius: 1000,
+					active: "active",
+					acceptance_tier: 'direct',
 					infoWinOpen: false,
 					radiusVisibility: false
 				},
 				{
-					merchant: "J & F Department Store Palo",
-					questName: "Sale Card Collection",
-					cashDropCount: "20",
+					name: "Sale Card Collection",
+					total_cashdrops: 10,
+					cashdrops_remaining: 10,
 					price: "50% less to all items",
-					phoneNumber: "###-###-####",
-					contactUrl: "www.facebook.com/merchant-contact",
-					tier: "\u2764\uFE0F\uD83D\uDCAF",
+					phone_no: null,
+					contact_url: "www.facebook.com/merchant-contact",
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					radius: "\u2B55\uD83D\uDCAF",
-					coordinates: {
+					coors: {
 						lat: 11.180325256142286,
 						lng: 125.00271409774162
 					},
-					cashDropsCoordinates: [
+					cashdrops: [
 						{
-							lat: 11.180425256142286,
-							lng: 125.00371409774162
+							coors: {
+								lat: 11.180425256142286,
+								lng: 125.00371409774162
+							}
 						},
 						{
-							lat: 11.180225256142286,
-							lng: 125.00471409774162
+							coors: {
+								lat: 11.180225256142286,
+								lng: 125.00471409774162
+							}
 						},
 						{
-							lat: 11.180525256142286,
-							lng: 125.00171409774162
+							coors: {
+								lat: 11.180525256142286,
+								lng: 125.00171409774162
+							}
 						}
 					],
-					questRadius: 1300,
-					questStatus: "active",
-					level: 'indirect',
+					radius: 1300,
+					active: "active",
+					acceptance_tier: 'indirect',
 					infoWinOpen: false,
 					radiusVisibility: false
 				},
 				{
-					merchant: "Seafoods & Ribs Warehouse",
-					questName: "Coupon Card Collection",
-					cashDropCount: "20",
+					name: "Coupon Card Collection",
+					total_cashdrops: 10,
+					cashdrops_remaining: 10,
 					price: "50% less to all items",
-					phoneNumber: "###-###-####",
-					contactUrl: "www.facebook.com/merchant-contact",
-					tier: "\u2764\uFE0F\uD83D\uDCAF",
+					phone_no: null,
+					contact_url: "www.facebook.com/merchant-contact",
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					radius: "\u2B55\uD83D\uDCAF",
-					coordinates: {
+					coors: {
 						lat: 11.172492400856424,
 						lng: 124.9996134948425
 					},
-					cashDropsCoordinates: [
+					cashdrops: [
 						{
-							lat: 11.170425256142286,
-							lng: 125.99171409774162
+							coors: {
+								lat: 11.170425256142286,
+								lng: 125.99171409774162
+							}
 						},
 						{
-							lat: 11.170225256142286,
-							lng: 125.99271409774162
+							coors: {
+								lat: 11.170225256142286,
+								lng: 125.99271409774162
+							}
 						},
 						{
-							lat: 11.170525256142286,
-							lng: 125.99571409774162
+							coors: {
+								lat: 11.170525256142286,
+								lng: 125.99571409774162
+							}
 						}
 					],
-					questRadius: 1200,
-					questStatus: "inactive",
-					level: 'direct',
+					radius: 1200,
+					active: "inactive",
+					acceptance_tier: 'direct',
 					infoWinOpen: false,
 					radiusVisibility: false
 				}
@@ -277,7 +289,7 @@ export default {
 			this.activeIndex !== infoIndex ? this.quest[this.activeIndex].radiusVisibility = false : ''
 			this.quest[infoIndex].infoWinOpen = !this.quest[infoIndex].infoWinOpen
 			this.quest[infoIndex].radiusVisibility = !this.quest[infoIndex].radiusVisibility
-			this.cashDropsCoordinates = this.quest[infoIndex].infoWinOpen === true ? this.quest[infoIndex].cashDropsCoordinates : null
+			this.cashDropsCoordinates = this.quest[infoIndex].infoWinOpen === true ? this.quest[infoIndex].cashdrops : null
 			this.activeIndex = infoIndex
 		},
 		resizeMapHeight ({ evt, ...info }) {
