@@ -89,7 +89,6 @@ module.exports = function (/* ctx */) {
       iconSet: 'mdi-v5', // Quasar icon set
       lang: 'en-us', // Quasar language pack
       config: {
-        loading
       },
 
       // Possible values for "importStrategy":

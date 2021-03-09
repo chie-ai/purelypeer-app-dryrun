@@ -22,9 +22,32 @@
 							<q-select ref="radiusModel" outlined color="grey-5" :dense="true" bg-color="white" v-model="radiusModel"
 								:options="radius.options" label="Quest Radius"
 								:rules="[val => !!val || 'Quest radius is required']" />
-							<q-select ref="cashDropCountModel" outlined color="grey-5" :dense="true" bg-color="white" v-model="cashDropCountModel"
-								:options="cashDropCount" label="Cash Drop Count"
-								:rules="[val => !!val || 'Cash drop count is required']" />
+						    <q-badge class="slider-badge">
+						      <b>Total of cashdrops</b> : {{ cashDropCountModel }}
+						    </q-badge>
+							<q-slider class="q-mt-none q-mb-sm amount-range-slider"
+						      :value="10"
+						      v-model="cashDropCountModel"
+						      :min="10"
+						      :max="100"
+						      :step="1"
+						     label/>
+						    <q-badge class="slider-badge">
+						      <b>Amount</b> : {{ amount.toFixed(8) }}
+						    </q-badge>
+						    <q-slider class="q-mt-none q-mb-sm amount-range-slider"
+						      :value="0.00000000"
+						      v-model="amount"
+						      :min="0.00000000"
+						      :max="3.00000000"
+						      :step="0.00000001"
+						      label
+						      :label-value="amount.toFixed(8)"
+						    />
+						    <!-- <span color="red-9" class="text-weight-light" style="font-size: 12px" v-if="amount === 0.00000000">Amount must not be empty</span> -->
+							<q-input color="grey-5" :dense="true" class="q-mb-lg" bg-color="white" outlined
+						        v-model="feeBreakdown" label="Fee breakdown"
+						        input-class="text-right" readonly />
 							<q-btn :label="'Cash Drop \uD83D\uDCA7'" outline type="submit" class="full-width" color="grey-6"/>
 						</q-form>
 					</div>
@@ -40,7 +63,7 @@
 export default {
 	data() {
 		return {
-			refModels: ['merchantName','phoneNumber','contactUrl','memo','tierModel','presenceModel','radiusModel','cashDropCountModel'],
+			refModels: ['merchantName','phoneNumber','contactUrl','memo','tierModel','presenceModel','radiusModel','cashDropCountModel','amount'],
 			merchantName: null,
 			phoneNumber: null,
 			contactUrl: null,
@@ -63,12 +86,14 @@ export default {
 					'\uD83D\uDD7A\u267F\uD83D\uDC83', '\uD83C\uDFD9\uFE0F', '\uD83D\uDEE3\uFE0F', '\uD83C\uDF10'
 				]
 			},
-			cashDropCountModel: null,
-			cashDropCount: [],
+			amount: 0.00000000,
+			cashDropCountModel: 10,
 			cashDropFormModels: {
 				tier: null,
 				radius: null
 			},
+			feeBreakdown: 0.00002000,
+			amountBoolean: false
 		}
 	},
 	props: ['questCoordinates'],
@@ -78,11 +103,19 @@ export default {
 		},
 		tierModel (newTier, oldTier) {
 			this.changeTier()
+		},
+		cashDropCountModel (newBreakdown, oldBreakdown) {
+			let C = 0.00050000, T = 0.00002000, N = this.cashDropCountModel, OT = N*T
+			this.feeBreakdown = OT.toFixed(8)
 		}
 	},
 	methods: {
 		onSubmitQuest (evt) {
 
+				// if (this.amount === 0.00000000) {
+
+				// 	return false
+				// }
 			this.$q.loading.show({
 		        message: 'Creating of quest is in progress. <br/><span class="text-white">Hang on...</span>'
 		    })
@@ -98,17 +131,19 @@ export default {
 						"user": "a8b163ef-1149-448d-99b0-0fbbc45a76b3",
 						"token": "-",
 						"name": this.merchantName,
-						"phone_no": null,
-						"contact_url": null,
-						"memo": null,
+						"phone_no": this.phoneNumber,
+						"contact_url": this.contactUrl,
+						"memo": this.memo,
 						"acceptance_tier": this.cashDropFormModels.tier,
 						"coors": coordinates,
 						"radius": this.cashDropFormModels.radius,
 						"total_cashdrops": this.cashDropCountModel,
-						"amount": 3.0,
+						"amount": this.amount.toFixed(8),
 						"payment_address": "bitcoincash:pp8skudq3x5hzw8ew7vzsw8tn4k8wxsqsv0lt0mf3g",
 						"pubkey": "dddddddd"
 					}
+
+					console.log('Form: ', questCreate)
 
 					this.$axios.post('https://staging.purelypeer.cash/api/quests/', questCreate)
 					.then(response => {
@@ -194,14 +229,15 @@ export default {
 			}
 			this.$emit('changeQuestRadius', radius)
 		}
-	},
-	created () {
-		for (let i=10;i<=100;i++) {
-			this.cashDropCount.push(i)
-		}
 	}
 }
 </script>
 
 <style scoped>
+.amount-range-slider {
+	color: #0AC18E;
+}
+.slider-badge {
+	background: #0AC18E;
+}
 </style>

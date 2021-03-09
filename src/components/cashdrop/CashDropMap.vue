@@ -88,6 +88,18 @@ export default {
 	watch: {
 		changeQuestRadius (newRadius, oldRadius) {
 			this.questRadius = newRadius
+			if (this.questRadius === 1500) {
+				this.zoomScale = 13
+			}
+			else if (this.questRadius === 15000) {
+				this.zoomScale = 10
+			}
+			else if (this.questRadius === 150000) {
+				this.zoomScale = 7
+			}
+			else {
+				this.zoomScale = 4
+			}
 		},
 		changeQuestTier (newTier, oldTier) {
 			this.markerIcon = newTier.tierIcon
