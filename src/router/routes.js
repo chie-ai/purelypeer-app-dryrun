@@ -2,6 +2,18 @@
 const routes = [
   {
     path: '/',
+    component: () => import('layouts/firstvisit/StartLayout.vue'),
+    children: [
+      { 
+        path: '', component: () => import('pages/firstvisit/Index.vue')
+      },
+      { 
+        path: 'wallet-address', component: () => import('pages/firstvisit/walletAddress.vue')
+      },
+    ]
+  },
+  {
+    path: '/explore',
     component: () => import('layouts/explore/ExploreLayout.vue'),
     children: [
       { 
@@ -17,7 +29,7 @@ const routes = [
     path: '/setting',
     component: () => import('layouts/setting/SettingLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/setting/Index.vue') }
+      { path: '', component: () => import('pages/setting/Index.vue') },
     ]
   },
   {
