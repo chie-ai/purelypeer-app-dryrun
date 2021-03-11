@@ -35,10 +35,6 @@ export function createWallet ({commit}, wallet) {
 				}
 			}
 
-			localStorage.setItem("bch", response.data.addresses[0].bch_address)
-			localStorage.setItem("addresses", addresses)
-			localStorage.setItem("seed_hash", response.data.seed_hash)
-			localStorage.setItem("xpubkey", response.data.xpubkey)
 			resolve(response)
 		})
 		.catch(error => {

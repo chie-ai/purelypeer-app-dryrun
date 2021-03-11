@@ -8,7 +8,7 @@
 					<div class="col-12 q-py-md quest-list" v-for="(quest, questIndex) in quests" :key="questIndex" @click="showQuestCoordinatesOnMap(quest.coors)">
 						<div class="row">
 							<div class="col-12 q-px-sm">
-								<p class="q-mb-xs"><span class="text-weight-bold">Merchant Name: </span><span class="text-subtitle2">{{ quest.name }}</span></p>
+								<p class="q-mb-xs"><span class="text-weight-bold">Name: </span><span class="text-subtitle2">{{ quest.name }}</span></p>
 								<p class="q-mb-xs"><span class="text-weight-bold">Cash Drop Count: </span><span class="text-subtitle2">{{ quest.total_cashdrops }}</span></p>
 								<p class="q-mb-xs"><span class="text-weight-bold">PurelyPeer Tier: </span><span>{{ quest.acceptance_tier }}</span></p>
 
@@ -22,7 +22,7 @@
 								</div>
 							</div>
 							<div class="col-12 q-px-sm q-mt-sm">
-								<q-btn size="sm" color="teal" :ref="'btn-'+questIndex" label="Show more info" @click="showMorequestInfo(questIndex)"/>
+								<q-btn size="sm" color="teal" :ref="'btn-'+questIndex" :label="quest.btnLabel" @click="showMorequestInfo(questIndex)"/>
 							</div>
 						</div>
 					</div>
@@ -83,6 +83,7 @@ export default {
 						lng: 125.0017081909703
 					},
 					level: "upcoming",
+					btnLabel: "Show more info"
 				},
 				{
 					name: "McDo",
@@ -97,7 +98,8 @@ export default {
 						lat: 11.176572907648463,
 						lng: 125.00093244003742
 					},
-					level: "direct"
+					level: "direct",
+					btnLabel: "Show more info"
 				},
 				{
 					name: "J & F Department Store Palo",
@@ -112,7 +114,8 @@ export default {
 						lat: 11.180325256142286,
 						lng: 125.00271409774162
 					},
-					level: "indirect"
+					level: "indirect",
+					btnLabel: "Show more info"
 				},
 				{
 					name: "Seafoods & Ribs Warehouse",
@@ -127,7 +130,8 @@ export default {
 						lat: 11.172492400856424,
 						lng: 124.9996134948425
 					},
-					level: "direct"
+					level: "direct",
+					btnLabel: "Show more info"
 				}
 			]
 		}
@@ -141,8 +145,8 @@ export default {
 			this.$refs[ref][0].classList.toggle('showMorequestInfo')
 
 			classList.value.match(/showMorequestInfo/gi) === null
-			? this.$refs['btn-'+ref][0].label = 'Show more info'
-			: this.$refs['btn-'+ref][0].label = 'Hide other info'
+			? this.quests[ref].btnLabel = 'Show more info'
+			: this.quests[ref].btnLabel = 'Hide other info'
 		},
 		changeTier () {
 			this.purelyPeertier.number++
@@ -155,25 +159,6 @@ export default {
 		changeQuestRadius () {
 			this.questRadius.number++
 			this.questRadius.number = this.questRadius.number == 5 ? 0 : this.questRadius.number
-		},
-		createWalletAndUser () {
-			createWallet()
-			.then(response => {
-				console.log('Response: ', response)
-				localStorage.setItem("seedPhrase", response.mnemonic);
-
-				let wallet = {
-					seed_hash: response.seedHash,
-					xpubkey: response.xPubKey
-				}
-
-				this.$store.dispatch('wallet/createUser', wallet)
-
-				// this.fetchQuestList()
-			})
-			.catch(error => {
-				console.log('Error: ', error)
-			})
 		},
 		importWallet () {
 
@@ -202,13 +187,7 @@ export default {
 		}
 	},
 	created () {
-		if (localStorage.getItem("seedPhrase") === null) {
-			this.createWalletAndUser()
-		} 
-		// else localStorage.removeItem("seedPhrase") /*console.log("Has an existing secret key") */
-		else {
-			this.importWallet()
-		}
+		this.importWallet()
 	}
 }
 </script>

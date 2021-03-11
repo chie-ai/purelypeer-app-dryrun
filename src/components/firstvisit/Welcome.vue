@@ -10,6 +10,7 @@
         padding
         class="primary text-white shadow-1 carousel-style q-pa-none"
         ref="guide_carousel"
+        @transition=""
     >
 
 	    <template v-slot:navigation-icon="{ active, btnProps, onClick }">
@@ -17,80 +18,91 @@
 	        <q-btn v-else size="sm" :icon="btnProps.icon" class="control-color-1" flat round dense @click="onClick" />
 	    </template>
 
-        <q-carousel-slide name="guides" class="flex-center q-mb-md q-pt-none">
-          <div class="q-px-lg q-pb-md q-pt-lg">
-	          <img src="PurelyPeer-stamp.png" width="100%" class="rounded-borders">
+        <q-carousel-slide name="welcome" class="flex-center q-mb-md q-pt-none">
+          <div class="q-px-lg q-pb-md q-pt-lg text-center">
+	          <img src="PurelyPeer-stamp.png" width="90%" class="rounded-borders">
           </div>
-          <h4 class="q-my-md q-mb-lg text-center">Guide</h4>
-          <div class="q-mt-md text-center guide-phrase">
-            <p class="instructions">{{ lorem }}</p>
-            <div class="see-more" @click="readMore">
-            	<span class="mdi mdi-chevron-down mdi-36px" style="color: #0AC18E;"></span>
+          <h5 class="q-my-md q-mb-md text-center">Welcome to PurelyPeer</h5>
+          <div class="q-mt-md text-center guide-phrase" ref="guide_phrase">
+            <p class="phrase">{{ lorem }}</p>
+            <div class="see-more" @click="readMore" ref="see_more">
+            	<span class="read-more-text"><strong>Click here to read more...</strong></span>
+            </div>
+          </div>
+        </q-carousel-slide>
+        <q-carousel-slide name="guides" class="flex-center q-mb-md q-pt-none">
+          <div class="q-px-lg q-pb-md q-pt-lg text-center">
+	          <img src="PurelyPeer-stamp.png" width="90%" class="rounded-borders">
+          </div>
+          <h5 class="q-my-md q-mb-md text-center">Guide</h5>
+          <div class="q-mt-md text-center guide-phrase" ref="guide_phrase">
+            <p class="phrase">{{ lorem }}</p>
+            <div class="see-more" @click="readMore" ref="see_more">
+            	<span class="read-more-text"><strong>Click here to read more...</strong></span>
             </div>
           </div>
         </q-carousel-slide>
         <q-carousel-slide name="explore" class="flex-center q-mb-md q-pt-none">
-          <div class="q-px-lg q-pb-md q-pt-lg">
-	          <img src="PurelyPeer-stamp.png" width="100%" class="rounded-borders">
+          <div class="q-px-lg q-pb-md q-pt-lg text-center">
+	          <img src="PurelyPeer-stamp.png" width="90%" class="rounded-borders">
           </div>
-          <h4 class="q-my-md q-mb-lg text-center">Explore</h4>
-          <div class="q-mt-md text-center guide-phrase">
-            <p class="instructions">{{ lorem }}</p>
-            <div class="see-more">
-            	<span class="mdi mdi-chevron-down mdi-36px" style="color: #0AC18E;"></span>
+          <h5 class="q-my-md q-mb-md text-center">Explore</h5>
+          <div class="q-mt-md text-center guide-phrase" ref="guide_phrase">
+            <p class="phrase">{{ lorem }}</p>
+            <div class="see-more" @click="readMore" ref="see_more">
+            	<span class="read-more-text"><strong>Click here to read more...</strong></span>
             </div>
           </div>
         </q-carousel-slide>
         <q-carousel-slide name="cashdrop" class="flex-center q-mb-md q-pt-none">
-          <div class="q-px-lg q-pb-md q-pt-lg">
-	          <img src="PurelyPeer-stamp.png" width="100%" class="rounded-borders">
+          <div class="q-px-lg q-pb-md q-pt-lg text-center">
+	          <img src="PurelyPeer-stamp.png" width="90%" class="rounded-borders">
           </div>
-          <h4 class="q-my-md q-mb-lg text-center">Cashdrop</h4>
-          <div class="q-mt-md text-center guide-phrase">
-            <p class="instructions">{{ lorem }}</p>
-            <div class="see-more">
-            	<span class="mdi mdi-chevron-down mdi-36px" style="color: #0AC18E;"></span>
+          <h5 class="q-my-md q-mb-md text-center">Cashdrop</h5>
+          <div class="q-mt-md text-center guide-phrase" ref="guide_phrase">
+            <p class="phrase">{{ lorem }}</p>
+            <div class="see-more" @click="readMore" ref="see_more">
+            	<span class="read-more-text"><strong>Click here to read more...</strong></span>
             </div>
           </div>
         </q-carousel-slide>
         <q-carousel-slide name="collect" class="flex-center q-mb-md q-pt-none">
-          <div class="q-px-lg q-pb-md q-pt-lg">
-	          <img src="PurelyPeer-stamp.png" width="100%" class="rounded-borders">
+          <div class="q-px-lg q-pb-md q-pt-lg text-center">
+	          <img src="PurelyPeer-stamp.png" width="90%" class="rounded-borders">
           </div>
-          <h4 class="q-my-md q-mb-lg text-center">Collect</h4>
-          <div class="q-mt-md text-center guide-phrase">
-            <p class="instructions">{{ lorem }}</p>
-            <div class="see-more">
-            	<span class="mdi mdi-chevron-down mdi-36px" style="color: #0AC18E;"></span>
+          <h5 class="q-my-md q-mb-md text-center">Collect</h5>
+          <div class="q-mt-md text-center guide-phrase" ref="guide_phrase">
+            <p class="phrase">{{ lorem }}</p>
+            <div class="see-more" @click="readMore" ref="see_more">
+            	<span class="read-more-text"><strong>Click here to read more...</strong></span>
             </div>
           </div>
         </q-carousel-slide>
         <q-carousel-slide name="settings" class="flex-center q-mb-md q-pt-none">
-          <div class="q-px-lg q-pb-md q-pt-lg">
-	          <img src="PurelyPeer-stamp.png" width="100%" class="rounded-borders">
+          <div class="q-px-lg q-pb-md q-pt-lg text-center">
+	          <img src="PurelyPeer-stamp.png" width="90%" class="rounded-borders">
           </div>
-          <h4 class="q-my-md q-mb-lg text-center">Settings</h4>
-          <div class="q-mt-md text-center guide-phrase">
-            <p class="instructions">{{ lorem }}</p>
-            <div class="see-more">
-            	<span class="mdi mdi-chevron-down mdi-36px" style="color: #0AC18E;"></span>
+          <h5 class="q-my-md q-mb-md text-center">Settings</h5>
+          <div class="q-mt-md text-center guide-phrase" ref="guide_phrase">
+            <p class="phrase">{{ lorem }}</p>
+            <div class="see-more" @click="readMore" ref="see_more">
+            	<span class="read-more-text"><strong>Click here to read more...</strong></span>
             </div>
           </div>
         </q-carousel-slide>
         <q-carousel-slide name="start" class="flex-center q-mb-md q-pt-none">
-          <div class="q-px-lg q-pb-md q-pt-lg">
-	          <img src="PurelyPeer-stamp.png" width="100%" class="rounded-borders">
+          <div class="q-px-lg q-pb-md q-pt-lg text-center">
+	          <img src="PurelyPeer-stamp.png" width="90%" class="rounded-borders">
           </div>
           <h4 class="q-my-md text-center">Start Now</h4>
           <div class="q-mt-md text-center">
-            
-	      <q-btn
-		    rounded
-		    class="btn-proceed text-white q-mt-lg"
-		    size="md"
-		    label="Proceed"
-		    @click="createWallet"
-	      />
+		      <q-btn
+			    rounded
+			    class="btn-proceed text-white q-mt-lg"
+			    size="md"
+			    label="Proceed"
+			    @click="createWallet"
+		      />
           </div>
         </q-carousel-slide>
     </q-carousel>
@@ -104,30 +116,30 @@ import { QSpinnerFacebook } from 'quasar'
 export default {
   	data () {
 	    return {
-	      	slide: 'guides',
-	      	lorem: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo.',
-	      	timer: null,
-	      	heightWatcher: null
+	      	slide: 'welcome',
+	      	lorem: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo.',
+	      	routeTimer: null,
+	      	notifier: true
 	    }
   	},
   	methods: {
 	    createWallet () {
-	    	this.$refs.guide_carousel.$el.style.display = "none"
-	    	clearInterval(this.heightWatcher)
+	    	this.$refs.guide_carousel.$el.classList.add('hidden')
 
 		    this.$q.loading.show({
 		        spinner: QSpinnerFacebook,
 		        spinnerColor: 'spinner-color',
 		        spinnerSize: 140,
 		        backgroundColor: 'white',
-		        message: 'Creating of wallet is in progress. <br/><strong style="color: #0AC18E;">Hang on...</strong>',
+		        message: '<b>Creating of wallet is in progress.</b> <br/><strong style="color: #0AC18E;">Hang on...</strong>',
 		        messageColor: 'black'
 		    })
 
 			createWallet()
 			.then(response => {
 				console.log('Response: ', response)
-				localStorage.setItem("seedPhrase", response.mnemonic);
+
+				this.$store.commit('wallet/mutateSeedPhrase', response.mnemonic)
 
 				let wallet = {
 					seed_hash: response.seedHash,
@@ -136,35 +148,40 @@ export default {
 
 				this.$store.dispatch('wallet/createUser', wallet)
 
-			    this.timer = setTimeout(() => {
+			    this.routeTimer = setTimeout(() => {
 			        this.$q.loading.hide()
-			        this.timer = void 0
-			        this.$router.push({path:'wallet-address'})
+			        this.routeTimer = void 0
+			        this.$router.push({path:'seed-phrase'})
 			    }, 3000)
 			})
 			.catch(error => {
 				console.log('Error: ', error)
-			    this.timer = setTimeout(() => {
+			    this.routeTimer = setTimeout(() => {
 			        this.$q.loading.hide()
-			        this.timer = void 0
-			        this.$router.push({path:'wallet-address'})
+			        this.routeTimer = void 0
+			        this.$router.push({path:'seed-phrase'})
 			    }, 3000)
 			})
 
-			// localStorage.removeItem("seedPhrase")
-
 	    },
 	    readMore () {
-
-	    }
+	    	this.$refs.see_more.classList.add('hide-text')
+	    	this.$refs.guide_phrase.classList.add('overflow-auto')
+	    	if (this.notifier === true) {
+		    	this.$q.notify({
+			        message: 'Scroll to read more...',
+			        color: 'notify-purelypeer',
+			        timeout: 1000,
+			        position: 'center'
+			    })
+			    this.notifier = false	
+	    	}
+	    },
   	},
-	created () {
-	  	this.heightWatcher = setInterval(() => {
-			if (document.getElementsByClassName('guide-phrase')[0].style !== undefined) {
-		  		document.getElementsByClassName('guide-phrase')[0].style.height = ((26/100) * window.innerHeight) + 'px'
-			}
-	  	}, 100)
-	}
+  	created () {
+  		if (localStorage.getItem('seedPhrase')) this.$router.push({path:'seed-phrase'})
+  		// localStorage.clear();
+  	}
 }
 </script>
 
@@ -182,12 +199,13 @@ export default {
 	padding-top: 6px;
 	padding-bottom: 2px;
 }
-.instructions {
-	color: #939796;
+.phrase {
+	color: #8C908F;
 }
 .guide-phrase {
 	position: relative;
 	overflow: hidden;
+	height: calc((30/100) * 100vh)
 }
 .text-control-color {
 	color: #0AC18E;
@@ -200,9 +218,25 @@ export default {
 }
 .see-more {
 	position: absolute;
-	height: 40px;
+	line-height: 44px;
 	width: 100%;
 	bottom: 0pt;
-	background-color: rgba(255,255,255,.5)
+	background-color: rgba(255,255,255,.8);
+}
+.read-more-text {
+	color: #0AC18E;
+	display: block;
+}
+.hide-text {
+	display: none;
+}
+.overflow-auto {
+	overflow: auto !important;
+}
+.bg-notify-purelypeer {
+	background-color: #0AC18E;
+}
+.scroll {
+	overflow: hidden;
 }
 </style>

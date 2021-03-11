@@ -8,7 +8,7 @@ const routes = [
         path: '', component: () => import('pages/firstvisit/Index.vue')
       },
       { 
-        path: 'wallet-address', component: () => import('pages/firstvisit/walletAddress.vue')
+        path: 'seed-phrase', component: () => import('pages/firstvisit/WalletSeedPhrase.vue')
       },
     ]
   },

@@ -1,4 +1,7 @@
 
+export function mutateSeedPhrase (state, seedPhrase) {
+	state.wallet.seedPhrase = seedPhrase
+}
 
 export function mutateAddresses (state, addresses) {
 	state.wallet.addresses[0].bch = addresses[0].bch_address

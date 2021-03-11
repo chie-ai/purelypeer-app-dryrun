@@ -1,15 +1,15 @@
 <template>
 	<div class="row">
-		<Wallet />
+		<WalletSeedPhrase />
 	</div>
 </template>
 
 <script>
-import Wallet from '../../components/firstvisit/WalletAddress.vue'
+import WalletSeedPhrase from '../../components/firstvisit/WalletSeedPhrase.vue'
 
 export default {
 	components: {
-		Wallet,
+		WalletSeedPhrase,
 	}
 }
 </script>
