@@ -8,7 +8,7 @@
         control-color="control-color-1"
         navigation
         padding
-        class="primary text-white shadow-1 carousel-style q-pa-none"
+        class="primary text-white shadow-1 carousel-style q-mt-lg q-pa-none"
         ref="guide_carousel"
         @transition=""
     >
@@ -205,7 +205,7 @@ export default {
 .guide-phrase {
 	position: relative;
 	overflow: hidden;
-	height: calc((30/100) * 100vh)
+	height: calc((36/100) * 100vh)
 }
 .text-control-color {
 	color: #0AC18E;

@@ -22,7 +22,7 @@
 								</div>
 							</div>
 							<div class="col-12 q-px-sm q-mt-sm">
-								<q-btn size="sm" color="teal" :ref="'btn-'+questIndex" :label="quest.btnLabel" @click="showMorequestInfo(questIndex)"/>
+								<q-btn size="sm" color="purelypeer" rounded :ref="'btn-'+questIndex" :label="quest.btnLabel" @click="showMorequestInfo(questIndex)"/>
 							</div>
 						</div>
 					</div>
@@ -70,7 +70,7 @@ export default {
 			},
 			quests: [
 				{
-					name: "Jollibee",
+					name: "test 1",
 					total_cashdrops: "10",
 					price: "Mug",
 					phone_no: "###-###-####",
@@ -86,7 +86,7 @@ export default {
 					btnLabel: "Show more info"
 				},
 				{
-					name: "McDo",
+					name: "test 2",
 					total_cashdrops: "14",
 					price: "Spaghetti",
 					phone_no: "###-###-####",
@@ -102,7 +102,7 @@ export default {
 					btnLabel: "Show more info"
 				},
 				{
-					name: "J & F Department Store Palo",
+					name: "test 3",
 					total_cashdrops: "20",
 					price: "50% less to all items",
 					phone_no: "###-###-####",
@@ -118,7 +118,7 @@ export default {
 					btnLabel: "Show more info"
 				},
 				{
-					name: "Seafoods & Ribs Warehouse",
+					name: "test 4",
 					total_cashdrops: "20",
 					price: "50% less to all items",
 					phoneNumber: "###-###-####",
@@ -176,5 +176,12 @@ export default {
 }
 .showMorequestInfo {
 	display: block;
+}
+.bg-purelypeer {
+	background-color: #0AC18E;
+	padding-top: 2px;
+}
+p {
+	color: #676767;
 }
 </style>

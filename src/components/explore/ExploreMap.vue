@@ -21,13 +21,6 @@
 				<GmapInfoWindow
 					v-for="(info, infoIndex) in quest" :key="infoIndex+'windowinfo'"
 					:options="{
-								content: '<div>\
-											<p><strong>Quest Info</strong></p>\
-											<span><strong>Quest Name: </strong>'+info.name+'</span><br/>\
-											<span><strong>PurelyPeer Tier: </strong>'+(info.acceptance_tier).charAt(0).toUpperCase()+(info.acceptance_tier).slice(1)+'</span><br/>\
-											<span><strong>Remaining Cash Drop: </strong>'+info.cashdrops_remaining+'</span><br/>\
-											<span><strong>Cash Drop Count: </strong>'+info.total_cashdrops+'</span><br/>\
-										</div>',
 								pixelOffset: {
 									width: 12,
 									height: -25
@@ -38,6 +31,13 @@
 					:position="info.coors"
 					:opened="info.infoWinOpen"
 					@closeclick="toggleWindowInfo(infoIndex)">
+					<div class="infowindow">
+						<p class="text-h6 info-header"><strong>Quest Info</strong></p>
+						<p class="q-my-none"><strong>Quest Name: </strong>{{ info.name }}</p>
+						<p class="q-my-none"><strong>PurelyPeer Tier: </strong>{{ (info.acceptance_tier).charAt(0).toUpperCase()+(info.acceptance_tier).slice(1) }}</p>
+						<p class="q-my-none"><strong>Remaining Cash Drop: </strong>{{ info.cashdrops_remaining }}</p>
+						<p class="q-my-none"><strong>Cash Drop Count: </strong>{{ info.total_cashdrops }}</p>
+					</div>
 				</GmapInfoWindow>
 
 				<GmapMarker ref="userLocation"
@@ -314,10 +314,14 @@ export default {
 			this.doResize(event)
 	    },
 		doResize (e) {
+
 			let map = this.$refs.mapRef
 			let newHeight = this.mapHeight + (e.type !== 'mousemove' ? e.changedTouches[0].screenY : e.clientY) - this.startY
+			let min_MapHeight = 334
 
-			newHeight >= 334 ? map.$el.style.height = newHeight + 'px' : ''
+			if (((80/100) * window.innerHeight) >= newHeight) {
+				newHeight >= min_MapHeight ? map.$el.style.height = newHeight + 'px' : ''
+			}
 		},
 	},
 	created () {
@@ -395,9 +399,12 @@ export default {
             inset 6px 6px 12px #0bd49c;
 }
 .btn-google-maps-resizer i {
-	position: absolute;
+	/*position: absolute;
 	top: -2px;
-	left: 7.5px;
+	left: 7.5px;*/
 	font-size: 20px !important;
+}
+.infowindow p {
+	color: #676767;
 }
 </style>

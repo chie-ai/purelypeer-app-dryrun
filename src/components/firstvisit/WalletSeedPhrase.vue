@@ -164,6 +164,12 @@ export default {
 		this.seedPhrase = this.$store.state.wallet.wallet.seedPhrase
 		this.seedHash = this.$store.state.wallet.seedhash
 		this.xPubKey = this.$store.state.wallet.xPubKey
+        this.$q.notify({
+	        message: 'Wallet has been successfully created!',
+	        color: 'notify-color',
+	        position: 'top',
+	        timeout: 3000
+	    })
 	}
 }
 </script>

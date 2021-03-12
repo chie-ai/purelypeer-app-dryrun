@@ -24,9 +24,7 @@ export default async function createWallet (walletIndex = 0) {
 
 		const returnValues = {
 			mnemonic,
-			seedBuffer,
 			seedHash,
-			masterHDNode,
 			xPubKey,
 			// childNode,
 			// bchAddress,

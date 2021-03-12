@@ -1,10 +1,12 @@
 <template>
 	<div>
-        <div class="q-px-lg q-pb-md q-pt-lg text-center">
-	        <img src="PurelyPeer-stamp.png" width="90%" class="rounded-borders">
-        </div>
-        <div class="q-px-md">
-	        <h5 class="q-my-md text-center">Select where to proceed</h5>
+		<div class="q-px-md">
+	        <div class="q-px-lg q-pb-md q-pt-lg text-center">
+		        <img src="PurelyPeer-stamp.png" width="90%" class="rounded-borders">
+	        </div>
+		</div>
+        <div class="q-px-lg">
+	        <h5 class="q-my-md text-center">Select what to display</h5>
         </div>
         <div class="q-mt-md text-center">
 			<div class="btn-seed-phrase q-px-sm">
@@ -42,9 +44,6 @@
 
 <script>
 export default {
-	data () {
-		return {}
-	},
 	methods: {
 	    proceed (destination) {
 	    	this.$router.push({path:`${destination}`})

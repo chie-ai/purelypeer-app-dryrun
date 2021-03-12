@@ -127,8 +127,11 @@ export default {
 		doResize (e) {
 			let map = this.$refs.mapRef
 			let newHeight = this.mapHeight + (e.type !== 'mousemove' ? e.changedTouches[0].screenY : e.clientY) - this.startY
+			let min_MapHeight = 334
 
-			newHeight >= 334 ? map.$el.style.height = newHeight + 'px' : ''
+			if (((80/100) * window.innerHeight) >= newHeight) {
+				newHeight >= min_MapHeight ? map.$el.style.height = newHeight + 'px' : ''
+			}
 		},
 	},
 	created () {
@@ -206,9 +209,9 @@ export default {
             inset 6px 6px 12px #0bd49c;
 }
 .btn-google-maps-resizer i {
-	position: absolute;
+	/*position: absolute;
 	top: -2px;
-	left: 7.5px;
+	left: 7.5px;*/
 	font-size: 20px !important;
 }
 </style>
