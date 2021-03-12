@@ -112,10 +112,6 @@ export default {
 	methods: {
 		onSubmitQuest (evt) {
 
-				// if (this.amount === 0.00000000) {
-
-				// 	return false
-				// }
 			this.$q.loading.show({
 		        message: 'Creating of quest is in progress. <br/><span class="text-white">Hang on...</span>'
 		    })

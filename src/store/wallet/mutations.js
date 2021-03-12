@@ -9,6 +9,6 @@ export function mutateAddresses (state, addresses) {
 }
 
 export function mutateKeys (state, data) {
-	state.seedHash = data.seed_hash
+	state.seedhash = data.seed_hash
 	state.xPubKey = data.xpubkey
 }

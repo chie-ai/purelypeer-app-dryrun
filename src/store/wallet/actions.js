@@ -8,7 +8,7 @@ export function createUser ({dispatch}, wallet) {
 		.then(response => {
 			dispatch('createWallet', wallet)
 			.then(res => {
-				console.log('Created user: ', res)
+				// console.log('Created user: ', res)
 				resolve(res)
 			})
 			.catch(err => console.log('error: ', err))
@@ -24,7 +24,7 @@ export function createWallet ({commit}, wallet) {
 	return new Promise((resolve, reject) => {
 		axios.post('https://staging.purelypeer.cash/api/wallet/', wallet)
 		.then(response => {
-			console.log('Wallet return: ', response.data)
+			// console.log('Wallet return: ', response.data)
 			commit('mutateAddresses', response.data.addresses)
 			commit('mutateKeys', response.data)
 

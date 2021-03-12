@@ -137,7 +137,7 @@ export default {
 
 			createWallet()
 			.then(response => {
-				console.log('Response: ', response)
+				// console.log('Response: ', response)
 
 				this.$store.commit('wallet/mutateSeedPhrase', response.mnemonic)
 
@@ -179,7 +179,7 @@ export default {
 	    },
   	},
   	created () {
-  		if (localStorage.getItem('seedPhrase')) this.$router.push({path:'seed-phrase'})
+  		if (localStorage.getItem('seedPhrase')) this.$router.push({path:'select-page-to-proceed'})
   		// localStorage.clear();
   	}
 }

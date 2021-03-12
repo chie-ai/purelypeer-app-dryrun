@@ -5,7 +5,7 @@
 		<h5 class="text-center q-mt-none">QRCODE</h5>
 
 		<div class="qr-code-row q-mb-lg">
-			<qr-code :text="addresses" color="#515D59" :size="220" class="seed-phrase"></qr-code>
+			<qr-code :text="seedPhrase" color="#515D59" :size="220" class="seed-phrase"></qr-code>
 		</div>
 
 		<template>
@@ -14,7 +14,7 @@
 
 			<div class="q-pa-lg">
 				<h5 class="text-center q-my-sm">Seed Phrase</h5>
-				<p class="text-center">{{ addresses }}</p>
+				<p class="text-center">{{ seedPhrase }}</p>
 			</div>
 
 		      <q-card-actions>
@@ -39,7 +39,15 @@
 					    label="proceed to create"
 					    @click="proceed('cash-drop')"
 				    />
-					<p class="q-mt-lg">B. To collect cashdrops</p>
+					<p class="q-mt-lg">B. To explore cashdrops</p>
+				    <q-btn
+					    rounded
+					    class="btn-seedPhrase text-white q-mt-none"
+					    size="md"
+					    label="proceed to explore"
+					    @click="proceed('explore')"
+				    />
+					<p class="q-mt-lg">C. To collect cashdrops</p>
 				    <q-btn
 					    rounded
 					    class="btn-seedPhrase text-white q-mt-none"
@@ -95,14 +103,12 @@ import { QSpinnerFacebook } from 'quasar'
 export default {
 	data () {
 		return {
-			addresses: null,
-			vibilitySeedPhrase: false,
+			seedPhrase: null,
+			seedHash: null,
+			xPubKey: null,
 		}
 	},
 	methods: {
-		toggleSeedPhrase () {
-			this.vibilitySeedPhrase = !this.vibilitySeedPhrase
-		},
 	    showSeedPhrase () {
 	      	this.$refs.seed_phrase_dialog.show()
 	    },
@@ -131,9 +137,10 @@ export default {
 
 		    this.$refs.seed_phrase.classList.add('hidden')
 
-		    localStorage.setItem('seedPhrase', this.addresses)
-		    localStorage.setItem('seedHash', this.$store.state.seedhash)
-		    localStorage.setItem('xPubkey', this.$store.state.xPubKey)
+		    // Store wallet seed phrase, seed hash and xpubkey to localstorage (will be used for importing wallet)
+		    localStorage.setItem('seedPhrase', this.seedPhrase)
+		    localStorage.setItem('seedHash', this.seedHash)
+		    localStorage.setItem('xPubkey', this.xPubKey)
 
 		    this.routeTimer = setTimeout(() => {
 		        this.$q.loading.hide()
@@ -154,9 +161,9 @@ export default {
 	    }
 	},
 	created () {
-		this.addresses = this.$store.state.wallet.wallet.seedPhrase
-		// this.addresses = localStorage.getItem('seedPhrase')
-		console.log('BCH address: ', this.addresses)
+		this.seedPhrase = this.$store.state.wallet.wallet.seedPhrase
+		this.seedHash = this.$store.state.wallet.seedhash
+		this.xPubKey = this.$store.state.wallet.xPubKey
 	}
 }
 </script>

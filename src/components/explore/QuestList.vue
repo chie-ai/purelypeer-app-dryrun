@@ -160,34 +160,12 @@ export default {
 			this.questRadius.number++
 			this.questRadius.number = this.questRadius.number == 5 ? 0 : this.questRadius.number
 		},
-		importWallet () {
-
-			let wallet = {
-				seed_hash: localStorage.getItem('seed_hash'),
-				xpubkey: localStorage.getItem('xpubkey')
-			}
-
-			this.$axios.post("https://staging.purelypeer.cash/api/wallet/import_wallet/", wallet)
-			.then(response => {
-				console.log('Mutate Addresses', response)
-				this.$store.commit('wallet/mutateAddresses', response.data.addresses)
-
-				// this.fetchQuestList()
-
-				console.log('BCH address: ', this.$store.state.wallet.wallet.addresses[0].bch)
-				console.log('SLP address: ', this.$store.state.wallet.wallet.addresses[0].slp)
-			})
-			.catch(error => console.log('Failed importing'))
-		},
 		fetchQuestList () {
 			this.$store.dispatch('cashdrop/fetchQuestList')
 			.then(response => {
 				console.log('Hello quest: ', response)
 			})
 		}
-	},
-	created () {
-		this.importWallet()
 	}
 }
 </script>
