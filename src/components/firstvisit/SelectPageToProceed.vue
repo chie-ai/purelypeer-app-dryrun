@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="q-px-md">
+		<div class="q-px-md q-mt-lg">
 	        <div class="q-px-lg q-pb-md q-pt-lg text-center">
 		        <img src="PurelyPeer-stamp.png" width="90%" class="rounded-borders">
 	        </div>
@@ -59,6 +59,7 @@ export default {
 			.then(response => {
 				// console.log('Mutate Addresses', response)
 				this.$store.commit('wallet/mutateAddresses', response.data.addresses)
+				// addresses[0].bch_address
 			})
 			.catch(error => console.log('Failed importing'))
 		},

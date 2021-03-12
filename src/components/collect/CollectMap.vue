@@ -21,13 +21,6 @@
 				<GmapInfoWindow
 					v-for="(info, infoIndex) in quest" :key="infoIndex+'windowinfo'"
 					:options="{
-								content: '<div>\
-											<p><strong>Quest Info</strong></p>\
-											<span><strong>Quest Name: </strong>'+info.name+'</span><br/>\
-											<span><strong>PurelyPeer Tier: </strong>'+(info.acceptance_tier).charAt(0).toUpperCase()+(info.acceptance_tier).slice(1)+'</span><br/>\
-											<span><strong>Remaining Cash Drop: </strong>'+info.cashdrops_remaining+'</span><br/>\
-											<span><strong>Cash Drop Count: </strong>'+info.total_cashdrops+'</span><br/>\
-										</div>',
 								pixelOffset: {
 									width: 12,
 									height: -25
@@ -38,6 +31,13 @@
 					:position="info.coors"
 					:opened="info.infoWinOpen"
 					@closeclick="toggleWindowInfo(infoIndex)">
+					<div class="infowindow">
+						<p class="text-h6 info-header"><strong>Quest Info</strong></p>
+						<p class="q-my-sm"><strong>Quest Name: </strong>{{ info.name }}</p>
+						<p class="q-my-sm"><strong>PurelyPeer Tier: </strong>{{ (info.acceptance_tier).charAt(0).toUpperCase()+(info.acceptance_tier).slice(1) }}</p>
+						<p class="q-my-sm"><strong>Remaining Cash Drop: </strong>{{ info.cashdrops_remaining }}</p>
+						<p class="q-my-sm"><strong>Cash Drop Count: </strong>{{ info.total_cashdrops }}</p>
+					</div>
 				</GmapInfoWindow>
 
 				<GmapMarker ref="userLocation"
@@ -398,5 +398,8 @@ export default {
 	top: -2px;
 	left: 7.5px;*/
 	font-size: 20px !important;
+}
+.infowindow p {
+	color: #676767;
 }
 </style>

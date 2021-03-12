@@ -184,7 +184,7 @@ export default {
   	}
 }
 </script>
-
+ 
 <style>
 .carousel-style {
 	position: fixed;
@@ -205,7 +205,7 @@ export default {
 .guide-phrase {
 	position: relative;
 	overflow: hidden;
-	height: calc((36/100) * 100vh)
+	height: calc((32/100) * 100vh)
 }
 .text-control-color {
 	color: #0AC18E;

@@ -18,7 +18,6 @@
 									<p class="q-mb-xs"><span class="text-weight-bold">Phone Number: </span><span class="text-subtitle2">{{ quest.phone_no }}</span></p>
 									<p class="q-mb-xs"><span class="text-weight-bold">Contact URL: </span><a href="www.facebook.com" class="text-caption">{{ quest.contactUrl }}</a></p>
 									<p class="q-mb-xs"><span class="text-weight-bold">Presence: </span><span>{{ quest.presence }}</span></p>
-									<p class="q-mb-xs"><span class="text-weight-bold">Radius: </span><span>{{ quest.radius }}</span></p>
 								</div>
 							</div>
 							<div class="col-12 q-px-sm q-mt-sm">

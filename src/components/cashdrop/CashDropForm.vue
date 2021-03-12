@@ -71,19 +71,19 @@ export default {
 			tierModel: null,
 			tier: {
 			    options: [
-			        '\uD83D\uDC9A', '\uD83E\uDDE1', '\uD83D\uDC99', '\uD83D\uDDA4'
+			        'Direct \uD83D\uDC9A', 'Indirect \uD83E\uDDE1', 'Upcoming \uD83D\uDC99', 'Inactive \uD83D\uDDA4'
 			    ]
 			},
 			presenceModel: null,
 			presence: {
 				options: [
-					'\uD83E\uDDF1\u2714\uFE0F', '\uD83E\uDDF1\u274C'
+					'Yes \uD83E\uDDF1\u2714\uFE0F', 'No \uD83E\uDDF1\u274C'
 				]
 			},
 			radiusModel: null,
 			radius: {
 				options: [
-					'\uD83D\uDD7A\u267F\uD83D\uDC83', '\uD83C\uDFD9\uFE0F', '\uD83D\uDEE3\uFE0F', '\uD83C\uDF10'
+					'15 min \uD83D\uDD7A\u267F\uD83D\uDC83', 'Urban \uD83C\uDFD9\uFE0F', 'Regional \uD83D\uDEE3\uFE0F', 'Continental \uD83C\uDF10'
 				]
 			},
 			amount: 0.00000000,
@@ -93,7 +93,9 @@ export default {
 				radius: null
 			},
 			feeBreakdown: 0.00002000,
-			amountBoolean: false
+			amountBoolean: false,
+			questPresence: null
+
 		}
 	},
 	props: ['questCoordinates'],
@@ -107,7 +109,14 @@ export default {
 		cashDropCountModel (newBreakdown, oldBreakdown) {
 			let C = 0.00050000, T = 0.00002000, N = this.cashDropCountModel, OT = N*T
 			this.feeBreakdown = OT.toFixed(8)
-		}
+		},
+		presenceModel (newPresence, oldPresence) {
+			if (this.presence.options.indexOf(newPresence) === 0) {
+				this.questPresence = 'Yes'
+			} else {
+				this.questPresence = 'No'
+			}
+		},
 	},
 	methods: {
 		onSubmitQuest (evt) {
@@ -134,6 +143,7 @@ export default {
 						"coors": coordinates,
 						"radius": this.cashDropFormModels.radius,
 						"total_cashdrops": this.cashDropCountModel,
+						"presence": this.questPresence,
 						"amount": this.amount.toFixed(8),
 						"payment_address": "bitcoincash:pp8skudq3x5hzw8ew7vzsw8tn4k8wxsqsv0lt0mf3g",
 						"pubkey": "dddddddd"
@@ -141,33 +151,33 @@ export default {
 
 					console.log('Form: ', questCreate)
 
-					this.$axios.post('https://staging.purelypeer.cash/api/quests/', questCreate)
-					.then(response => {
-						console.log('Success :', response)
+					// this.$axios.post('https://staging.purelypeer.cash/api/quests/', questCreate)
+					// .then(response => {
+					// 	console.log('Success :', response)
 
-						for (let i=0;this.refModels.length>i;i++) {
-							this[this.refModels[i]] = null
-						}
+					// 	for (let i=0;this.refModels.length>i;i++) {
+					// 		this[this.refModels[i]] = null
+					// 	}
 
-					    this.timer = setTimeout(() => {
-					        this.$q.loading.hide()
-					        this.timer = void 0
-							this.onReset()
-					    }, 0)
-					})
-					.catch(error => {
-						console.log('Error: ', error)
+					//     this.timer = setTimeout(() => {
+					//         this.$q.loading.hide()
+					//         this.timer = void 0
+					// 		this.onReset()
+					//     }, 0)
+					// })
+					// .catch(error => {
+					// 	console.log('Error: ', error)
 
-						for (let i=0;this.refModels.length>i;i++) {
-							this[this.refModels[i]] = null
-						}
+					// 	for (let i=0;this.refModels.length>i;i++) {
+					// 		this[this.refModels[i]] = null
+					// 	}
 
-					    this.timer = setTimeout(() => {
-					        this.$q.loading.hide()
-					        this.timer = void 0
-							this.onReset()
-					    }, 0)
-					})
+					//     this.timer = setTimeout(() => {
+					//         this.$q.loading.hide()
+					//         this.timer = void 0
+					// 		this.onReset()
+					//     }, 0)
+					// })
 				}
 			})
 		},

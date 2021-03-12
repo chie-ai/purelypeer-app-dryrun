@@ -33,10 +33,10 @@
 					@closeclick="toggleWindowInfo(infoIndex)">
 					<div class="infowindow">
 						<p class="text-h6 info-header"><strong>Quest Info</strong></p>
-						<p class="q-my-none"><strong>Quest Name: </strong>{{ info.name }}</p>
-						<p class="q-my-none"><strong>PurelyPeer Tier: </strong>{{ (info.acceptance_tier).charAt(0).toUpperCase()+(info.acceptance_tier).slice(1) }}</p>
-						<p class="q-my-none"><strong>Remaining Cash Drop: </strong>{{ info.cashdrops_remaining }}</p>
-						<p class="q-my-none"><strong>Cash Drop Count: </strong>{{ info.total_cashdrops }}</p>
+						<p class="q-my-sm"><strong>Quest Name: </strong>{{ info.name }}</p>
+						<p class="q-my-sm"><strong>PurelyPeer Tier: </strong>{{ (info.acceptance_tier).charAt(0).toUpperCase()+(info.acceptance_tier).slice(1) }}</p>
+						<p class="q-my-sm"><strong>Remaining Cash Drop: </strong>{{ info.cashdrops_remaining }}</p>
+						<p class="q-my-sm"><strong>Cash Drop Count: </strong>{{ info.total_cashdrops }}</p>
 					</div>
 				</GmapInfoWindow>
 
