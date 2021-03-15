@@ -395,6 +395,7 @@ export default {
 	color: #fff;
 	background: #0AC18E;
 	outline: none;
+	box-shadow: green;
 	box-shadow: inset -6px -6px 12px #09ae80,
             inset 6px 6px 12px #0bd49c;
 }

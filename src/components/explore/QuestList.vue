@@ -74,7 +74,7 @@ export default {
 					price: "Mug",
 					phone_no: "###-###-####",
 					contact_url: "www.facebook.com/merchant-contact",
-					acceptance_tier: "\u2764\uFE0F\uD83D\uDCAF",
+					acceptance_tier: "All \u2764\uFE0F\uD83D\uDCAF",
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
 					radius: "\u2B55\uD83D\uDCAF",
 					coors: {
@@ -90,7 +90,7 @@ export default {
 					price: "Spaghetti",
 					phone_no: "###-###-####",
 					contact_url: "www.facebook.com/merchant-contact",
-					acceptance_tier: "\u2764\uFE0F\uD83D\uDCAF",
+					acceptance_tier: "All \u2764\uFE0F\uD83D\uDCAF",
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
 					radius: "\u2B55\uD83D\uDCAF",
 					coors: {
@@ -106,7 +106,7 @@ export default {
 					price: "50% less to all items",
 					phone_no: "###-###-####",
 					contact_url: "www.facebook.com/merchant-contact",
-					acceptance_tier: "\u2764\uFE0F\uD83D\uDCAF",
+					acceptance_tier: "All \u2764\uFE0F\uD83D\uDCAF",
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
 					radius: "\u2B55\uD83D\uDCAF",
 					coors: {
@@ -122,7 +122,7 @@ export default {
 					price: "50% less to all items",
 					phoneNumber: "###-###-####",
 					contact_url: "www.facebook.com/merchant-contact",
-					acceptance_tier: "\u2764\uFE0F\uD83D\uDCAF",
+					acceptance_tier: "All \u2764\uFE0F\uD83D\uDCAF",
 					presence: "\uD83E\uDDF1\uD83D\uDCAF",
 					radius: "\u2B55\uD83D\uDCAF",
 					coors: {

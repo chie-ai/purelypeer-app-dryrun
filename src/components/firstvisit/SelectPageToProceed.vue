@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div ref="select_a_page">
 		<div class="q-px-md q-mt-lg">
 	        <div class="q-px-lg q-pb-md q-pt-lg text-center">
 		        <img src="PurelyPeer-stamp.png" width="90%" class="rounded-borders">
@@ -43,10 +43,23 @@
 </template>
 
 <script>
+import { QSpinnerFacebook } from 'quasar'
+
 export default {
 	methods: {
 	    proceed (destination) {
-	    	this.$router.push({path:`${destination}`})
+
+		    this.$q.loading.show({
+		        spinner: QSpinnerFacebook,
+		        spinnerColor: 'spinner-color',
+		        spinnerSize: 140,
+		        backgroundColor: 'white',
+		    })
+		    this.$refs.select_a_page.style.display = "none"
+		    setTimeout(() => {
+		        this.$q.loading.hide()
+		    	this.$router.push({path:`${destination}`})
+		    }, 2000)
 	    },
 		importWallet () {
 
@@ -76,5 +89,8 @@ export default {
 	padding-top: 6px;
 	padding-bottom: 2px;
 	width: 100% !important;
+}
+.text-spinner-color {
+	color: #0AC18E;
 }
 </style>
