@@ -33,6 +33,7 @@ const routes = [
     component: () => import('layouts/setting/SettingLayout.vue'),
     children: [
       { path: '', component: () => import('pages/setting/Index.vue') },
+      { path: 'receive', component: () => import('pages/setting/Receive.vue') },
     ]
   },
   {

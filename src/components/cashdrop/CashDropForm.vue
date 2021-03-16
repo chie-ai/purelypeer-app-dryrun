@@ -7,7 +7,7 @@
 				<div class="row justify-center q-mb-md">
 					<div class="col-11">
 						<q-form ref="questForm" class="q-gutter-y-sm" action="https://some-url.com" method="post" @submit="onSubmitQuest" >
-							<q-input ref="merchantName" color="grey-5" :dense="true" bg-color="white" outlined label="Merchant Name" type="text" v-model="merchantName"
+							<q-input ref="merchantName" color="grey-5" :dense="true" bg-color="white" outlined label="Merchant Name" type="text" lazy-rules v-model="merchantName"
 								:rules="[val => !!val || 'Merchant name is required']" />
 							<q-input ref="phoneNumber" color="grey-5" :dense="true" bg-color="white" outlined label="Phone number" type="number" v-model="phoneNumber"
 								mask="(###) #### - ####" fill-mask unmasked-value class="q-mb-lg" />
@@ -15,13 +15,13 @@
 							<q-input ref="memo" color="grey-5" :dense="true" bg-color="white" outlined label="Memo" type="text" v-model="memo" class="q-mb-lg" />
 							<q-select ref="tierModel" outlined color="grey-5" :dense="true" bg-color="white" v-model="tierModel"
 								:options="tier.options" label="PurelyPeer Tier"
-								:rules="[val => !!val || 'PurelyPeer tier is required']" />
+								lazy-rules :rules="[val => !!val || 'PurelyPeer tier is required']" />
 							<q-select ref="presenceModel" outlined color="grey-5" :dense="true" bg-color="white" v-model="presenceModel"
 								:options="presence.options" label="Physical Presence"
-								:rules="[val => !!val || 'Physical presence is required']" />
+								lazy-rules :rules="[val => !!val || 'Physical presence is required']" />
 							<q-select ref="radiusModel" outlined color="grey-5" :dense="true" bg-color="white" v-model="radiusModel"
 								:options="radius.options" label="Quest Radius"
-								:rules="[val => !!val || 'Quest radius is required']" />
+								lazy-rules :rules="[val => !!val || 'Quest radius is required']" />
 						    <q-badge class="slider-badge">
 						      <b>Total of cashdrops</b> : {{ cashDropCountModel }}
 						    </q-badge>
@@ -35,7 +35,7 @@
 						    <q-badge class="slider-badge">
 						      <b>Amount</b> : {{ amount.toFixed(8) }}
 						    </q-badge>
-						    <q-slider class="q-mt-none q-mb-sm amount-range-slider"
+						    <q-slider class="q-mt-none q-mb-none amount-range-slider"
 						      :value="0.00000000"
 						      v-model="amount"
 						      :min="0.00000000"
@@ -44,7 +44,7 @@
 						      label
 						      :label-value="amount.toFixed(8)"
 						    />
-						    <!-- <span color="red-9" class="text-weight-light" style="font-size: 12px" v-if="amount === 0.00000000">Amount must not be empty</span> -->
+						    <span class="text-weight-light" style="font-size: 11px; color: red;">Amount must not be empty</span>
 							<q-input color="grey-5" :dense="true" class="q-mb-lg" bg-color="white" outlined
 						        v-model="feeBreakdown" label="Fee breakdown"
 						        input-class="text-right" readonly />
@@ -63,7 +63,7 @@
 export default {
 	data() {
 		return {
-			refModels: ['merchantName','phoneNumber','contactUrl','memo','tierModel','presenceModel','radiusModel','cashDropCountModel','amount'],
+			refModels: ['merchantName','phoneNumber','contactUrl','memo','tierModel','presenceModel','radiusModel'],
 			merchantName: null,
 			phoneNumber: null,
 			contactUrl: null,
@@ -125,7 +125,20 @@ export default {
 		        message: 'Creating of quest is in progress. <br/><span class="text-white">Hang on...</span>'
 		    })
 
+		    // if ((this.amount).toFixed(8) == '0.00000000') {
+			   //  this.$q.notify({
+						//         message: 'Amount is invalid...',
+						//         color: 'red-8',
+						//         timeout: 1000,
+						//         position: 'top'
+						//     })
+			   //  this.$q.loading.hide()
+
+			   //  return false
+		    // }
+
 			this.$refs.questForm.validate().then(success => {
+
 				if (success) {
 					let coordinates = []
 					for (let i=0; Object.keys(this.questCoordinates).length>i; i++) {
@@ -157,6 +170,7 @@ export default {
 
 					// 	for (let i=0;this.refModels.length>i;i++) {
 					// 		this[this.refModels[i]] = null
+					// 		this.$refs[this.refModels[i]].resetValidation()
 					// 	}
 
 					//     this.timer = setTimeout(() => {
@@ -167,24 +181,9 @@ export default {
 					// })
 					// .catch(error => {
 					// 	console.log('Error: ', error)
-
-					// 	for (let i=0;this.refModels.length>i;i++) {
-					// 		this[this.refModels[i]] = null
-					// 	}
-
-					//     this.timer = setTimeout(() => {
-					//         this.$q.loading.hide()
-					//         this.timer = void 0
-					// 		this.onReset()
-					//     }, 0)
 					// })
 				}
 			})
-		},
-		onReset () {
-			for (let i=0;this.refModels.length>i;i++) {
-				this.$refs[this.refModels[i]].resetValidation()
-			}
 		},
 		changeTier () {
 			let tierIcon = 'PurelyPeer-icon-black.png'

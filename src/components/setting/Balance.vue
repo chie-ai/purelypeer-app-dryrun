@@ -15,22 +15,10 @@
 
 <script>
 
-import checkBCHBalance from '../../utils/check_bchbalance.js'
-
 export default {
 	data () {
 		return {}
 	},
-	created () {
-		console.log('BCH Add: ', this.$store.state.wallet.wallet.addresses[0].bch)
-		let balance = checkBCHBalance(this.$store.state.wallet.wallet.addresses[0].bch)
-			.then(response => {
-				console.log('Success: ', response)
-			})
-			.catch(error => {
-				console.log('Failed: ', error)
-			})
-	}
 }
 </script>
 

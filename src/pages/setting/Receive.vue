@@ -1,15 +1,15 @@
 <template>
 	<div class="row">
-		<Balance />
+		<Receive />
 	</div>
 </template>
 
 <script>
-import Balance from '../../components/setting/Balance.vue'
+import Receive from '../../components/setting/Receive.vue'
 
 export default {
 	components: {
-		Balance
+		Receive
 	}
 }
 </script>

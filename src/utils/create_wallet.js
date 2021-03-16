@@ -1,14 +1,4 @@
-const NETWORK = 'testnet'
-
-// REST API servers.
-const BCHN_MAINNET = 'https://bchn.fullstack.cash/v3/'
-// const ABC_MAINNET = 'https://abc.fullstack.cash/v3/'
-const TESTNET3 = 'https://testnet3.fullstack.cash/v3/'
-
-const BCHJS = require('@psf/bch-js')
-
-const bchjs = NETWORK === 'mainnet' ? new BCHJS({ restURL: BCHN_MAINNET }) : new BCHJS({ restURL: TESTNET3 })
-
+import bchjs from './getAPIServer.js'
 import sha256 from 'js-sha256';
 
 export default async function createWallet (walletIndex = 0) {

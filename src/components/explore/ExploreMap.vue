@@ -50,7 +50,7 @@
 
 				<GmapMarker v-for="(mark, markerIndex) in quest" :key="markerIndex+'marker'"
 					:icon="{
-							url: (mark.active === 'active' ? (mark.acceptance_tier === 'upcoming' ? 'PurelyPeer-location-blue.png' : (mark.acceptance_tier === 'direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png'),
+							url: (mark.active === 'active' ? (mark.acceptance_tier === 'Upcoming' ? 'PurelyPeer-location-blue.png' : (mark.acceptance_tier === 'Direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png'),
 
 							scaledSize: google && new google.maps.Size((mark.active === 'active' ? 30 : 50), (mark.active === 'active' ? 40 : 50)),
 
@@ -117,7 +117,7 @@ export default {
 					],
 					radius: 1900,
 					active: "active",
-					acceptance_tier: 'upcoming',
+					acceptance_tier: 'Direct',
 					infoWinOpen: false,
 					radiusVisibility: false
 				},
@@ -154,7 +154,7 @@ export default {
 					],
 					radius: 1000,
 					active: "active",
-					acceptance_tier: 'direct',
+					acceptance_tier: 'Indirect',
 					infoWinOpen: false,
 					radiusVisibility: false
 				},
@@ -192,7 +192,7 @@ export default {
 					],
 					radius: 1300,
 					active: "active",
-					acceptance_tier: 'indirect',
+					acceptance_tier: 'Upcoming',
 					infoWinOpen: false,
 					radiusVisibility: false
 				},
@@ -230,7 +230,7 @@ export default {
 					],
 					radius: 1200,
 					active: "inactive",
-					acceptance_tier: 'direct',
+					acceptance_tier: 'Inactive',
 					infoWinOpen: false,
 					radiusVisibility: false
 				}

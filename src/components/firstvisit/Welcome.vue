@@ -188,7 +188,7 @@ export default {
 <style>
 .carousel-style {
 	position: fixed;
-	height: 100%;
+	height: 98%;
 	box-shadow: none;
 	overflow: auto;
 }

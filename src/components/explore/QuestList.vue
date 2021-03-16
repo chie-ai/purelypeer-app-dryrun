@@ -10,10 +10,14 @@
 							<div class="col-12 q-px-sm">
 								<p class="q-mb-xs"><span class="text-weight-bold">Name: </span><span class="text-subtitle2">{{ quest.name }}</span></p>
 								<p class="q-mb-xs"><span class="text-weight-bold">Cash Drop Count: </span><span class="text-subtitle2">{{ quest.total_cashdrops }}</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">PurelyPeer Tier: </span><span>{{ quest.acceptance_tier }}</span></p>
+
+								<p class="q-mb-xs"><span class="text-weight-bold">PurelyPeer Tier: </span>
+									<span>
+										{{ quest.acceptance_tier === 'Direct' ? 'Direct \uD83D\uDC9A' : quest.acceptance_tier === 'Indirect' ? 'Indirect \uD83E\uDDE1' : quest.acceptance_tier === 'Upcoming' ? 'Upcoming \uD83D\uDC99' : 'Inactive \uD83D\uDDA4' }}
+									</span>
+								</p>
 
 								<div class="questMoreInfo" :ref="questIndex">
-									<p class="q-mb-xs"><span class="text-weight-bold">Level: </span><span>{{ (quest.level).charAt(0).toUpperCase() + (quest.level).slice(1) }}</span></p>
 									<p class="q-mb-xs"><span class="text-weight-bold">Radius: </span><span>{{ quest.radius }}</span></p>
 									<p class="q-mb-xs"><span class="text-weight-bold">Phone Number: </span><span class="text-subtitle2">{{ quest.phone_no }}</span></p>
 									<p class="q-mb-xs"><span class="text-weight-bold">Contact URL: </span><a href="www.facebook.com" class="text-caption">{{ quest.contactUrl }}</a></p>
@@ -71,65 +75,57 @@ export default {
 				{
 					name: "test 1",
 					total_cashdrops: "10",
-					price: "Mug",
 					phone_no: "###-###-####",
 					contact_url: "www.facebook.com/merchant-contact",
-					acceptance_tier: "All \u2764\uFE0F\uD83D\uDCAF",
-					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					radius: "\u2B55\uD83D\uDCAF",
+					acceptance_tier: "Direct",
+					presence: "Yes",
+					radius: "1500",
 					coors: {
 						lat: 11.17783410449158,
 						lng: 125.0017081909703
 					},
-					level: "upcoming",
 					btnLabel: "Show more info"
 				},
 				{
 					name: "test 2",
 					total_cashdrops: "14",
-					price: "Spaghetti",
 					phone_no: "###-###-####",
 					contact_url: "www.facebook.com/merchant-contact",
-					acceptance_tier: "All \u2764\uFE0F\uD83D\uDCAF",
-					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					radius: "\u2B55\uD83D\uDCAF",
+					acceptance_tier: "Indirect",
+					presence: "Yes",
+					radius: "1500",
 					coors: {
 						lat: 11.176572907648463,
 						lng: 125.00093244003742
 					},
-					level: "direct",
 					btnLabel: "Show more info"
 				},
 				{
 					name: "test 3",
 					total_cashdrops: "20",
-					price: "50% less to all items",
 					phone_no: "###-###-####",
 					contact_url: "www.facebook.com/merchant-contact",
-					acceptance_tier: "All \u2764\uFE0F\uD83D\uDCAF",
-					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					radius: "\u2B55\uD83D\uDCAF",
+					acceptance_tier: "Upcoming",
+					presence: "Yes",
+					radius: "1500",
 					coors: {
 						lat: 11.180325256142286,
 						lng: 125.00271409774162
 					},
-					level: "indirect",
 					btnLabel: "Show more info"
 				},
 				{
 					name: "test 4",
 					total_cashdrops: "20",
-					price: "50% less to all items",
 					phoneNumber: "###-###-####",
 					contact_url: "www.facebook.com/merchant-contact",
-					acceptance_tier: "All \u2764\uFE0F\uD83D\uDCAF",
-					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					radius: "\u2B55\uD83D\uDCAF",
+					acceptance_tier: "Inactive",
+					presence: "Yes",
+					radius: "1500",
 					coors: {
 						lat: 11.172492400856424,
 						lng: 124.9996134948425
 					},
-					level: "direct",
 					btnLabel: "Show more info"
 				}
 			]

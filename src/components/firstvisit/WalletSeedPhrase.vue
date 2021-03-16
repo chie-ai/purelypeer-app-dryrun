@@ -31,7 +31,7 @@
 
 				<div class="q-pa-lg">
 					<h5 class="text-center q-my-sm">Where do you want to proceed?</h5>
-					<p class="q-mt-md">A. To create cashdrops</p>
+					<p class="q-mt-md">A. To create quest</p>
 				    <q-btn
 					    rounded
 					    class="btn-seedPhrase text-white q-mt-none"
