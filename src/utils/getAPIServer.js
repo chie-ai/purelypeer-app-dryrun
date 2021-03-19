@@ -10,4 +10,4 @@ const BCHJS = require('@psf/bch-js')
 
 const bchjs = NETWORK === 'mainnet' ? new BCHJS({ restURL: BCHN_MAINNET }) : new BCHJS({ restURL: TESTNET3 })
 
-export default bchjs
+export default { bchjs, NETWORK }

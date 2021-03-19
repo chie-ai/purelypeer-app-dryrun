@@ -1,13 +1,13 @@
 <template>
 	<div class="row explore-body">
 		<ExploreMap :move-to-the-quest-coordinates="coordinates" />
-		<QuestList v-on:moveToTheQuestCoordinates="questCoordinates" />
+		<!-- <QuestList v-on:moveToTheQuestCoordinates="questCoordinates" /> -->
 	</div>
 </template>
 
 <script>
 import ExploreMap from '../../components/explore/ExploreMap.vue'
-import QuestList from '../../components/explore/QuestList.vue'
+// import QuestList from '../../components/explore/QuestList.vue'
 
 export default {
 	data () {
@@ -17,7 +17,7 @@ export default {
 	},
 	components: {
 		ExploreMap,
-		QuestList
+		// QuestList
 	},
 	methods: {
 		questCoordinates (coordinates) {
