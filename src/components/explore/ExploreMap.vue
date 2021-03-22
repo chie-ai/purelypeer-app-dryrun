@@ -2,13 +2,17 @@
 	<q-layout>
 		<q-page-container>
 			<div id="explore-map" class="row">
+				<div class="zoom-controls q-mt-md">
+					<span @click="zoomScale++">&#x2B06;&#xFE0F;</span>
+					<span @click="zoomScale--">&#x2B07;&#xFE0F;</span>
+				</div>
 			    <l-map
-			      :zoom="zoom"
+			      :zoom="zoomScale"
 			      :center="center"
 			      :options="mapOptions"
 			      style="height: 334px"
 			      @update:center="centerUpdate"
-			      @ready="readyLocation"
+			      @ready="readyMap"
 			      @click="removePopUpinfo"
 			      @move="removePopUpinfo"
 			      ref="myPurelyPeerMap"
@@ -20,7 +24,7 @@
 
 				    <l-marker v-for="(mark, markerIndex) in quest" :key="markerIndex+'marker'"
 				    :lat-lng="mark.coors" @click="toggleWindowInfo(markerIndex)">
-				    	<l-popup :options="popUpOptions" @remove="removePopUpinfo">
+				    	<l-popup :options="popUpOptions" @remove="removePopUpinfo" ref="pops">
 							<div class="infowindow">
 								<p class="text-h6 info-header"><strong>Quest Info</strong></p>
 								<p><strong>Quest Name: </strong>{{ mark.name }}</p>
@@ -68,12 +72,14 @@ export default {
 	},
 	data() {
 	    return {
-	    	zoom: 13,
-	   		url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-	    	attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+	    	zoomScale: 13,
+	   		url: 'https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png',
+	    	attribution: '©OpenStreetMap, ©CartoDB',
 	    	mapOptions: {
 	        	zoomSnap: 0.5,
-	        	closePopupOnClick: false
+	        	closePopupOnClick: true,
+	        	zoomControl: false,
+	        	inertia: true
 	    	},
 	    	popUpOptions: { 
 	    		autoPan: false,
@@ -234,14 +240,25 @@ export default {
 			activeIndex: 0,
 			cashDropsCoordinates: null
 		};
-	},    
+	},
+	props: ['moveToTheQuestCoordinates'],
+	watch: {
+	    moveToTheQuestCoordinates () {
+	    	let coors = this.moveToTheQuestCoordinates
+
+	    	this.center = coors
+	    	this.markerLocation = coors
+	    	this.removePopUpinfo()
+	    }
+	},
 	methods: {
  	    centerUpdate(center) {
-	      this.markerLocation = center;
-	      this.circle.center = center;
+	    	this.markerLocation = center;
+	    	this.circle.center = center;
 	    },
-	    readyLocation () {
-			this.$watchLocation({})
+	    readyMap () {
+			// this.$watchLocation({})
+	    	this.$getLocation({})
 			.then(coordinates => {
 				let coors = latLng(coordinates.lat, coordinates.lng)
 				this.center = coors
@@ -251,15 +268,14 @@ export default {
 			.catch(error => console.log('Unable to retreive your location: ', error))
 		},
 		toggleWindowInfo (infoIndex) {
-			// this.activeIndex !== infoIndex ? this.quest[this.activeIndex].infoWinOpen = false : ''
 			this.activeIndex !== infoIndex ? this.quest[this.activeIndex].radiusVisibility = false : ''
-			// this.quest[infoIndex].infoWinOpen = !this.quest[infoIndex].infoWinOpen
+			this.quest[infoIndex].infoWinOpen = !this.quest[infoIndex].infoWinOpen
 			this.quest[infoIndex].radiusVisibility = !this.quest[infoIndex].radiusVisibility
-			// this.cashDropsCoordinates = this.quest[infoIndex].infoWinOpen === true ? this.quest[infoIndex].cashdrops : ''
 			this.activeIndex = infoIndex
 		},
 		removePopUpinfo () {
-			// this.quest[this.activeIndex].infoWinOpen = false
+			this.quest[this.activeIndex].infoWinOpen === true ? document.getElementsByClassName('leaflet-popup-close-button')[0].click() : ''
+			this.quest[this.activeIndex].infoWinOpen = false
 			this.quest[this.activeIndex].radiusVisibility = false
 			this.cashDropsCoordinates = null
 		},
@@ -271,5 +287,19 @@ export default {
 .infowindow p {
 	color: #676767;
 	margin: 0;
+}
+.zoom-controls {
+	position: absolute;
+	text-align: center;
+	width: 100%;
+	z-index: 1000;
+}
+.zoom-controls span {
+	cursor: pointer;
+	font-size: 28px;
+	z-index: 1000;
+}
+.q-layout--standard {
+	min-height: 334px !important;
 }
 </style>
