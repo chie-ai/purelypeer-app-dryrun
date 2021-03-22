@@ -42,7 +42,7 @@
 				    <l-circle
 				    	v-for="(pin, index) in quest":key="index"
 					    :lat-lng="pin.coors"
-					    :radius="circle.radius"
+					    :radius="pin.radius"
 					    :color="circle.color"
 					    :fillColor="circle.fillColor"
 					    :weight="1"
@@ -92,14 +92,12 @@ export default {
 		    }),
 		    markerLocation: latLng(0, 0),
 		    circle: {
-		        center: [47.413220, -1.0482],
-		        radius: 1500,
 		        color: '#0AC18E',
 		        fillColor: 'transparent'
 		    },
 		    quest: [
 				{
-					name: "Star Card Collection",
+					name: "Quest 1",
 					total_cashdrops: 10,
 					cashdrops_remaining: 10,
 					phone_no: null,
@@ -126,14 +124,14 @@ export default {
 							}
 						}
 					],
-					radius: 1900,
+					radius: 150000,
 					active: "active",
 					acceptance_tier: 'Direct',
 					infoWinOpen: false,
 					radiusVisibility: false
 				},
 				{
-					name: "Half Moon Card Collection",
+					name: "Quest 2",
 					total_cashdrops: 10,
 					cashdrops_remaining: 10,
 					phone_no: null,
@@ -160,14 +158,14 @@ export default {
 							}
 						}
 					],
-					radius: 1000,
+					radius: 1500,
 					active: "active",
 					acceptance_tier: 'Indirect',
 					infoWinOpen: false,
 					radiusVisibility: false
 				},
 				{
-					name: "Sale Card Collection",
+					name: "Quest 3",
 					total_cashdrops: 10,
 					cashdrops_remaining: 10,
 					price: "50% less to all items",
@@ -195,14 +193,14 @@ export default {
 							}
 						}
 					],
-					radius: 1300,
+					radius: 15000,
 					active: "active",
 					acceptance_tier: 'Upcoming',
 					infoWinOpen: false,
 					radiusVisibility: false
 				},
 				{
-					name: "Coupon Card Collection",
+					name: "Quest 4",
 					total_cashdrops: 10,
 					cashdrops_remaining: 10,
 					price: "50% less to all items",
@@ -230,7 +228,7 @@ export default {
 							}
 						}
 					],
-					radius: 1200,
+					radius: 1500,
 					active: "inactive",
 					acceptance_tier: 'Inactive',
 					infoWinOpen: false,
@@ -262,8 +260,8 @@ export default {
 			.then(coordinates => {
 				let coors = latLng(coordinates.lat, coordinates.lng)
 				this.center = coors
-				// this.isLocationShared = true
 				this.circle.center = coors
+				this.isLocationShared = true
 			})
 			.catch(error => console.log('Unable to retreive your location: ', error))
 		},

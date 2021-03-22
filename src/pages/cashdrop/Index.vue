@@ -1,6 +1,6 @@
 <template>
 	<div class="row">
-		<CashDropMap :change-quest-radius="radius" :change-quest-tier="tier" v-on:deliverTheCoordinates="deliverTheCoordinates" />
+		<CashDropMap :change-quest-radius="radius" :change-quest-tier="tier" v-on:passCoordinatesToForm="passCoordinatesToForm" />
 		<CashDropForm v-on:changeQuestRadius="changeQuestRadius" v-on:changeQuestTier="changeQuestTier" :quest-coordinates="coordinates" />
 	</div>
 </template>
@@ -28,7 +28,7 @@ export default {
 		changeQuestTier (tier) {
 			this.tier = tier
 		},
-		deliverTheCoordinates (coors) {
+		passCoordinatesToForm (coors) {
 			this.coordinates = coors
 		}
 	}

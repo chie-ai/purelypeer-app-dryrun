@@ -146,6 +146,8 @@ export default {
 					xpubkey: response.xPubKey
 				}
 
+				console.log('XPubKey: ', response.xPubKey)
+
 				this.$store.dispatch('wallet/createUser', wallet)
 
 			    this.routeTimer = setTimeout(() => {

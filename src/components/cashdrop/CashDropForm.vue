@@ -137,6 +137,8 @@ export default {
 			   //  return false
 		    // }
 
+		    console.log('coordinates: ', this.questCoordinates)
+
 			this.$refs.questForm.validate().then(success => {
 
 				if (success) {

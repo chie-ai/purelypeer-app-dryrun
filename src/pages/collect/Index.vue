@@ -1,19 +1,29 @@
 <template>
 	<div class="row">
-		<ExploreMap />
-		<Gallery />
+		<CollectMap :move-to-the-quest-coordinates="coordinates" />
+		<!-- <Gallery v-on:moveToTheQuestCoordinates="questCoordinates" /> -->
 	</div>
 </template>
 
 <script>
-import ExploreMap from '../../components/collect/CollectMap.vue'
+import CollectMap from '../../components/collect/CollectMap.vue'
 import Gallery from '../../components/collect/Gallery.vue'
 
 export default {
+	data () {
+		return {
+			coordinates: null
+		}
+	},
 	components: {
-		ExploreMap,
+		CollectMap,
 		Gallery
-	}
+	},
+	methods: {
+		questCoordinates (coordinates) {
+			this.coordinates = coordinates
+		}
+	},
 }
 </script>
 
