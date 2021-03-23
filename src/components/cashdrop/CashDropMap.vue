@@ -13,6 +13,7 @@
 			      style="height: 334px"
 			      @update:center="centerUpdate"
 			      @ready="readyMap"
+			      @move="updateMarkerCoordinates"
 			      ref="myPurelyPeerMap"
 			    >
 
@@ -27,6 +28,9 @@
 					    :fillColor="circle.fillColor"
 					    :weight="1" />
 				</l-map>
+				<div class="adjust-map-height q-px-md">
+					<q-btn color="btn-map-resizer text-btn-color" v-touch-pan.vertical.prevent.mouse="resizeMapHeight" size="sm" label="Drag to resize" />
+				</div>
 			</div>
 		</q-page-container>
 	</q-layout>
@@ -121,6 +125,32 @@ export default {
 			})
 			.catch(error => console.log('Unable to retreive your location: ', error))
 		},
+		updateMarkerCoordinates () {
+			this.markerLocation = this.$refs.myPurelyPeerMap.mapObject.getCenter()
+		},
+		resizeMapHeight ({ evt, ...info }) {
+			let map = this.$refs.myPurelyPeerMap.$el
+		    if(this.counter == 0) {
+				this.mapHeight = parseInt(document.defaultView.getComputedStyle(map).height, 10)
+		    	this.startY = Math.round(evt.changedTouches[0].screenY)
+		    }
+		    if (!info.isFinal) {
+		    	this.counter++
+		    } else {
+		    	this.counter = 0
+		    }
+			this.doResize(event)
+	    },
+		doResize (e) {
+			let map = this.$refs.myPurelyPeerMap
+			let newHeight = this.mapHeight + e.changedTouches[0].screenY - this.startY
+			let min_MapHeight = 334
+
+			if (((80/100) * window.innerHeight) >= newHeight) {
+				newHeight >= min_MapHeight ? map.$el.style.height = newHeight + 'px' : ''
+			}
+			this.$refs.myPurelyPeerMap.mapObject.invalidateSize()
+		},
 	},
 }
 </script>
@@ -139,5 +169,19 @@ export default {
 }
 .q-layout--standard {
 	min-height: 334px !important;
+}
+.adjust-map-height {
+	position: absolute;
+	text-align: center;
+	bottom: 18px;
+	width: 100%;
+	z-index: 1000;
+}
+.bg-btn-map-resizer {
+	background-color: rgba(255, 255, 255, 0.4);
+	box-shadow: none !important;
+}
+.text-btn-color {
+	color: rgba(0, 0, 0, 0.7) !important;
 }
 </style>

@@ -3,7 +3,7 @@ import sha256 from 'js-sha256';
 
 export default async function createWallet (walletIndex = 0) {
 	try {
-		console.log('Network: ', server)
+		// console.log('Network: ', server)
 		const bchjs = server.bchjs
 		const mnemonic = bchjs.Mnemonic.generate(128);
 		const seedBuffer = await server.bchjs.Mnemonic.toSeed(mnemonic);

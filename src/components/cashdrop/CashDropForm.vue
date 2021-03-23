@@ -39,7 +39,7 @@
 						      :value="0.00000000"
 						      v-model="amount"
 						      :min="0.00000000"
-						      :max="3.00000000"
+						      :max="1.00000000"
 						      :step="0.00000001"
 						      label
 						      :label-value="amount.toFixed(8)"
@@ -158,7 +158,7 @@ export default {
 						"coors": coordinates,
 						"radius": this.cashDropFormModels.radius,
 						"total_cashdrops": this.cashDropCountModel,
-						"presence": this.questPresence,
+						"has_physical_presence": this.questPresence,
 						"amount": this.amount.toFixed(8),
 						"payment_address": "bitcoincash:pp8skudq3x5hzw8ew7vzsw8tn4k8wxsqsv0lt0mf3g",
 						"pubkey": "dddddddd"
