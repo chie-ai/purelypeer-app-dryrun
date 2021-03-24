@@ -12,13 +12,13 @@
 .wrapper {
 	top: 0px;
 	position: fixed;
-    display: flex;
-    width: 100%;
-    margin: auto;
-    align-items: stretch;
+  display: flex;
+  width: 100%;
+  margin: auto;
+  align-items: stretch;
 	box-shadow: inset 6px 6px 12px #09b384,
               inset -6px -6px 12px #0bcf98;
-	z-index: 20;
+	z-index: 2000;
 }
 #menu {
   width: 100%;

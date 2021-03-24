@@ -3,8 +3,8 @@
 		<q-page-container>
 			<div id="explore-map" class="row">
 				<div class="zoom-controls q-mt-md">
-					<span @click="zoomScale++">&#x2B06;&#xFE0F;</span>
-					<span @click="zoomScale--">&#x2B07;&#xFE0F;</span>
+					<span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
+					<span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
 				</div>
 			    <l-map
 			      :zoom="zoomScale"
@@ -48,7 +48,9 @@
 					    :weight="1"
 					    :visible="pin.radiusVisibility"
 					    @click="toggleWindowInfo(index)" />
-
+					<l-control :position="'bottomleft'" class="purelypeer-watermark" >
+					    PurelyPeer
+					</l-control>
 			    </l-map>
 				<div class="adjust-map-height q-px-md">
 					<q-btn color="btn-map-resizer text-btn-color" v-touch-pan.vertical.prevent.mouse="resizeMapHeight" size="sm" label="Drag to resize" />
@@ -60,7 +62,7 @@
 
 <script>
 import { latLng, icon } from "leaflet";
-import { LMap, LTileLayer, LMarker, LCircle, LPopup, LIcon } from "vue2-leaflet";
+import { LMap, LTileLayer, LMarker, LCircle, LPopup, LIcon, LControl } from "vue2-leaflet";
 import 'leaflet/dist/leaflet.css';
 
 export default {
@@ -71,7 +73,8 @@ export default {
 	    LMarker,
 	    LCircle,
 	    LPopup,
-	    LIcon
+	    LIcon,
+	    LControl
 	},
 	data() {
 	    return {
@@ -282,7 +285,7 @@ export default {
 			this.quest[this.activeIndex].radiusVisibility = false
 			this.cashDropsCoordinates = null
 
-			this.markerLocation = this.$refs.myPurelyPeerMap.mapObject.getCenter()
+			// this.markerLocation = this.$refs.myPurelyPeerMap.mapObject.getCenter()
 		},
 		resizeMapHeight ({ evt, ...info }) {
 			let map = this.$refs.myPurelyPeerMap.$el
@@ -305,7 +308,7 @@ export default {
 			if (((80/100) * window.innerHeight) >= newHeight) {
 				newHeight >= min_MapHeight ? map.$el.style.height = newHeight + 'px' : ''
 			}
-			this.$refs.myPurelyPeerMap.mapObject.invalidateSize()
+			// this.$refs.myPurelyPeerMap.mapObject.invalidateSize()
 		},
 	},
 };
@@ -343,5 +346,14 @@ export default {
 }
 .text-btn-color {
 	color: rgba(0, 0, 0, 0.7) !important;
+}
+.purelypeer-watermark {
+	font-size: 150%;
+	font-weight: bolder;
+	color: #676767;
+	text-shadow: #555;
+	margin-left: 10px;
+	opacity: 0.5;
+	padding-bottom: 0px;
 }
 </style>

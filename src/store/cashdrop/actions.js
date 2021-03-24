@@ -1,7 +1,7 @@
 
 import axios from 'axios'
 
-export function fetchQuestList ({}) {
+export function fetchQuestList ({},) {
 	return new Promise((resolve, reject) => {
 		axios.get('https://staging.purelypeer.cash/api/quests/')
 		.then(response => {
@@ -14,4 +14,18 @@ export function fetchQuestList ({}) {
 		})
 	})
 
+}
+
+export function createQuest ({}, questCreate) {
+	return new Promise((resolve, reject) => {
+		axios.post('https://staging.purelypeer.cash/api/quests/', questCreate)
+		.then(response => {
+			console.log('Success :', response)
+			resolve(response)
+		})
+		.catch(error => {
+			console.log('Error: ', error)
+			reject(error)
+		})
+	})
 }

@@ -3,8 +3,8 @@
 		<q-page-container>
 			<div id="explore-map" class="row">
 				<div class="zoom-controls q-mt-md">
-					<span @click="zoomScale++">&#x2B06;&#xFE0F;</span>
-					<span @click="zoomScale--">&#x2B07;&#xFE0F;</span>
+					<span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
+					<span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
 				</div>
 			    <l-map
 			      :zoom="zoomScale"
@@ -27,9 +27,12 @@
 					    :color="circle.color"
 					    :fillColor="circle.fillColor"
 					    :weight="1" />
+					<!-- <l-control :position="'topleft'" class="purelypeer-watermark" >
+					    PurelyPeer
+					</l-control> -->
 				</l-map>
 				<div class="adjust-map-height q-px-md">
-					<q-btn color="btn-map-resizer text-btn-color" v-touch-pan.vertical.prevent.mouse="resizeMapHeight" size="sm" label="Drag to resize" />
+					<q-btn color="btn-map-resizer text-btn-color" class="btn-map" v-touch-pan.vertical.prevent.mouse="resizeMapHeight" size="sm" label="Drag to resize" />
 				</div>
 			</div>
 		</q-page-container>
@@ -38,7 +41,7 @@
 
 <script>
 import { latLng, icon } from "leaflet";
-import { LMap, LTileLayer, LMarker, LCircle, LIcon } from "vue2-leaflet";
+import { LMap, LTileLayer, LMarker, LCircle, LIcon, LControl } from "vue2-leaflet";
 import 'leaflet/dist/leaflet.css';
 
 export default {
@@ -48,11 +51,12 @@ export default {
 	    LTileLayer,
 	    LMarker,
 	    LCircle,
-	    LIcon
+	    LIcon,
+	    LControl
 	},
 	data () {
 		return {
-	    	zoomScale: 13,
+	    	zoomScale: 14,
 	   		url: 'https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png',
 	    	attribution: '©OpenStreetMap, ©CartoDB',
 	    	mapOptions: {
@@ -155,7 +159,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .zoom-controls {
 	position: absolute;
 	text-align: center;
@@ -183,5 +187,17 @@ export default {
 }
 .text-btn-color {
 	color: rgba(0, 0, 0, 0.7) !important;
+}
+.btn-map {
+	width: 80%;
+}
+.purelypeer-watermark {
+	font-size: 150%;
+	font-weight: bolder;
+	color: #676767;
+	text-shadow: #555;
+	margin-left: 10px;
+	opacity: 0.5;
+	padding-bottom: 0px;
 }
 </style>

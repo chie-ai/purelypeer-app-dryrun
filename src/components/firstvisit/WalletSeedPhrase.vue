@@ -131,7 +131,7 @@ export default {
 		        spinnerColor: 'spinner-color',
 		        spinnerSize: 140,
 		        backgroundColor: 'white',
-		        message: '<b>backing up of seed phrase is in progress.</b> <br/><strong style="color: #0AC18E;">Hang on...</strong>',
+		        message: '<b>Backing up of seed phrase is in progress.</b> <br/><strong style="color: #0AC18E;">Hang on...</strong>',
 		        messageColor: 'black'
 		    })
 

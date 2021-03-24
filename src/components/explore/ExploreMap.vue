@@ -2,10 +2,12 @@
 	<q-layout>
 		<q-page-container>
 			<div id="explore-map" class="row">
-				<div class="zoom-controls q-mt-md">
-					<span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
-					<span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
-				</div>
+				<l-control class="example-custom-control">
+					<div class="zoom-controls q-mt-md">
+						<span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
+						<span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
+					</div>
+			    </l-control>
 			    <l-map
 			      :zoom="zoomScale"
 			      :center="center"
@@ -22,7 +24,7 @@
 
 				    <l-marker :icon="icon" :lat-lng="markerLocation"></l-marker>
 
-				    <l-marker v-for="(mark, markerIndex) in quest" :key="markerIndex+'marker'"
+				    <l-marker v-for="(mark, markerIndex) in quests" :key="markerIndex+'marker'"
 				    :lat-lng="mark.coors" @click="toggleWindowInfo(markerIndex)">
 				    	<l-popup :options="popUpOptions" @remove="removePopUpinfo" ref="pops">
 							<div class="infowindow">
@@ -40,7 +42,7 @@
 				    </l-marker>
 
 				    <l-circle
-				    	v-for="(pin, index) in quest":key="index"
+				    	v-for="(pin, index) in quests":key="index"
 					    :lat-lng="pin.coors"
 					    :radius="pin.radius"
 					    :color="circle.color"
@@ -48,10 +50,12 @@
 					    :weight="1"
 					    :visible="pin.radiusVisibility"
 					    @click="toggleWindowInfo(index)" />
-
+					<!-- <l-control :position="'topleft'" class="purelypeer-watermark" >
+					    PurelyPeer
+					</l-control> -->
 			    </l-map>
 				<div class="adjust-map-height q-px-md">
-					<q-btn color="btn-map-resizer text-btn-color" v-touch-pan.vertical.prevent.mouse="resizeMapHeight" size="sm" label="Drag to resize" />
+					<q-btn color="btn-map-resizer text-btn-color" class="btn-map" v-touch-pan.vertical.prevent.mouse="resizeMapHeight" size="sm" label="Drag to resize" />
 				</div>
 			</div>
 		</q-page-container>
@@ -60,7 +64,7 @@
 
 <script>
 import { latLng, icon, latLngBounds } from "leaflet";
-import { LMap, LTileLayer, LMarker, LCircle, LPopup, LIcon } from "vue2-leaflet";
+import { LMap, LTileLayer, LMarker, LCircle, LPopup, LIcon, LControl } from "vue2-leaflet";
 import 'leaflet/dist/leaflet.css';
 // import server from '../../utils/getAPIServer.js'
 
@@ -72,7 +76,8 @@ export default {
 	    LMarker,
 	    LCircle,
 	    LPopup,
-	    LIcon
+	    LIcon,
+	    LControl
 	},
 	data() {
 	    return {
@@ -100,151 +105,13 @@ export default {
 		        color: '#0AC18E',
 		        fillColor: 'transparent'
 		    },
-		    quest: [
-				{
-					name: "Quest 1",
-					total_cashdrops: 10,
-					cashdrops_remaining: 10,
-					phone_no: null,
-					contact_url: "www.facebook.com/merchant-contact",
-					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					coors: [ 11.17783410449158, 125.0017081909703 ],
-					cashdrops: [
-						{
-							coors: {
-								lat: 11.170425256142286,
-								lng: 125.00371409774162
-							}
-						},
-						{
-							coors: {
-								lat: 11.170225256142286,
-								lng: 125.00471409774162
-							}
-						},
-						{
-							coors: {
-								lat: 11.170525256142286,
-								lng: 125.00171409774162
-							}
-						}
-					],
-					radius: 150000,
-					active: "active",
-					acceptance_tier: 'Direct',
-					infoWinOpen: false,
-					radiusVisibility: false
-				},
-				{
-					name: "Quest 2",
-					total_cashdrops: 10,
-					cashdrops_remaining: 10,
-					phone_no: null,
-					contact_url: "www.facebook.com/merchant-contact",
-					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					coors: [ 11.176572907648463, 125.00093244003742 ],
-					cashdrops: [
-						{
-							coors: {
-								lat: 11.170425256142286,
-								lng: 125.00071409774162
-							}
-						},
-						{
-							coors: {
-								lat: 11.170225256142286,
-								lng: 125.00071409774162
-							}
-						},
-						{
-							coors: {
-								lat: 11.170525256142286,
-								lng: 125.00071409774162
-							}
-						}
-					],
-					radius: 1500,
-					active: "active",
-					acceptance_tier: 'Indirect',
-					infoWinOpen: false,
-					radiusVisibility: false
-				},
-				{
-					name: "Quest 3",
-					total_cashdrops: 10,
-					cashdrops_remaining: 10,
-					price: "50% less to all items",
-					phone_no: null,
-					contact_url: "www.facebook.com/merchant-contact",
-					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					coors: [ 11.180325256142286, 125.00271409774162 ],
-					cashdrops: [
-						{
-							coors: {
-								lat: 11.180425256142286,
-								lng: 125.00371409774162
-							}
-						},
-						{
-							coors: {
-								lat: 11.180225256142286,
-								lng: 125.00471409774162
-							}
-						},
-						{
-							coors: {
-								lat: 11.180525256142286,
-								lng: 125.00171409774162
-							}
-						}
-					],
-					radius: 15000,
-					active: "active",
-					acceptance_tier: 'Upcoming',
-					infoWinOpen: false,
-					radiusVisibility: false
-				},
-				{
-					name: "Quest 4",
-					total_cashdrops: 10,
-					cashdrops_remaining: 10,
-					price: "50% less to all items",
-					phone_no: null,
-					contact_url: "www.facebook.com/merchant-contact",
-					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					coors: [ 11.172492400856424, 124.9996134948425 ],
-					cashdrops: [
-						{
-							coors: {
-								lat: 11.170425256142286,
-								lng: 125.99171409774162
-							}
-						},
-						{
-							coors: {
-								lat: 11.170225256142286,
-								lng: 125.99271409774162
-							}
-						},
-						{
-							coors: {
-								lat: 11.170525256142286,
-								lng: 125.99571409774162
-							}
-						}
-					],
-					radius: 1500,
-					active: "inactive",
-					acceptance_tier: 'Inactive',
-					infoWinOpen: false,
-					radiusVisibility: false
-				}
-		    ],
+		    quests: null,
 			activeIndex: 0,
 			cashDropsCoordinates: null,
 			startY: 0,
 			counter: 0,
-			mapHeight: 0
+			mapHeight: 0,
+			hover: false
 		};
 	},
 	props: ['moveToTheQuestCoordinates'],
@@ -273,16 +140,18 @@ export default {
 			.catch(error => console.log('Unable to retreive your location: ', error))
 		},
 		toggleWindowInfo (infoIndex) {
-			this.activeIndex !== infoIndex ? this.quest[this.activeIndex].radiusVisibility = false : ''
-			this.quest[infoIndex].infoWinOpen = !this.quest[infoIndex].infoWinOpen
-			this.quest[infoIndex].radiusVisibility = !this.quest[infoIndex].radiusVisibility
+			this.activeIndex !== infoIndex ? this.quests[this.activeIndex].radiusVisibility = false : ''
+			this.quests[infoIndex].infoWinOpen = !this.quests[infoIndex].infoWinOpen
+			this.quests[infoIndex].radiusVisibility = !this.quests[infoIndex].radiusVisibility
 			this.activeIndex = infoIndex
 		},
 		removePopUpinfo () {
-			this.quest[this.activeIndex].infoWinOpen === true ? document.getElementsByClassName('leaflet-popup-close-button')[0].click() : ''
-			this.quest[this.activeIndex].infoWinOpen = false
-			this.quest[this.activeIndex].radiusVisibility = false
-			this.cashDropsCoordinates = null
+			if(this.quests !== null) {
+				this.quests[this.activeIndex].infoWinOpen === true ? document.getElementsByClassName('leaflet-popup-close-button')[0].click() : ''
+				this.quests[this.activeIndex].infoWinOpen = false
+				this.quests[this.activeIndex].radiusVisibility = false
+				this.cashDropsCoordinates = null
+			}
 
 			this.markerLocation = this.$refs.myPurelyPeerMap.mapObject.getCenter()
 		},
@@ -308,19 +177,18 @@ export default {
 				newHeight >= min_MapHeight ? map.$el.style.height = newHeight + 'px' : ''
 			}
 			this.$refs.myPurelyPeerMap.mapObject.invalidateSize()
-		},
+		}
 	},
-	// created () {
-	// 	let bchjs = server.bchjs
-
-	// 	let balance = bchjs.Electrumx.balance('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5')
-	// 		.then(res => {
-	// 			console.log('Balance: ', res)
-	// 		})
-	// 		.catch(err => {
-	// 			console.log('Err: ', err)
-	// 		})
-	// }
+	async mounted () {
+		await this.$store.dispatch('cashdrop/fetchQuestList')
+		.then(res => {
+			this.quests = res.data.results.map(quest => ({ ...quest, infoWinOpen: false, radiusVisibility: false }))
+			// this.$store.commit('cashdrop/mutateQuests', res.data.results)
+		})
+		.catch(err => {
+			console.log('Error: ', err)
+		})
+	}
 };
 </script>
 
@@ -343,13 +211,6 @@ export default {
 .q-layout--standard {
 	min-height: 334px !important;
 }
-.adjust-map-height {
-	position: absolute;
-	text-align: center;
-	bottom: -17px;
-	width: 100%;
-	z-index: 1000;
-}
 .resize-controller {
 	position: relative;
 	cursor: pointer;
@@ -359,6 +220,7 @@ export default {
 	text-align: center;
 	bottom: 18px;
 	width: 100%;
+	/*display: none;*/
 	z-index: 1000;
 }
 .bg-btn-map-resizer {
@@ -367,5 +229,20 @@ export default {
 }
 .text-btn-color {
 	color: rgba(0, 0, 0, 0.7) !important;
+}
+.btn-map {
+	width: 80%;
+}
+/*.btn-map-visible {
+	display: none;
+}*/
+.purelypeer-watermark {
+	font-size: 150%;
+	font-weight: bolder;
+	color: #676767;
+	text-shadow: #555;
+	margin-left: 10px;
+	opacity: 0.5;
+	padding-bottom: 0px;
 }
 </style>

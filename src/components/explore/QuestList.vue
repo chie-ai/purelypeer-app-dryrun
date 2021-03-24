@@ -71,64 +71,7 @@ export default {
 				options: ['&#128175;', '&#10004;', '&#10060;'],
 				number: 0
 			},
-			quests: [
-				{
-					name: "test 1",
-					total_cashdrops: "10",
-					phone_no: "###-###-####",
-					contact_url: "www.facebook.com/merchant-contact",
-					acceptance_tier: "Direct",
-					presence: "Yes",
-					radius: "1500",
-					coors: {
-						lat: 11.17783410449158,
-						lng: 125.0017081909703
-					},
-					btnLabel: "Show more info"
-				},
-				{
-					name: "test 2",
-					total_cashdrops: "14",
-					phone_no: "###-###-####",
-					contact_url: "www.facebook.com/merchant-contact",
-					acceptance_tier: "Indirect",
-					presence: "Yes",
-					radius: "1500",
-					coors: {
-						lat: 11.176572907648463,
-						lng: 125.00093244003742
-					},
-					btnLabel: "Show more info"
-				},
-				{
-					name: "test 3",
-					total_cashdrops: "20",
-					phone_no: "###-###-####",
-					contact_url: "www.facebook.com/merchant-contact",
-					acceptance_tier: "Upcoming",
-					presence: "Yes",
-					radius: "1500",
-					coors: {
-						lat: 11.180325256142286,
-						lng: 125.00271409774162
-					},
-					btnLabel: "Show more info"
-				},
-				{
-					name: "test 4",
-					total_cashdrops: "20",
-					phoneNumber: "###-###-####",
-					contact_url: "www.facebook.com/merchant-contact",
-					acceptance_tier: "Inactive",
-					presence: "Yes",
-					radius: "1500",
-					coors: {
-						lat: 11.172492400856424,
-						lng: 124.9996134948425
-					},
-					btnLabel: "Show more info"
-				}
-			]
+			quests: null,
 		}
 	},
 	methods: {
@@ -155,12 +98,20 @@ export default {
 			this.questRadius.number++
 			this.questRadius.number = this.questRadius.number == 5 ? 0 : this.questRadius.number
 		},
-		fetchQuestList () {
-			this.$store.dispatch('cashdrop/fetchQuestList')
-			.then(response => {
-				console.log('Hello quest: ', response)
-			})
-		}
+	},
+	async mounted () {
+		// setTimeout(() => {
+		// 	let quests = this.$store.state.cashdrop.quests
+		// 	this.quests = quests.map(quest => ({ ...quest, btnLabel: "Show more info" }))
+		// }, 1000)
+
+		await this.$store.dispatch('cashdrop/fetchQuestList')
+		.then(res => {
+			this.quests = res.data.results.map(quest => ({ ...quest, infoWinOpen: false, radiusVisibility: false }))
+		})
+		.catch(err => {
+			console.log('Error: ', err)
+		})
 	}
 }
 </script>

@@ -22,31 +22,33 @@
 							<q-select ref="radiusModel" outlined color="grey-5" :dense="true" bg-color="white" v-model="radiusModel"
 								:options="radius.options" label="Quest Radius"
 								lazy-rules :rules="[val => !!val || 'Quest radius is required']" />
-						    <q-badge class="slider-badge">
-						      <b>Total of cashdrops</b> : {{ cashDropCountModel }}
+						    <q-badge class="slider-badge text-caption">
+						      <b>Total of cashdrops : {{ cashDropCountModel }}</b>
 						    </q-badge>
 							<q-slider class="q-mt-none q-mb-sm amount-range-slider"
-						      :value="10"
+						      :value="2"
 						      v-model="cashDropCountModel"
-						      :min="10"
+						      :min="2"
 						      :max="100"
 						      :step="1"
 						     label/>
-						    <q-badge class="slider-badge">
-						      <b>Amount</b> : {{ amount.toFixed(8) }}
+							<q-input ref="amount" color="grey-5" :dense="true" bg-color="white" outlined label="Amount for the cashdrops" type="text"
+							v-model="amount.toFixed(8)" lazy-rules :rules="[val => val > 0.00000000 || 'Please set your desired amount',]"
+							input-class="text-right" />
+						    <q-badge class="slider-badge text-caption">
+						      <b>Set amount</b>
 						    </q-badge>
 						    <q-slider class="q-mt-none q-mb-none amount-range-slider"
 						      :value="0.00000000"
-						      v-model="amount"
+						      v-model="amount"	
 						      :min="0.00000000"
 						      :max="1.00000000"
 						      :step="0.00000001"
 						      label
 						      :label-value="amount.toFixed(8)"
 						    />
-						    <span class="text-weight-light" style="font-size: 11px; color: red;">Amount must not be empty</span>
 							<q-input color="grey-5" :dense="true" class="q-mb-lg" bg-color="white" outlined
-						        v-model="feeBreakdown" label="Fee breakdown"
+						        v-model="feeBreakdown.toFixed(8)" label="Fee Breakdown"
 						        input-class="text-right" readonly />
 							<q-btn :label="'Cash Drop \uD83D\uDCA7'" outline type="submit" class="full-width" color="grey-6"/>
 						</q-form>
@@ -59,11 +61,12 @@
 </template>
 
 <script>
+import { QSpinnerFacebook } from 'quasar'
 
 export default {
 	data() {
 		return {
-			refModels: ['merchantName','phoneNumber','contactUrl','memo','tierModel','presenceModel','radiusModel'],
+			refModels: ['merchantName','phoneNumber','contactUrl','memo','tierModel','presenceModel','radiusModel','amount'],
 			merchantName: null,
 			phoneNumber: null,
 			contactUrl: null,
@@ -87,14 +90,14 @@ export default {
 				]
 			},
 			amount: 0.00000000,
-			cashDropCountModel: 10,
+			cashDropCountModel: 2,
 			cashDropFormModels: {
 				tier: null,
 				radius: null
 			},
 			feeBreakdown: 0.00002000,
 			amountBoolean: false,
-			questPresence: null
+			questPresence: null,
 
 		}
 	},
@@ -108,36 +111,21 @@ export default {
 		},
 		cashDropCountModel (newBreakdown, oldBreakdown) {
 			let C = 0.00050000, T = 0.00002000, N = this.cashDropCountModel, OT = N*T
-			this.feeBreakdown = OT.toFixed(8)
+			this.feeBreakdown = OT
 		},
 		presenceModel (newPresence, oldPresence) {
-			if (this.presence.options.indexOf(newPresence) === 0) {
-				this.questPresence = 'Yes'
-			} else {
-				this.questPresence = 'No'
-			}
-		},
+			this.questPresence = this.presence.options.indexOf(newPresence) === 0 ? true : false
+		}
 	},
 	methods: {
 		onSubmitQuest (evt) {
 
 			this.$q.loading.show({
-		        message: 'Creating of quest is in progress. <br/><span class="text-white">Hang on...</span>'
+		        spinner: QSpinnerFacebook,
+		        spinnerColor: 'spinner-color',
+		        spinnerSize: 140,
+		        message: 'Creating of quest is in progress. <br/><span class="text-white">Hang on...</span>',
 		    })
-
-		    // if ((this.amount).toFixed(8) == '0.00000000') {
-			   //  this.$q.notify({
-						//         message: 'Amount is invalid...',
-						//         color: 'red-8',
-						//         timeout: 1000,
-						//         position: 'top'
-						//     })
-			   //  this.$q.loading.hide()
-
-			   //  return false
-		    // }
-
-		    console.log('coordinates: ', this.questCoordinates)
 
 			this.$refs.questForm.validate().then(success => {
 
@@ -148,7 +136,7 @@ export default {
 					}
 
 					let questCreate = {
-						"user": "a8b163ef-1149-448d-99b0-0fbbc45a76b3",
+						"user": localStorage.getItem('user_id'),
 						"token": "-",
 						"name": this.merchantName,
 						"phone_no": this.phoneNumber,
@@ -160,30 +148,33 @@ export default {
 						"total_cashdrops": this.cashDropCountModel,
 						"has_physical_presence": this.questPresence,
 						"amount": this.amount.toFixed(8),
-						"payment_address": "bitcoincash:pp8skudq3x5hzw8ew7vzsw8tn4k8wxsqsv0lt0mf3g",
-						"pubkey": "dddddddd"
+						"payment_address": "bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5",
+						"pubkey": localStorage.getItem('xPubkey')
 					}
+					// console.log('Form: ', questCreate)
 
-					console.log('Form: ', questCreate)
-
-					// this.$axios.post('https://staging.purelypeer.cash/api/quests/', questCreate)
-					// .then(response => {
-					// 	console.log('Success :', response)
-
-					// 	for (let i=0;this.refModels.length>i;i++) {
-					// 		this[this.refModels[i]] = null
-					// 		this.$refs[this.refModels[i]].resetValidation()
-					// 	}
-
-					//     this.timer = setTimeout(() => {
-					//         this.$q.loading.hide()
-					//         this.timer = void 0
-					// 		this.onReset()
-					//     }, 0)
-					// })
-					// .catch(error => {
-					// 	console.log('Error: ', error)
-					// })
+					this.$store.dispatch('cashdrop/createQuest', questCreate)
+					.then(response => {
+						for (let i=0;this.refModels.length>i;i++) {
+							this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
+							this.$refs[this.refModels[i]].resetValidation()
+						}
+					    this.timer = setTimeout(() => {
+					        this.$q.loading.hide()
+					        this.timer = void 0
+					    }, 0)
+					})
+					.catch(error => {
+						console.log('Error: ', error)
+						for (let i=0;this.refModels.length>i;i++) {
+							this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
+							this.$refs[this.refModels[i]].resetValidation()
+						}
+					    this.timer = setTimeout(() => {
+					        this.$q.loading.hide()
+					        this.timer = void 0
+					    }, 0)
+					})
 				}
 			})
 		},
@@ -236,15 +227,22 @@ export default {
 			}
 			this.$emit('changeQuestRadius', radius)
 		}
-	}
+	},
 }
 </script>
 
-<style scoped>
+<style>
+.text-spinner-color {
+	color: #0AC18E !important;
+}
 .amount-range-slider {
 	color: #0AC18E;
 }
 .slider-badge {
 	background: #0AC18E;
+}
+.amount-error {
+	font-size: 11px;
+	color: #B00303;
 }
 </style>
