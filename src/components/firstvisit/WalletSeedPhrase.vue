@@ -78,7 +78,7 @@
 			    rounded
 			    class="btn-seedPhrase text-white"
 			    size="md"
-			    label="buckup your seed phrase"
+			    label="Backup your seed phrase"
 			    @click="backupSeedPhrase"
 		      />
 			</div>

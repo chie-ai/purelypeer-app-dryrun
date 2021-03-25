@@ -1,5 +1,5 @@
 <template>
-	<div id="quest-list">
+	<div id="quest-list" ref="questList">
 		<div class="col-12 quest-container q-mt-lg">
 			<h5 class="text-center q-mt-md q-mb-sm">Quest Form</h5>
 
@@ -23,7 +23,7 @@
 								:options="radius.options" label="Quest Radius"
 								lazy-rules :rules="[val => !!val || 'Quest radius is required']" />
 						    <q-badge class="slider-badge text-caption">
-						      <b>Total of cashdrops : {{ cashDropCountModel }}</b>
+						      <b>Number of cashdrops : {{ cashDropCountModel }}</b>
 						    </q-badge>
 							<q-slider class="q-mt-none q-mb-sm amount-range-slider"
 						      :value="2"
@@ -120,11 +120,17 @@ export default {
 	methods: {
 		onSubmitQuest (evt) {
 
+			this.$refs.questList.classList.add('hidden')
+			this.$emit('toogleQuestlist', true)
+			document.getElementById('nav-menu').classList.add('hidden')
+
 			this.$q.loading.show({
 		        spinner: QSpinnerFacebook,
 		        spinnerColor: 'spinner-color',
 		        spinnerSize: 140,
-		        message: 'Creating of quest is in progress. <br/><span class="text-white">Hang on...</span>',
+		        backgroundColor: 'white',
+		        message: 'Creating of quest is in progress. <br/><span style="color: #0AC18E;">Hang on...</span>',
+		        messageColor: 'black'
 		    })
 
 			this.$refs.questForm.validate().then(success => {
@@ -153,28 +159,62 @@ export default {
 					}
 					// console.log('Form: ', questCreate)
 
-					this.$store.dispatch('cashdrop/createQuest', questCreate)
-					.then(response => {
-						for (let i=0;this.refModels.length>i;i++) {
-							this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
-							this.$refs[this.refModels[i]].resetValidation()
-						}
 					    this.timer = setTimeout(() => {
 					        this.$q.loading.hide()
 					        this.timer = void 0
-					    }, 0)
-					})
-					.catch(error => {
-						console.log('Error: ', error)
-						for (let i=0;this.refModels.length>i;i++) {
-							this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
-							this.$refs[this.refModels[i]].resetValidation()
-						}
-					    this.timer = setTimeout(() => {
-					        this.$q.loading.hide()
-					        this.timer = void 0
-					    }, 0)
-					})
+					        for (let i=0;this.refModels.length>i;i++) {
+								this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
+								this.$refs[this.refModels[i]].resetValidation()
+							}
+					        this.$q.notify({
+						        message: 'Your quest has been successfully created!',
+						        color: 'notify-color',
+						        position: 'center',
+						        timeout: 1000
+						    })
+						    this.$refs.questList.classList.remove('hidden')
+							document.getElementById('nav-menu').classList.remove('hidden')
+						    this.$emit('toogleQuestlist', false)
+					    }, 10000)
+
+					// this.$store.dispatch('cashdrop/createQuest', questCreate)
+					// .then(response => {
+					// 	for (let i=0;this.refModels.length>i;i++) {
+					// 		this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
+					// 		this.$refs[this.refModels[i]].resetValidation()
+					// 	}
+					//     this.timer = setTimeout(() => {
+					//         this.$q.loading.hide()
+					//         this.timer = void 0
+					//     }, 0)
+				 //        this.$q.notify({
+					//         message: 'Your quest has been successfully created!',
+					//         color: 'notify-color',
+					//         position: 'top',
+					//         timeout: 2000
+					//     })
+					//     this.$refs.questList.classList.remove('hidden')
+					// 	this.$emit('toogleQuestlist', false)
+					// })
+					// .catch(error => {
+					// 	console.log('Error: ', error)
+					// 	for (let i=0;this.refModels.length>i;i++) {
+					// 		this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
+					// 		this.$refs[this.refModels[i]].resetValidation()
+					// 	}
+					//     this.timer = setTimeout(() => {
+					//         this.$q.loading.hide()
+					//         this.timer = void 0
+					//     }, 0)
+				 //        this.$q.notify({
+					//         message: 'Your quest has been successfully created!',
+					//         color: 'notify-color',
+					//         position: 'top',
+					//         timeout: 2000
+					//     })
+					//     this.$refs.questList.classList.remove('hidden')
+					// 	this.$emit('toogleQuestlist', false)
+					// })
 				}
 			})
 		},
@@ -234,6 +274,9 @@ export default {
 <style>
 .text-spinner-color {
 	color: #0AC18E !important;
+}
+.bg-notify-color {
+	background-color: #0AC18E;
 }
 .amount-range-slider {
 	color: #0AC18E;

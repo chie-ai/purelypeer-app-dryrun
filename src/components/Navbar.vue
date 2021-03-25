@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" id="nav-menu">
     <AppLogo />
     <div id="menu">
       <ul>

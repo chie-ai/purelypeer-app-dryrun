@@ -5,7 +5,8 @@
 
 			<div class="quest-main q-mx-md">
 				<div class="column quest-body">
-					<div class="col-12 q-py-md quest-list" v-for="(quest, questIndex) in quests" :key="questIndex" @click="showQuestCoordinatesOnMap(quest.coors)">
+					<div class="col-12 q-py-md quest-list" v-for="(quest, questIndex) in quests" :key="questIndex"
+						@click="showQuestCoordinatesOnMap(quest)">
 						<div class="row">
 							<div class="col-12 q-px-sm">
 								<p class="q-mb-xs"><span class="text-weight-bold">Name: </span><span class="text-subtitle2">{{ quest.name }}</span></p>
@@ -107,7 +108,7 @@ export default {
 
 		await this.$store.dispatch('cashdrop/fetchQuestList')
 		.then(res => {
-			this.quests = res.data.results.map(quest => ({ ...quest, infoWinOpen: false, radiusVisibility: false }))
+			this.quests = res.data.results.map(quest => ({ ...quest, btnLabel: 'Show more info' }))
 		})
 		.catch(err => {
 			console.log('Error: ', err)

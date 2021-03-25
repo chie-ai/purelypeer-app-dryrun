@@ -2,11 +2,9 @@
 	<q-layout>
 		<q-page-container>
 			<div id="explore-map" class="row">
-				<l-control class="example-custom-control">
-					<div class="zoom-controls q-mt-md">
-						<span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
-						<span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
-					</div>
+				<l-control class="example-custom-control q-mt-md zoom-controls">
+					<span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
+					<span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
 			    </l-control>
 			    <l-map
 			      :zoom="zoomScale"
@@ -36,9 +34,16 @@
 							</div>
 						</l-popup>
 						<l-icon
-				        	:icon-size="[mark.active === 'active' ? 30 : 50, mark.active === 'active' ? 40 : 50]"
-				        	:icon-anchor="[mark.active === 'active' ? 1 : 12, mark.active === 'active' ? 40 : 44]"
-				        	:icon-url="(mark.active === 'active' ? (mark.acceptance_tier === 'Upcoming' ? 'PurelyPeer-location-blue.png' : (mark.acceptance_tier === 'Direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')" />
+				        	:icon-size="[mark.active === true ? 30 : 50, mark.active === true ? 40 : 50]"
+				        	:icon-anchor="[mark.active === true ? 1 : 12, mark.active === true ? 40 : 44]"
+				        	:icon-url="(mark.active === true ? (mark.acceptance_tier === 'Upcoming' ? 'PurelyPeer-location-blue.png' : (mark.acceptance_tier === 'Direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')" />
+				    </l-marker>
+
+				    <l-marker :lat-lng="cashDropCoor.coors" v-for="(cashDropCoor, cashDropsIndex) in cashDropsCoordinates">
+				    	<l-icon
+				        	:icon-size="[30, 30]"
+				        	:icon-anchor="[40, 54]"
+				        	:icon-url="'PurelyPeer-location-current-B.png'" />
 				    </l-marker>
 
 				    <l-circle
@@ -111,13 +116,28 @@ export default {
 			startY: 0,
 			counter: 0,
 			mapHeight: 0,
-			hover: false
+			hover: false,
+			questRadius: null
 		};
 	},
 	props: ['moveToTheQuestCoordinates'],
 	watch: {
 	    moveToTheQuestCoordinates () {
-	    	let coors = this.moveToTheQuestCoordinates
+	    	let coors = this.moveToTheQuestCoordinates.coors
+			this.questRadius = this.moveToTheQuestCoordinates.radius
+
+			if (this.questRadius === 1500) {
+				this.zoomScale = 14
+			}
+			else if (this.questRadius === 15000) {
+				this.zoomScale = 10
+			}
+			else if (this.questRadius === 150000) {
+				this.zoomScale = 7
+			}
+			else {
+				this.zoomScale = 4
+			}
 
 	    	this.center = coors
 	    	this.markerLocation = coors
@@ -143,6 +163,7 @@ export default {
 			this.activeIndex !== infoIndex ? this.quests[this.activeIndex].radiusVisibility = false : ''
 			this.quests[infoIndex].infoWinOpen = !this.quests[infoIndex].infoWinOpen
 			this.quests[infoIndex].radiusVisibility = !this.quests[infoIndex].radiusVisibility
+			this.cashDropsCoordinates = this.quests[infoIndex].infoWinOpen === true ? this.quests[infoIndex].cashdrops : ''
 			this.activeIndex = infoIndex
 		},
 		removePopUpinfo () {
@@ -183,7 +204,6 @@ export default {
 		await this.$store.dispatch('cashdrop/fetchQuestList')
 		.then(res => {
 			this.quests = res.data.results.map(quest => ({ ...quest, infoWinOpen: false, radiusVisibility: false }))
-			// this.$store.commit('cashdrop/mutateQuests', res.data.results)
 		})
 		.catch(err => {
 			console.log('Error: ', err)
@@ -220,7 +240,6 @@ export default {
 	text-align: center;
 	bottom: 18px;
 	width: 100%;
-	/*display: none;*/
 	z-index: 1000;
 }
 .bg-btn-map-resizer {
@@ -232,9 +251,10 @@ export default {
 }
 .btn-map {
 	width: 80%;
+	/*display: none*/
 }
-/*.btn-map-visible {
-	display: none;
+/*.show-btn {
+	display: inline-block;
 }*/
 .purelypeer-watermark {
 	font-size: 150%;

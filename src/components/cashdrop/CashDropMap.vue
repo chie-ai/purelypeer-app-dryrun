@@ -1,7 +1,7 @@
 <template>
 	<q-layout>
 		<q-page-container>
-			<div id="explore-map" class="row">
+			<div id="explore-map" class="row" ref="exploreMap">
 				<div class="zoom-controls q-mt-md">
 					<span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
 					<span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
@@ -86,12 +86,12 @@ export default {
 			tierVariation: 'inactive'
 		}
 	},
-	props: ['changeQuestRadius','changeQuestTier'],
+	props: ['changeQuestRadius','changeQuestTier','mapVisibility'],
 	watch: {
 		changeQuestRadius (newRadius, oldRadius) {
 			this.questRadius = newRadius
 			if (this.questRadius === 1500) {
-				this.zoomScale = 13
+				this.zoomScale = 14
 			}
 			else if (this.questRadius === 15000) {
 				this.zoomScale = 10
@@ -109,6 +109,9 @@ export default {
 							iconSize: [newTier.tier !== 'inactive' ? 30 : 50, newTier.tier !== 'inactive' ? 40 : 51],
 							iconAnchor: [newTier.tier !== 'inactive' ? 2 : 12, newTier.tier !== 'inactive' ? 39 : 46]
 						})
+		},
+		mapVisibility (newBoolean, oldBoolean) {
+			newBoolean ? this.$refs.exploreMap.classList.add('hidden') : this.$refs.exploreMap.classList.remove('hidden')
 		}
 	},
 	methods: {

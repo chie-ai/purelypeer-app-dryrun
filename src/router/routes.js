@@ -40,7 +40,8 @@ const routes = [
     path: '/cash-drop',
     component: () => import('layouts/cashdrop/CashDropLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/cashdrop/Index.vue') }
+      { path: '', component: () => import('pages/cashdrop/Index.vue') },
+      { path: 'payment', component: () => import('pages/cashdrop/Payment.vue') }
     ]
   },
   {

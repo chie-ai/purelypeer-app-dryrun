@@ -137,7 +137,7 @@ export default {
 
 			createWallet()
 			.then(response => {
-				console.log('Response: ', response)
+				// console.log('Response: ', response)
 
 				this.$store.commit('wallet/mutateSeedPhrase', response.mnemonic)
 
@@ -146,9 +146,10 @@ export default {
 					xpubkey: response.xPubKey
 				}
 
-				console.log('XPubKey: ', response.xPubKey)
-
 				this.$store.dispatch('wallet/createUser', wallet)
+				.then(res => {
+					
+				})
 
 			    this.routeTimer = setTimeout(() => {
 			        this.$q.loading.hide()

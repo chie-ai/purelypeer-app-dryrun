@@ -3,8 +3,5 @@
   "appName": "PurelyPeeer App",
   "bundledWebRuntime": false,
   "npmClient": "npm",
-  "webDir": "www",
-  "server": {
-    "url": "https://192.168.254.167:3000"
-  }
+  "webDir": "www"
 }

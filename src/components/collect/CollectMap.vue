@@ -22,7 +22,7 @@
 
 				    <l-marker :icon="icon" :lat-lng="markerLocation"></l-marker>
 
-				    <l-marker v-for="(mark, markerIndex) in quest" :key="markerIndex+'marker'"
+				    <l-marker v-for="(mark, markerIndex) in quests" :key="markerIndex+'marker'"
 				    :lat-lng="mark.coors" @click="toggleWindowInfo(markerIndex)">
 				    	<l-popup :options="popUpOptions" @remove="removePopUpinfo" ref="pops">
 							<div class="infowindow">
@@ -39,8 +39,15 @@
 				        	:icon-url="(mark.active === 'active' ? (mark.acceptance_tier === 'Upcoming' ? 'PurelyPeer-location-blue.png' : (mark.acceptance_tier === 'Direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')" />
 				    </l-marker>
 
+				    <l-marker :lat-lng="cashDropCoor.coors" v-for="(cashDropCoor, cashDropsIndex) in cashDropsCoordinates">
+				    	<l-icon
+				        	:icon-size="[30, 30]"
+				        	:icon-anchor="[40, 54]"
+				        	:icon-url="'PurelyPeer-location-current-B.png'" />
+				    </l-marker>
+
 				    <l-circle
-				    	v-for="(pin, index) in quest":key="index"
+				    	v-for="(pin, index) in quests":key="index"
 					    :lat-lng="pin.coors"
 					    :radius="pin.radius"
 					    :color="circle.color"
@@ -48,12 +55,12 @@
 					    :weight="1"
 					    :visible="pin.radiusVisibility"
 					    @click="toggleWindowInfo(index)" />
-					<l-control :position="'bottomleft'" class="purelypeer-watermark" >
+					<!-- <l-control :position="'bottomleft'" class="purelypeer-watermark" >
 					    PurelyPeer
-					</l-control>
+					</l-control> -->
 			    </l-map>
 				<div class="adjust-map-height q-px-md">
-					<q-btn color="btn-map-resizer text-btn-color" v-touch-pan.vertical.prevent.mouse="resizeMapHeight" size="sm" label="Drag to resize" />
+					<q-btn color="btn-map-resizer text-btn-color" class="btn-map" v-touch-pan.vertical.prevent.mouse="resizeMapHeight" size="sm" label="Drag to resize" />
 				</div>
 			</div>
 		</q-page-container>
@@ -101,146 +108,7 @@ export default {
 		        color: '#0AC18E',
 		        fillColor: 'transparent'
 		    },
-		    quest: [
-				{
-					name: "Quest 1",
-					total_cashdrops: 10,
-					cashdrops_remaining: 10,
-					phone_no: null,
-					contact_url: "www.facebook.com/merchant-contact",
-					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					coors: [ 11.17783410449158, 125.0017081909703 ],
-					cashdrops: [
-						{
-							coors: {
-								lat: 11.170425256142286,
-								lng: 125.00371409774162
-							}
-						},
-						{
-							coors: {
-								lat: 11.170225256142286,
-								lng: 125.00471409774162
-							}
-						},
-						{
-							coors: {
-								lat: 11.170525256142286,
-								lng: 125.00171409774162
-							}
-						}
-					],
-					radius: 150000,
-					active: "active",
-					acceptance_tier: 'Direct',
-					infoWinOpen: false,
-					radiusVisibility: false
-				},
-				{
-					name: "Quest 2",
-					total_cashdrops: 10,
-					cashdrops_remaining: 10,
-					phone_no: null,
-					contact_url: "www.facebook.com/merchant-contact",
-					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					coors: [ 11.176572907648463, 125.00093244003742 ],
-					cashdrops: [
-						{
-							coors: {
-								lat: 11.170425256142286,
-								lng: 125.00071409774162
-							}
-						},
-						{
-							coors: {
-								lat: 11.170225256142286,
-								lng: 125.00071409774162
-							}
-						},
-						{
-							coors: {
-								lat: 11.170525256142286,
-								lng: 125.00071409774162
-							}
-						}
-					],
-					radius: 1500,
-					active: "active",
-					acceptance_tier: 'Indirect',
-					infoWinOpen: false,
-					radiusVisibility: false
-				},
-				{
-					name: "Quest 3",
-					total_cashdrops: 10,
-					cashdrops_remaining: 10,
-					price: "50% less to all items",
-					phone_no: null,
-					contact_url: "www.facebook.com/merchant-contact",
-					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					coors: [ 11.180325256142286, 125.00271409774162 ],
-					cashdrops: [
-						{
-							coors: {
-								lat: 11.180425256142286,
-								lng: 125.00371409774162
-							}
-						},
-						{
-							coors: {
-								lat: 11.180225256142286,
-								lng: 125.00471409774162
-							}
-						},
-						{
-							coors: {
-								lat: 11.180525256142286,
-								lng: 125.00171409774162
-							}
-						}
-					],
-					radius: 15000,
-					active: "active",
-					acceptance_tier: 'Upcoming',
-					infoWinOpen: false,
-					radiusVisibility: false
-				},
-				{
-					name: "Quest 4",
-					total_cashdrops: 10,
-					cashdrops_remaining: 10,
-					price: "50% less to all items",
-					phone_no: null,
-					contact_url: "www.facebook.com/merchant-contact",
-					presence: "\uD83E\uDDF1\uD83D\uDCAF",
-					coors: [ 11.172492400856424, 124.9996134948425 ],
-					cashdrops: [
-						{
-							coors: {
-								lat: 11.170425256142286,
-								lng: 125.99171409774162
-							}
-						},
-						{
-							coors: {
-								lat: 11.170225256142286,
-								lng: 125.99271409774162
-							}
-						},
-						{
-							coors: {
-								lat: 11.170525256142286,
-								lng: 125.99571409774162
-							}
-						}
-					],
-					radius: 1500,
-					active: "inactive",
-					acceptance_tier: 'Inactive',
-					infoWinOpen: false,
-					radiusVisibility: false
-				}
-		    ],
+		    quests: null,
 			activeIndex: 0,
 			cashDropsCoordinates: null,
 			startY: 0,
@@ -274,18 +142,21 @@ export default {
 			.catch(error => console.log('Unable to retreive your location: ', error))
 		},
 		toggleWindowInfo (infoIndex) {
-			this.activeIndex !== infoIndex ? this.quest[this.activeIndex].radiusVisibility = false : ''
-			this.quest[infoIndex].infoWinOpen = !this.quest[infoIndex].infoWinOpen
-			this.quest[infoIndex].radiusVisibility = !this.quest[infoIndex].radiusVisibility
+			this.activeIndex !== infoIndex ? this.quests[this.activeIndex].radiusVisibility = false : ''
+			this.quests[infoIndex].infoWinOpen = !this.quests[infoIndex].infoWinOpen
+			this.quests[infoIndex].radiusVisibility = !this.quests[infoIndex].radiusVisibility
+			this.cashDropsCoordinates = this.quests[infoIndex].infoWinOpen === true ? this.quests[infoIndex].cashdrops : ''
 			this.activeIndex = infoIndex
 		},
 		removePopUpinfo () {
-			this.quest[this.activeIndex].infoWinOpen === true ? document.getElementsByClassName('leaflet-popup-close-button')[0].click() : ''
-			this.quest[this.activeIndex].infoWinOpen = false
-			this.quest[this.activeIndex].radiusVisibility = false
-			this.cashDropsCoordinates = null
+			if(this.quests !== null) {
+				this.quests[this.activeIndex].infoWinOpen === true ? document.getElementsByClassName('leaflet-popup-close-button')[0].click() : ''
+				this.quests[this.activeIndex].infoWinOpen = false
+				this.quests[this.activeIndex].radiusVisibility = false
+				this.cashDropsCoordinates = null
+			}
 
-			// this.markerLocation = this.$refs.myPurelyPeerMap.mapObject.getCenter()
+			this.markerLocation = this.$refs.myPurelyPeerMap.mapObject.getCenter()
 		},
 		resizeMapHeight ({ evt, ...info }) {
 			let map = this.$refs.myPurelyPeerMap.$el
@@ -308,9 +179,18 @@ export default {
 			if (((80/100) * window.innerHeight) >= newHeight) {
 				newHeight >= min_MapHeight ? map.$el.style.height = newHeight + 'px' : ''
 			}
-			// this.$refs.myPurelyPeerMap.mapObject.invalidateSize()
+			this.$refs.myPurelyPeerMap.mapObject.invalidateSize()
 		},
 	},
+	async mounted () {
+		await this.$store.dispatch('cashdrop/fetchQuestList')
+		.then(res => {
+			this.quests = res.data.results.map(quest => ({ ...quest, infoWinOpen: false, radiusVisibility: false }))
+		})
+		.catch(err => {
+			console.log('Error: ', err)
+		})
+	}
 };
 </script>
 
@@ -346,6 +226,9 @@ export default {
 }
 .text-btn-color {
 	color: rgba(0, 0, 0, 0.7) !important;
+}
+.btn-map {
+	width: 80%;
 }
 .purelypeer-watermark {
 	font-size: 150%;

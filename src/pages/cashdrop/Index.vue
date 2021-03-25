@@ -1,7 +1,7 @@
 <template>
 	<div class="row">
-		<CashDropMap :change-quest-radius="radius" :change-quest-tier="tier" v-on:passCoordinatesToForm="passCoordinatesToForm" />
-		<CashDropForm v-on:changeQuestRadius="changeQuestRadius" v-on:changeQuestTier="changeQuestTier" :quest-coordinates="coordinates" />
+		<CashDropMap :change-quest-radius="radius" :map-visibility="visibility" :change-quest-tier="tier" v-on:passCoordinatesToForm="passCoordinatesToForm" />
+		<CashDropForm v-on:changeQuestRadius="changeQuestRadius" v-on:toogleQuestlist="formVisibility" v-on:changeQuestTier="changeQuestTier" :quest-coordinates="coordinates" />
 	</div>
 </template>
 
@@ -14,7 +14,8 @@ export default {
 		return {
 			radius: 1000,
 			tier: 'inactive',
-			coordinates: null
+			coordinates: null,
+			visibility: null
 		}
 	},
 	components: {
@@ -30,6 +31,9 @@ export default {
 		},
 		passCoordinatesToForm (coors) {
 			this.coordinates = coors
+		},
+		formVisibility (bool) {
+			this.visibility = bool
 		}
 	}
 }
