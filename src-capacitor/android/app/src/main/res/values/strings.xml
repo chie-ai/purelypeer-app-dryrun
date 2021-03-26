@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">PurelyPeeer App</string>
-    <string name="title_activity_main">PurelyPeeer App</string>
+    <string name="app_name">PurelyPeer</string>
+    <string name="title_activity_main">PurelyPeer</string>
     <string name="package_name">cash.purelypeer.app</string>
     <string name="custom_url_scheme">cash.purelypeer.app</string>
 </resources>

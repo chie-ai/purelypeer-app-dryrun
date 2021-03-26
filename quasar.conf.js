@@ -126,8 +126,8 @@ module.exports = function (/* ctx */) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: 'PurelyPeeer App',
-        short_name: 'PurelyPeeer App',
+        name: 'PurelyPeer',
+        short_name: 'PurelyPeer',
         description: '',
         display: 'standalone',
         orientation: 'portrait',

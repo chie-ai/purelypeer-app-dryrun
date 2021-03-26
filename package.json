@@ -2,7 +2,7 @@
   "name": "purelypeer-app",
   "version": "0.0.1",
   "description": "",
-  "productName": "PurelyPeeer App",
+  "productName": "PurelyPeer",
   "author": "be@purelypeer.cash",
   "private": true,
   "scripts": {

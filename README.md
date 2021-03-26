@@ -1,4 +1,4 @@
-# PurelyPeeer App (purelypeer-app)
+# PurelyPeer (purelypeer-app)
 
 
 
