@@ -1,5 +1,5 @@
 <template>
-	<div class="row">
+	<div class="row animate-in-load">
 		<PaymentMap />
 		<Payment />
 	</div>

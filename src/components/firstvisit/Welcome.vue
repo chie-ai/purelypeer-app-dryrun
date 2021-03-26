@@ -147,9 +147,6 @@ export default {
 				}
 
 				this.$store.dispatch('wallet/createUser', wallet)
-				.then(res => {
-					
-				})
 
 			    this.routeTimer = setTimeout(() => {
 			        this.$q.loading.hide()

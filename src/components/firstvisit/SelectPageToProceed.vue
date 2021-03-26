@@ -54,16 +54,12 @@ export default {
 		        spinnerColor: 'spinner-color',
 		        spinnerSize: 140,
 		        backgroundColor: 'white',
+		        message: '<b>Importing of wallet is in progress.</b> <br/><strong style="color: #0AC18E;">Hang on...</strong>',
+		        messageColor: 'black'
 		    })
 		    this.$refs.select_a_page.style.display = "none"
-		    setTimeout(() => {
-		        this.$q.loading.hide()
-		    	this.$router.push({path:`${destination}`})
-		    }, 2000)
-	    },
-		importWallet () {
 
-			let wallet = {
+		    let wallet = {
 				seed_hash: localStorage.getItem('seedHash'),
 				xpubkey: localStorage.getItem('xPubkey')
 			}
@@ -72,13 +68,13 @@ export default {
 			.then(response => {
 				// console.log('Mutate Addresses', response)
 				this.$store.commit('wallet/mutateAddresses', response.data.addresses)
-				// addresses[0].bch_address
+			    setTimeout(() => {
+			        this.$q.loading.hide()
+			    	this.$router.push({path:`${destination}`})
+			    }, 2000)
 			})
 			.catch(error => console.log('Failed importing'))
-		},
-	},
-	created () {
-		this.importWallet()
+	    },
 	}
 }
 </script>

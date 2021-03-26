@@ -8,6 +8,15 @@
 	src: url(../assets/static/Comfortaa-Bold.ttf) format('truetype');
 }
 
+.animate-in-load {
+  animation: 1s appear;
+}
+@keyframes appear {
+  0% {
+    opacity: 0;
+  }
+}
+
 // Navbar
 .wrapper {
 	top: 0px;

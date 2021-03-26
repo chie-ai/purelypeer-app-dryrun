@@ -1,5 +1,5 @@
 <template>
-	<div class="row">
+	<div class="row animate-in-load">
 		<CollectMap :move-to-the-quest-coordinates="coordinates" />
 		<!-- <Gallery v-on:moveToTheQuestCoordinates="questCoordinates" /> -->
 	</div>

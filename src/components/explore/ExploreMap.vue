@@ -71,7 +71,6 @@
 import { latLng, icon, latLngBounds } from "leaflet";
 import { LMap, LTileLayer, LMarker, LCircle, LPopup, LIcon, LControl } from "vue2-leaflet";
 import 'leaflet/dist/leaflet.css';
-// import server from '../../utils/getAPIServer.js'
 
 export default {
 	name: "Explore-map",
@@ -126,21 +125,24 @@ export default {
 	    	let coors = this.moveToTheQuestCoordinates.coors
 			this.questRadius = this.moveToTheQuestCoordinates.radius
 
-			if (this.questRadius === 1500) {
-				this.zoomScale = 14
-			}
-			else if (this.questRadius === 15000) {
-				this.zoomScale = 10
-			}
-			else if (this.questRadius === 150000) {
-				this.zoomScale = 7
-			}
-			else {
-				this.zoomScale = 4
-			}
-
 	    	this.center = coors
 	    	this.markerLocation = coors
+
+	    	setTimeout(() => {
+				if (this.questRadius === 1500) {
+					this.zoomScale = 14
+				}
+				else if (this.questRadius === 15000) {
+					this.zoomScale = 10
+				}
+				else if (this.questRadius === 150000) {
+					this.zoomScale = 7
+				}
+				else {
+					this.zoomScale = 4
+				}
+	    	}, 600)
+
 	    	this.removePopUpinfo()
 	    }
 	},
