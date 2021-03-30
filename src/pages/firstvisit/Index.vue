@@ -1,16 +1,16 @@
 <template>
-	<div class="row animate-in-load">
-		<Welcome />
-	</div>
+  <div class="row animate-in-load">
+    <Welcome />
+  </div>
 </template>
 
 <script>
 import Welcome from '../../components/firstvisit/Welcome.vue'
 
 export default {
-	components: {
-		Welcome,
-	}
+  components: {
+    Welcome,
+  }
 }
 </script>
 

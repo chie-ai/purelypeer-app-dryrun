@@ -1,11 +1,11 @@
 
 @font-face {
-	font-family: PurelyPeer-Regular;
-	src: url(../assets/static/Comfortaa-Regular.ttf) format('truetype');
+  font-family: PurelyPeer-Regular;
+  src: url(../assets/static/Comfortaa-Regular.ttf) format('truetype');
 }
 @font-face {
-	font-family: PurelyPeer-Bold;
-	src: url(../assets/static/Comfortaa-Bold.ttf) format('truetype');
+  font-family: PurelyPeer-Bold;
+  src: url(../assets/static/Comfortaa-Bold.ttf) format('truetype');
 }
 
 .animate-in-load {
@@ -19,15 +19,15 @@
 
 // Navbar
 .wrapper {
-	top: 0px;
-	position: fixed;
+  top: 0px;
+  position: fixed;
   display: flex;
   width: 100%;
   margin: auto;
   align-items: stretch;
-	box-shadow: inset 6px 6px 12px #09b384,
+  box-shadow: inset 6px 6px 12px #09b384,
               inset -6px -6px 12px #0bcf98;
-	z-index: 2000;
+  z-index: 2000;
 }
 #menu {
   width: 100%;
@@ -70,52 +70,52 @@
     min-width: 60px !important;
     max-width: 60px !important;
     max-height: 60px;
-	background: #0AC18E;
-	// box-shadow: inset 6px 6px 12px #09b384,
-	//             inset -6px -6px 12px #0bcf98;
+  background: #0AC18E;
+  // box-shadow: inset 6px 6px 12px #09b384,
+  //             inset -6px -6px 12px #0bcf98;
 }
 
 // Explore mode
 #explore-map {
-	position: relative !important;
-	margin-top: 60px;
-	width: 100%;
-	// overflow: auto;
-	// box-shadow: inset 6px 6px 12px #b3d5e8,
-	//             inset -6px -6px 12px #cdf5ff;
+  position: relative !important;
+  margin-top: 60px;
+  width: 100%;
+  // overflow: auto;
+  // box-shadow: inset 6px 6px 12px #b3d5e8,
+  //             inset -6px -6px 12px #cdf5ff;
 }
 .map-layout {
-	width: 100%;
-	height: 334px !important;
+  width: 100%;
+  height: 334px !important;
 }
 h4 {
-	font-family: PurelyPeer-Bold;
-	color: #0AC18E;
+  font-family: PurelyPeer-Bold;
+  color: #0AC18E;
 }
 p, div > span {
-	font-family: PurelyPeer-Regular;
-	color: #175477;
+  font-family: PurelyPeer-Regular;
+  color: #175477;
 }
 #quest-list {
-	width: 100%;
-	border: 1px solid #ACDED0;
-	border-bottom: none;
-	background: #B5ECDD;
-	// box-shadow: inset 6px 6px 12px #a8dbce,
-	//             inset -6px -6px 12px #c2fdec;
+  width: 100%;
+  border: 1px solid #ACDED0;
+  border-bottom: none;
+  background: #B5ECDD;
+  // box-shadow: inset 6px 6px 12px #a8dbce,
+  //             inset -6px -6px 12px #c2fdec;
 }
 .quest-list {
-	border-bottom: 1px solid #B2B2B2;
+  border-bottom: 1px solid #B2B2B2;
 }
 table tbody.quest-table tr.quest-row {
-	margin: 0px !important;
-	border: 1px solid green !important;
+  margin: 0px !important;
+  border: 1px solid green !important;
 }
 .quest-main {
-	height: 200px;
-	overflow: auto;
-	border-top: 1px solid #B2B2B2;
-	border-bottom: 1px solid #B2B2B2;
+  height: 200px;
+  overflow: auto;
+  border-top: 1px solid #B2B2B2;
+  border-bottom: 1px solid #B2B2B2;
 }
 #ratio-option ul {
   display: inline-block;
@@ -148,37 +148,37 @@ table tbody.quest-table tr.quest-row {
   box-shadow: 0px 1px 3px 1px #C6C5C5;
 }
 #menu-list {
-	height: 450px;
-	width: 100%;
-	background: #0AC18E;
-	box-shadow: inset 6px 3px 12px #09b283,
-	            inset -6px -3px 12px #0bd099;
+  height: 450px;
+  width: 100%;
+  background: #0AC18E;
+  box-shadow: inset 6px 3px 12px #09b283,
+              inset -6px -3px 12px #0bd099;
 }
 h5 {
-	font-family: PurelyPeer-Bold
+  font-family: PurelyPeer-Bold
 }
 
 // Setting
 #setting {
-	height: 450px;
-	width: 100%;
-	background: #B5ECDD;
-	box-shadow: inset 6px 6px 12px #a8dbce,
-	            inset -6px -6px 12px #c2fdec;
+  height: 450px;
+  width: 100%;
+  background: #B5ECDD;
+  box-shadow: inset 6px 6px 12px #a8dbce,
+              inset -6px -6px 12px #c2fdec;
 }
 h5.setting-caption {
-	font-family: PurelyPeer-Bold;
-	color: #0AC18E !important;
+  font-family: PurelyPeer-Bold;
+  color: #0AC18E !important;
 }
 
 // BCH Wallet
 #bch-balance {
-	// height: 114px;
-	width: 100%;
-	background: #0AC18E;
-	box-shadow: inset 6px 3px 12px #09b283,
-	            inset -6px -1px 12px #0bd099;
-	margin-top: 60px;
+  // height: 114px;
+  width: 100%;
+  background: #0AC18E;
+  box-shadow: inset 6px 3px 12px #09b283,
+              inset -6px -1px 12px #0bd099;
+  margin-top: 60px;
 }
 .bch-menu-list ul {
   display: block;
@@ -211,19 +211,19 @@ h5.setting-caption {
   z-index: 11;
 }
 p.bch-amount {
-	color: #03392A;
-	font-weight: bolder;
+  color: #03392A;
+  font-weight: bolder;
 }
 
 // Cash Drop
 h5 {
-	font-family: PurelyPeer-Bold;
-	color: #0AC18E;
+  font-family: PurelyPeer-Bold;
+  color: #0AC18E;
 }
 
 // Collect
 #collect-map {
-	position: relative !important;
-	margin-top: 60px;
-	width: 100%;
+  position: relative !important;
+  margin-top: 60px;
+  width: 100%;
 }

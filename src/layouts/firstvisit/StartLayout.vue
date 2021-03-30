@@ -1,26 +1,26 @@
 <template>
-	<div>
-	    <router-view/>
-	</div>
+  <div>
+      <router-view/>
+  </div>
 </template>
 
 <script>
 
 export default {
-	data() {
-		return {
-		}
-	},
+  data() {
+    return {
+    }
+  },
 }
 </script>
 
 <style>
 @font-face {
-	font-family: PurelyPeer-Regular;
-	src: url(../../assets/static/Comfortaa-Regular.ttf) format('truetype');
+  font-family: PurelyPeer-Regular;
+  src: url(../../assets/static/Comfortaa-Regular.ttf) format('truetype');
 
 }
 body {
-	font-family: PurelyPeer-Regular;
+  font-family: PurelyPeer-Regular;
 }
 </style>

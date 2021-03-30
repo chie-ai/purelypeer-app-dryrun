@@ -1,4 +1,4 @@
 
 export function mutateQuests (state, quests) {
-	state.quests = quests
+  state.quests = quests
 }

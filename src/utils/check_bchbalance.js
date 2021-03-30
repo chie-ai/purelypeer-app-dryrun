@@ -5,7 +5,6 @@ import server from './getAPIServer.js'
 export default async function getBCHBalance (bchAddress) {
   try {
     // first get BCH balance
-    let bchAdd = bchAddress
     const bchjs = server.bchjs
     const balance = await bchjs.Electrumx.balance('bitcoincash:qrkf6p4f9wwagxjfhdzj2p0p8v5f90pvuylefkna04')
 

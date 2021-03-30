@@ -1,134 +1,134 @@
 <template>
-	<div id="quest-list">
-		<div class="col-12 quest-container q-mt-lg">
-			<h5 class="text-center q-mt-md q-mb-sm">Quests</h5>
+  <div id="quest-list">
+    <div class="col-12 quest-container q-mt-lg">
+      <h5 class="text-center q-mt-md q-mb-sm">Quests</h5>
 
-			<div class="quest-main q-mx-md">
-				<div class="column quest-body">
-					<div class="col-12 q-py-md quest-list" v-for="(quest, questIndex) in quests" :key="questIndex"
-						@click="showQuestCoordinatesOnMap(quest)">
-						<div class="row">
-							<div class="col-12 q-px-sm">
-								<p class="q-mb-xs"><span class="text-weight-bold">Name: </span><span class="text-subtitle2">{{ quest.name }}</span></p>
-								<p class="q-mb-xs"><span class="text-weight-bold">Cash Drop Count: </span><span class="text-subtitle2">{{ quest.total_cashdrops }}</span></p>
+      <div class="quest-main q-mx-md">
+        <div class="column quest-body">
+          <div class="col-12 q-py-md quest-list" v-for="(quest, questIndex) in quests" :key="questIndex"
+            @click="showQuestCoordinatesOnMap(quest)">
+            <div class="row">
+              <div class="col-12 q-px-sm">
+                <p class="q-mb-xs"><span class="text-weight-bold">Name: </span><span class="text-subtitle2">{{ quest.name }}</span></p>
+                <p class="q-mb-xs"><span class="text-weight-bold">Cash Drop Count: </span><span class="text-subtitle2">{{ quest.total_cashdrops }}</span></p>
 
-								<p class="q-mb-xs"><span class="text-weight-bold">PurelyPeer Tier: </span>
-									<span>
-										{{ quest.acceptance_tier === 'Direct' ? 'Direct \uD83D\uDC9A' : quest.acceptance_tier === 'Indirect' ? 'Indirect \uD83E\uDDE1' : quest.acceptance_tier === 'Upcoming' ? 'Upcoming \uD83D\uDC99' : 'Inactive \uD83D\uDDA4' }}
-									</span>
-								</p>
+                <p class="q-mb-xs"><span class="text-weight-bold">PurelyPeer Tier: </span>
+                  <span>
+                    {{ quest.acceptance_tier === 'Direct' ? 'Direct \uD83D\uDC9A' : quest.acceptance_tier === 'Indirect' ? 'Indirect \uD83E\uDDE1' : quest.acceptance_tier === 'Upcoming' ? 'Upcoming \uD83D\uDC99' : 'Inactive \uD83D\uDDA4' }}
+                  </span>
+                </p>
 
-								<div class="questMoreInfo" :ref="questIndex">
-									<p class="q-mb-xs"><span class="text-weight-bold">Radius: </span><span>{{ quest.radius }}</span></p>
-									<p class="q-mb-xs"><span class="text-weight-bold">Phone Number: </span><span class="text-subtitle2">{{ quest.phone_no }}</span></p>
-									<p class="q-mb-xs"><span class="text-weight-bold">Contact URL: </span><a href="www.facebook.com" class="text-caption">{{ quest.contactUrl }}</a></p>
-									<p class="q-mb-xs"><span class="text-weight-bold">Presence: </span><span>{{ quest.presence }}</span></p>
-								</div>
-							</div>
-							<div class="col-12 q-px-sm q-mt-sm">
-								<q-btn size="sm" color="purelypeer" rounded :ref="'btn-'+questIndex" :label="quest.btnLabel" @click="showMorequestInfo(questIndex)"/>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div id="ratio-option" class="q-mt-lg">
-			    <ul>
-			        <li><a href="#?" class="fs-2" @click="changeTier"><span v-html="purelyPeertier.options[purelyPeertier.number]"></span></a></li>
-			        <li><a href="#?" class="fs-2" @click="changePhysicalPresence">&#129521;<span v-html="phyicalPresence.options[phyicalPresence.number]"></span></a></li>
-			        <li><a href="#?" class="fs-2" @click="changeQuestRadius"><span v-html="questRadius.options[questRadius.number]"></span></a></li>
-			    </ul>
-			</div>
-			<div class="q-mx-md">
-				<div class="row justify-center">
-					<div class="col-12 q-my-md">
-						<q-input color="grey-5" bg-color="white" outlined label="Search. . .">
-					        <template v-slot:append>
-					          <q-icon name="search" />
-					        </template>
-					    </q-input>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                <div class="questMoreInfo" :ref="questIndex">
+                  <p class="q-mb-xs"><span class="text-weight-bold">Radius: </span><span>{{ quest.radius }}</span></p>
+                  <p class="q-mb-xs"><span class="text-weight-bold">Phone Number: </span><span class="text-subtitle2">{{ quest.phone_no }}</span></p>
+                  <p class="q-mb-xs"><span class="text-weight-bold">Contact URL: </span><a href="www.facebook.com" class="text-caption">{{ quest.contactUrl }}</a></p>
+                  <p class="q-mb-xs"><span class="text-weight-bold">Presence: </span><span>{{ quest.presence }}</span></p>
+                </div>
+              </div>
+              <div class="col-12 q-px-sm q-mt-sm">
+                <q-btn size="sm" color="purelypeer" rounded :ref="'btn-'+questIndex" :label="quest.btnLabel" @click="showMorequestInfo(questIndex)"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="ratio-option" class="q-mt-lg">
+          <ul>
+              <li><a href="#?" class="fs-2" @click="changeTier"><span v-html="purelyPeertier.options[purelyPeertier.number]"></span></a></li>
+              <li><a href="#?" class="fs-2" @click="changePhysicalPresence">&#129521;<span v-html="phyicalPresence.options[phyicalPresence.number]"></span></a></li>
+              <li><a href="#?" class="fs-2" @click="changeQuestRadius"><span v-html="questRadius.options[questRadius.number]"></span></a></li>
+          </ul>
+      </div>
+      <div class="q-mx-md">
+        <div class="row justify-center">
+          <div class="col-12 q-my-md">
+            <q-input color="grey-5" bg-color="white" outlined label="Search. . .">
+                  <template v-slot:append>
+                    <q-icon name="search" />
+                  </template>
+              </q-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import createWallet from '../../utils/create_wallet.js'
 
 export default {
-	data() {
-		return {
-			purelyPeertier: {
-				options: ['&#10084;&#128175;', '&#128154;', '&#128155;', '&#128153;', '&#128420;'],
-				number: 0
-			},
-			questRadius: {
-				options: ['&#11093;&#128175;', '&#128378;&#9855;&#128131;', '&#127961;', '&#128739;', '&#127760;'],
-				number: 0
-			},
-			phyicalPresence: {
-				options: ['&#128175;', '&#10004;', '&#10060;'],
-				number: 0
-			},
-			quests: null,
-		}
-	},
-	methods: {
-		showQuestCoordinatesOnMap (coordinates) {
-			this.$emit('moveToTheQuestCoordinates', coordinates)
-		},
-		showMorequestInfo (ref) {
-			let classList = this.$refs[ref][0].classList
-			this.$refs[ref][0].classList.toggle('showMorequestInfo')
+  data() {
+    return {
+      purelyPeertier: {
+        options: ['&#10084;&#128175;', '&#128154;', '&#128155;', '&#128153;', '&#128420;'],
+        number: 0
+      },
+      questRadius: {
+        options: ['&#11093;&#128175;', '&#128378;&#9855;&#128131;', '&#127961;', '&#128739;', '&#127760;'],
+        number: 0
+      },
+      phyicalPresence: {
+        options: ['&#128175;', '&#10004;', '&#10060;'],
+        number: 0
+      },
+      quests: null,
+    }
+  },
+  methods: {
+    showQuestCoordinatesOnMap (coordinates) {
+      this.$emit('moveToTheQuestCoordinates', coordinates)
+    },
+    showMorequestInfo (ref) {
+      let classList = this.$refs[ref][0].classList
+      this.$refs[ref][0].classList.toggle('showMorequestInfo')
 
-			classList.value.match(/showMorequestInfo/gi) === null
-			? this.quests[ref].btnLabel = 'Show more info'
-			: this.quests[ref].btnLabel = 'Hide other info'
-		},
-		changeTier () {
-			this.purelyPeertier.number++
-			this.purelyPeertier.number = this.purelyPeertier.number == 5 ? 0 : this.purelyPeertier.number
-		},
-		changePhysicalPresence () {
-			this.phyicalPresence.number++
-			this.phyicalPresence.number = this.phyicalPresence.number == 3 ? 0 : this.phyicalPresence.number
-		},
-		changeQuestRadius () {
-			this.questRadius.number++
-			this.questRadius.number = this.questRadius.number == 5 ? 0 : this.questRadius.number
-		},
-	},
-	async mounted () {
-		// setTimeout(() => {
-		// 	let quests = this.$store.state.cashdrop.quests
-		// 	this.quests = quests.map(quest => ({ ...quest, btnLabel: "Show more info" }))
-		// }, 1000)
+      classList.value.match(/showMorequestInfo/gi) === null
+      ? this.quests[ref].btnLabel = 'Show more info'
+      : this.quests[ref].btnLabel = 'Hide other info'
+    },
+    changeTier () {
+      this.purelyPeertier.number++
+      this.purelyPeertier.number = this.purelyPeertier.number == 5 ? 0 : this.purelyPeertier.number
+    },
+    changePhysicalPresence () {
+      this.phyicalPresence.number++
+      this.phyicalPresence.number = this.phyicalPresence.number == 3 ? 0 : this.phyicalPresence.number
+    },
+    changeQuestRadius () {
+      this.questRadius.number++
+      this.questRadius.number = this.questRadius.number == 5 ? 0 : this.questRadius.number
+    },
+  },
+  async mounted () {
+    // setTimeout(() => {
+    //   let quests = this.$store.state.cashdrop.quests
+    //   this.quests = quests.map(quest => ({ ...quest, btnLabel: "Show more info" }))
+    // }, 1000)
 
-		await this.$store.dispatch('cashdrop/fetchQuestList')
-		.then(res => {
-			this.quests = res.data.results.map(quest => ({ ...quest, btnLabel: 'Show more info' }))
-		})
-		.catch(err => {
-			console.log('Error: ', err)
-		})
-	}
+    await this.$store.dispatch('cashdrop/fetchQuestList')
+    .then(res => {
+      this.quests = res.data.results.map(quest => ({ ...quest, btnLabel: 'Show more info' }))
+    })
+    .catch(err => {
+      console.log('Error: ', err)
+    })
+  }
 }
 </script>
 
 <style>
 .questMoreInfo {
-	display: none;
+  display: none;
 }
 .showMorequestInfo {
-	display: block;
+  display: block;
 }
 .bg-purelypeer {
-	background-color: #0AC18E;
-	padding-top: 2px;
+  background-color: #0AC18E;
+  padding-top: 2px;
 }
 p {
-	color: #676767;
+  color: #676767;
 }
 </style>
