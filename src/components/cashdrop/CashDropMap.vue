@@ -2,10 +2,10 @@
   <q-layout>
     <q-page-container>
       <div id="explore-map" class="row" ref="exploreMap">
-        <div class="zoom-controls q-mt-md">
-          <span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
-          <span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
-        </div>
+          <l-control class="q-mt-md zoom-controls">
+            <span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
+            <span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
+          </l-control>
           <l-map
             :zoom="zoomScale"
             :center="center"
@@ -49,9 +49,9 @@ export default {
     LMap,
     LTileLayer,
     LMarker,
-    LCircle
+    LCircle,
     // LIcon,
-    // LControl
+    LControl
   },
   data () {
     return {

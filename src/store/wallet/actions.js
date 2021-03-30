@@ -38,7 +38,6 @@ export function createWallet ({commit}, wallet) {
       resolve(response)
     })
     .catch(error => {
-
       console.log('Failed to send wallet to the api.')
       console.log('Error: ', error)
     })

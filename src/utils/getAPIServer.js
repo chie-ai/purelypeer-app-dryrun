@@ -1,5 +1,5 @@
 
-const NETWORK = 'testnet'
+const NETWORK = 'mainnet'
 
 // REST API servers.
 const BCHN_MAINNET = 'https://bchn.fullstack.cash/v4/'

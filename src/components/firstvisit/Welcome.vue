@@ -110,6 +110,7 @@
 
 <script>
 import createWallet from '../../utils/create_wallet.js'
+import server from '../../utils/getAPIServer.js'
 import { QSpinnerFacebook } from 'quasar'
 
 export default {
@@ -135,13 +136,15 @@ export default {
       })
 
       createWallet().then(response => {
-        // console.log('Response: ', response)
+        console.log('Response: ', response)
 
         this.$store.commit('wallet/mutateSeedPhrase', response.mnemonic)
 
+        const xPubKey = server.bchjs.HDNode.toXPub(response.masterHDNode)
+
         const wallet = {
           seed_hash: response.seedHash,
-          xpubkey: response.publicKey
+          xpubkey: xPubKey
         }
 
         this.$store.dispatch('wallet/createUser', wallet)

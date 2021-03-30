@@ -13,6 +13,7 @@
     "build:pwa": "quasar build -m pwa"
   },
   "dependencies": {
+    "@capacitor/core": "^2.4.7",
     "@psf/bch-js": "^4.9.0",
     "@quasar/extras": "^1.0.0",
     "axios": "^0.21.1",

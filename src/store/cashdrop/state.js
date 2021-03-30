@@ -1,6 +1,12 @@
 
 export default function () {
   return {
-    quests: 'Hello'
+    quests: 'Hello',
+    createdQuestInfo: {
+    	coordinates: null,
+    	radius: null,
+    	tier: null,
+    	
+    }
   }
 }

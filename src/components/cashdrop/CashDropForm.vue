@@ -157,13 +157,17 @@ export default {
             payment_address: 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5',
             pubkey: localStorage.getItem('xPubkey')
           }
-          // console.log('Form: ', questCreate)
+
+          const questInfoForMap = [ coordinates, this.cashDropFormModels.radius, this.cashDropFormModels.tier ]
 
           this.$store.dispatch('cashdrop/createQuest', questCreate).then(response => {
             for (let i = 0; this.refModels.length > i; i++) {
               this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
               this.$refs[this.refModels[i]].resetValidation()
             }
+
+            this.$store.commit('cashdrop/mutateForMapInfo', questInfoForMap)
+
             this.timer = setTimeout(() => {
               this.$q.loading.hide()
               this.timer = undefined
@@ -176,13 +180,19 @@ export default {
               this.$emit('toogleQuestlist', false)
               this.$refs.questList.classList.remove('hidden')
               document.getElementById('nav-menu').classList.remove('hidden')
+
+              this.$router.push({ path: 'payment' })
             }, 1000)
+
           }).catch(error => {
             console.log('Error: ', error)
             for (let i = 0; this.refModels.length > i; i++) {
               this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
               this.$refs[this.refModels[i]].resetValidation()
             }
+
+            this.$store.commit('cashdrop/mutateForMapInfo', questInfoForMap)
+
             this.timer = setTimeout(() => {
               this.$q.loading.hide()
               this.timer = undefined
@@ -195,6 +205,8 @@ export default {
               this.$emit('toogleQuestlist', false)
               this.$refs.questList.classList.remove('hidden')
               document.getElementById('nav-menu').classList.remove('hidden')
+
+              this.$router.push({ path: 'cash-drop/payment' })
             }, 1000)
           })
         }
