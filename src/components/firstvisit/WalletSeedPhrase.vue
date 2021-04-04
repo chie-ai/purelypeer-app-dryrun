@@ -5,7 +5,7 @@
     <h5 class="text-center q-mt-none">QRCODE</h5>
 
     <div class="qr-code-row q-mb-lg">
-      <qr-code :text="seedPhrase" color="#515D59" :size="220" class="seed-phrase"></qr-code>
+      <qr-code :text="seedPhrase" color="#404543" :size="220" class="seed-phrase"></qr-code>
     </div>
 
     <template>
@@ -106,6 +106,8 @@ export default {
       seedPhrase: null,
       seedHash: null,
       xPubKey: null,
+      bchAddress: null,
+      slpAddress: null
     }
   },
   methods: {
@@ -141,16 +143,18 @@ export default {
         localStorage.setItem('seedPhrase', this.seedPhrase)
         localStorage.setItem('seedHash', this.seedHash)
         localStorage.setItem('xPubkey', this.xPubKey)
+        localStorage.setItem('bchAddress', this.bchAddress)
+        localStorage.setItem('slpAddress', this.slpAddress)
 
         this.routeTimer = setTimeout(() => {
-            this.$q.loading.hide()
-            this.routeTimer = void 0
-            this.$refs.seed_phrase.classList.remove('hidden')
-            this.$q.notify({
-              message: 'Backing up of seed phrase is done!',
-              color: 'notify-color',
-              position: 'top',
-              timeout: 2000
+          this.$q.loading.hide()
+          this.routeTimer = void 0
+          this.$refs.seed_phrase.classList.remove('hidden')
+          this.$q.notify({
+            message: 'Backing up of seed phrase is done!',
+            color: 'notify-color',
+            position: 'top',
+            timeout: 2000
           })
           this.$refs.btn_seedPhrase_backup.classList.add('hidden')
           this.$refs.btn_next.classList.remove('hidden')
@@ -164,12 +168,15 @@ export default {
     this.seedPhrase = this.$store.state.wallet.wallet.seedPhrase
     this.seedHash = this.$store.state.wallet.seedhash
     this.xPubKey = this.$store.state.wallet.xPubKey
-        this.$q.notify({
+    this.bchAddress = this.$store.state.wallet.wallet.addresses[0].bch
+    this.slpAddress = this.$store.state.wallet.wallet.addresses[0].slp
+
+    this.$q.notify({
           message: 'Wallet has been successfully created!',
           color: 'notify-color',
           position: 'top',
           timeout: 3000
-      })
+        })
   }
 }
 </script>

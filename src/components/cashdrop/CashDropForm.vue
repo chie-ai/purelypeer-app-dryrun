@@ -6,7 +6,7 @@
       <div class="q-mx-md q-mt-md">
         <div class="row justify-center q-mb-md">
           <div class="col-11">
-            <q-form ref="questForm" class="q-gutter-y-sm" action="https://some-url.com" method="post" @submit="onSubmitQuest" >
+            <q-form ref="questForm" class="q-gutter-y-sm" method="post" @submit="onSubmitQuest" >
               <q-input ref="merchantName" color="grey-5" :dense="true" bg-color="white" outlined label="Merchant Name" type="text" lazy-rules v-model="merchantName"
                 :rules="[val => !!val || 'Merchant name is required']" />
               <q-input ref="phoneNumber" color="grey-5" :dense="true" bg-color="white" outlined label="Phone number" type="number" v-model="phoneNumber"
@@ -50,7 +50,7 @@
               <q-input color="grey-5" :dense="true" class="q-mb-lg" bg-color="white" outlined
                     v-model="feeBreakdown.toFixed(8)" label="Fee Breakdown"
                     input-class="text-right" readonly />
-              <q-btn :label="'Cash Drop \uD83D\uDCA7'" outline type="submit" class="full-width" color="grey-6"/>
+              <q-btn :label="'Cash Drop \uD83D\uDCA7'" outline type="submit" class="full-width" color="quest-btn"/>
             </q-form>
           </div>
         </div>
@@ -158,9 +158,12 @@ export default {
             pubkey: localStorage.getItem('xPubkey')
           }
 
+          // console.log('Form: ', questCreate)
+
           const questInfoForMap = [ coordinates, this.cashDropFormModels.radius, this.cashDropFormModels.tier ]
 
           this.$store.dispatch('cashdrop/createQuest', questCreate).then(response => {
+            console.log('Response: ', response)
             for (let i = 0; this.refModels.length > i; i++) {
               this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
               this.$refs[this.refModels[i]].resetValidation()
@@ -277,5 +280,9 @@ export default {
 .amount-error {
   font-size: 11px;
   color: #B00303;
+}
+.text-quest-btn {
+  background-color: #0AC18E !important;
+  color: white;
 }
 </style>

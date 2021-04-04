@@ -2,17 +2,17 @@
   <q-layout>
     <q-page-container>
       	<div id="explore-map" class="row" ref="exploreMap">
-          	<l-control class="q-mt-md zoom-controls">
+          	<div class="q-mt-md zoom-controls">
             	<span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
-            	<span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
-          	</l-control>
+            	<span class="q-ml-xs" @click="zoomScale">&#x2B07;&#xFE0F;</span>
+          	</div>
           	<l-map
 	            :zoom="zoomScale"
 	            :center="center"
 	            :options="mapOptions"
 	            style="height: 334px"
 	            @ready="readyMap"
-	            @move="updateMarkerCoordinates"
+	            @moveend="updateMarkerCoordinates"
 	            ref="myPurelyPeerMap"
           	>
             <l-tile-layer :url="url" :attribution="attribution" />
@@ -71,38 +71,41 @@ export default {
 	},
 	methods: {
 	    readyMap () {
-	        	this.isLocationShared = true
-				this.center = this.$store.state.cashdrop.createdQuestInfo.coordinates
+        	this.isLocationShared = true
+			this.center = this.$store.state.cashdrop.createdQuestInfo.coordinates
 
-				this.questRadius = this.$store.state.cashdrop.createdQuestInfo.radius
-			    if (this.questRadius === 1500) {
-			        this.zoomScale = 14
-			    } else if (this.questRadius === 15000) {
-			        this.zoomScale = 10
-			    } else if (this.questRadius === 150000) {
-			        this.zoomScale = 7
-			    } else {
-			        this.zoomScale = 4
-			    }
+			this.questRadius = this.$store.state.cashdrop.createdQuestInfo.radius
+		    if (this.questRadius === 1500) {
+		        this.zoomScale = 14
+		    } else if (this.questRadius === 15000) {
+		        this.zoomScale = 10
+		    } else if (this.questRadius === 150000) {
+		        this.zoomScale = 7
+		    } else {
+		        this.zoomScale = 4
+		    }
 
-				let tier = this.$store.state.cashdrop.createdQuestInfo.tier
-			    let tierIcon = 'PurelyPeer-icon-black.png'
-			    if (tier === 'Direct') {
-			    	tierIcon = 'PurelyPeer-location-green.png'
-			    } else if (tier === 'Indirect') {
-			    	tierIcon = 'PurelyPeer-location-orange.png'
-			    } else if (tier === 'Upcoming') {
-			    	tierIcon = 'PurelyPeer-location-blue.png'
-			    }
+			let tier = this.$store.state.cashdrop.createdQuestInfo.tier
+		    let tierIcon = 'PurelyPeer-icon-black.png'
+		    if (tier === 'Direct') {
+		    	tierIcon = 'PurelyPeer-location-green.png'
+		    } else if (tier === 'Indirect') {
+		    	tierIcon = 'PurelyPeer-location-orange.png'
+		    } else if (tier === 'Upcoming') {
+		    	tierIcon = 'PurelyPeer-location-blue.png'
+		    }
 
-				this.icon = icon({
-					iconUrl: tierIcon,
-					iconSize: [tier !== 'Inactive' ? 30 : 50, tier !== 'Inactive' ? 40 : 51],
-					iconAnchor: [tier !== 'Inactive' ? 2 : 12, tier !== 'Inactive' ? 39 : 46]
-				})
+			this.icon = icon({
+				iconUrl: tierIcon,
+				iconSize: [tier !== 'Inactive' ? 30 : 50, tier !== 'Inactive' ? 40 : 51],
+				iconAnchor: [tier !== 'Inactive' ? 2 : 12, tier !== 'Inactive' ? 39 : 46]
+			})
 	    },
 	    updateMarkerCoordinates () {
-	      	this.markerLocation = this.$store.state.cashdrop.createdQuestInfo.coordinates
+	      	this.markerLocation = this.coors
+	      	this.center = latLng(this.coors[0], this.coors[1])
+		    this.$refs.myPurelyPeerMap.mapObject.stop()
+	      	console.log('Marker Coors: ', this.center)
 	    },
 	    resizeMapHeight ({ evt, ...info }) {
 		    const map = this.$refs.myPurelyPeerMap.$el
@@ -127,6 +130,10 @@ export default {
 		    }
 		    this.$refs.myPurelyPeerMap.mapObject.invalidateSize()
 	    }
+	},
+	created () {
+		this.coors = this.$store.state.cashdrop.createdQuestInfo.coordinates
+		console.log('Coors: ', this.coors)
 	}
 }
 </script>

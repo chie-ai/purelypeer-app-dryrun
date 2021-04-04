@@ -2,10 +2,10 @@
     <q-layout>
         <q-page-container>
             <div id="explore-map" class="row">
-                <l-control class="example-custom-control q-mt-md zoom-controls">
+                <div class="example-custom-control q-mt-md zoom-controls">
                     <span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
                     <span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
-                </l-control>
+                </div>
                 <l-map
                   :zoom="zoomScale"
                   :center="center"
@@ -15,6 +15,7 @@
                   @ready="readyMap"
                   @click="removePopUpinfo"
                   @move="removePopUpinfo"
+                  @update:zoom="zoomUpdate"
                   ref="myPurelyPeerMap"
                 >
 
@@ -84,7 +85,7 @@ export default {
     LCircle,
     LPopup,
     LIcon,
-    LControl
+    // LControl
   },
   data () {
     return {
@@ -146,6 +147,9 @@ export default {
     }
   },
   methods: {
+    zoomUpdate (scale) {
+      this.zoomScale = scale
+    },
     centerUpdate (center) {
       this.markerLocation = center
     },
@@ -206,7 +210,7 @@ export default {
     await this.$store.dispatch('cashdrop/fetchQuestList').then(res => {
       this.quests = res.data.results.map(quest => ({ ...quest, infoWinOpen: false, radiusVisibility: false }))
     }).catch(err => {
-      console.log('Error: ', err)
+      console.error('Error: ', err)
     })
   }
 }

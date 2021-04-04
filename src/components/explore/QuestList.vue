@@ -6,7 +6,7 @@
       <div class="quest-main q-mx-md">
         <div class="column quest-body">
           <div class="col-12 q-py-md quest-list" v-for="(quest, questIndex) in quests" :key="questIndex"
-            @click="showQuestCoordinatesOnMap(quest)">
+            @click="showQuestCoordinatesOnMap(quest, questIndex)">
             <div class="row">
               <div class="col-12 q-px-sm">
                 <p class="q-mb-xs"><span class="text-weight-bold">Name: </span><span class="text-subtitle2">{{ quest.name }}</span></p>
@@ -73,11 +73,27 @@ export default {
         number: 0
       },
       quests: null,
+      questIndexer: null
     }
   },
   methods: {
-    showQuestCoordinatesOnMap (coordinates) {
-      this.$emit('moveToTheQuestCoordinates', coordinates)
+    showQuestCoordinatesOnMap (coordinates, index) {
+
+      let dummyCoors = {
+        coors: [Number(coordinates.coors[0])+0.0000001,Number(coordinates.coors[1])+0.0000001],
+        radius: coordinates.radius
+      }
+
+      if (this.questIndexer == index) {
+        this.$emit('moveToTheQuestCoordinates', dummyCoors)
+        setTimeout(() => {
+          this.$emit('moveToTheQuestCoordinates', coordinates)
+        }, 50)
+      }
+      else {
+        this.$emit('moveToTheQuestCoordinates', coordinates)
+      }
+      this.questIndexer = index
     },
     showMorequestInfo (ref) {
       let classList = this.$refs[ref][0].classList
@@ -101,11 +117,6 @@ export default {
     },
   },
   async mounted () {
-    // setTimeout(() => {
-    //   let quests = this.$store.state.cashdrop.quests
-    //   this.quests = quests.map(quest => ({ ...quest, btnLabel: "Show more info" }))
-    // }, 1000)
-
     await this.$store.dispatch('cashdrop/fetchQuestList')
     .then(res => {
       this.quests = res.data.results.map(quest => ({ ...quest, btnLabel: 'Show more info' }))

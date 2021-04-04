@@ -6,59 +6,59 @@
           <span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
           <span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
         </div>
-          <l-map
-            :zoom="zoomScale"
-            :center="center"
-            :options="mapOptions"
-            style="height: 334px"
-            @update:center="centerUpdate"
-            @ready="readyMap"
-            @click="removePopUpinfo"
-            @move="removePopUpinfo"
-            ref="myPurelyPeerMap"
-          >
+        <l-map
+          :zoom="zoomScale"
+          :center="center"
+          :options="mapOptions"
+          style="height: 334px"
+          @update:center="centerUpdate"
+          @ready="readyMap"
+          @click="removePopUpinfo"
+          @move="removePopUpinfo"
+          ref="myPurelyPeerMap"
+        >
 
-            <l-tile-layer :url="url" :attribution="attribution" />
+          <l-tile-layer :url="url" :attribution="attribution" />
 
-            <l-marker :icon="icon" :lat-lng="markerLocation"></l-marker>
+          <l-marker :icon="icon" :lat-lng="markerLocation"></l-marker>
 
-            <l-marker v-for="(mark, markerIndex) in quests" :key="markerIndex+'marker'"
-            :lat-lng="mark.coors" @click="toggleWindowInfo(markerIndex)">
-              <l-popup :options="popUpOptions" @remove="removePopUpinfo" ref="pops">
-              <div class="infowindow">
-                <p class="text-h6 info-header"><strong>Quest Info</strong></p>
-                <p><strong>Quest Name: </strong>{{ mark.name }}</p>
-                <p><strong>PurelyPeer Tier: </strong>{{ (mark.acceptance_tier).charAt(0).toUpperCase()+(mark.acceptance_tier).slice(1) }}</p>
-                <p><strong>Remaining Cash Drop: </strong>{{ mark.cashdrops_remaining }}</p>
-                <p><strong>Cash Drop Count: </strong>{{ mark.total_cashdrops }}</p>
-              </div>
-            </l-popup>
+          <l-marker v-for="(mark, markerIndex) in quests" :key="markerIndex+'marker'"
+          :lat-lng="mark.coors" @click="toggleWindowInfo(markerIndex)">
+            <l-popup :options="popUpOptions" @remove="removePopUpinfo" ref="pops">
+            <div class="infowindow">
+              <p class="text-h6 info-header"><strong>Quest Info</strong></p>
+              <p><strong>Quest Name: </strong>{{ mark.name }}</p>
+              <p><strong>PurelyPeer Tier: </strong>{{ (mark.acceptance_tier).charAt(0).toUpperCase()+(mark.acceptance_tier).slice(1) }}</p>
+              <p><strong>Remaining Cash Drop: </strong>{{ mark.cashdrops_remaining }}</p>
+              <p><strong>Cash Drop Count: </strong>{{ mark.total_cashdrops }}</p>
+            </div>
+          </l-popup>
+          <l-icon
+                :icon-size="[mark.active === 'active' ? 30 : 50, mark.active === 'active' ? 40 : 50]"
+                :icon-anchor="[mark.active === 'active' ? 1 : 12, mark.active === 'active' ? 40 : 44]"
+                :icon-url="(mark.active === 'active' ? (mark.acceptance_tier === 'Upcoming' ? 'PurelyPeer-location-blue.png' : (mark.acceptance_tier === 'Direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')" />
+          </l-marker>
+
+          <l-marker :lat-lng="cashDropCoor.coors" v-for="(cashDropCoor, cashDropsIndex) in cashDropsCoordinates">
             <l-icon
-                  :icon-size="[mark.active === 'active' ? 30 : 50, mark.active === 'active' ? 40 : 50]"
-                  :icon-anchor="[mark.active === 'active' ? 1 : 12, mark.active === 'active' ? 40 : 44]"
-                  :icon-url="(mark.active === 'active' ? (mark.acceptance_tier === 'Upcoming' ? 'PurelyPeer-location-blue.png' : (mark.acceptance_tier === 'Direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')" />
-            </l-marker>
+                :icon-size="[30, 30]"
+                :icon-anchor="[40, 54]"
+                :icon-url="'PurelyPeer-location-current-B.png'" />
+          </l-marker>
 
-            <l-marker :lat-lng="cashDropCoor.coors" v-for="(cashDropCoor, cashDropsIndex) in cashDropsCoordinates">
-              <l-icon
-                  :icon-size="[30, 30]"
-                  :icon-anchor="[40, 54]"
-                  :icon-url="'PurelyPeer-location-current-B.png'" />
-            </l-marker>
-
-            <l-circle
-              v-for="(pin, index) in quests":key="index"
-              :lat-lng="pin.coors"
-              :radius="pin.radius"
-              :color="circle.color"
-              :fillColor="circle.fillColor"
-              :weight="1"
-              :visible="pin.radiusVisibility"
-              @click="toggleWindowInfo(index)" />
-          <!-- <l-control :position="'bottomleft'" class="purelypeer-watermark" >
-              PurelyPeer
-          </l-control> -->
-          </l-map>
+          <l-circle
+            v-for="(pin, index) in quests":key="index"
+            :lat-lng="pin.coors"
+            :radius="pin.radius"
+            :color="circle.color"
+            :fillColor="circle.fillColor"
+            :weight="1"
+            :visible="pin.radiusVisibility"
+            @click="toggleWindowInfo(index)" />
+        <!-- <l-control :position="'bottomleft'" class="purelypeer-watermark" >
+            PurelyPeer
+        </l-control> -->
+        </l-map>
         <div class="adjust-map-height q-px-md">
           <q-btn color="btn-map-resizer text-btn-color" class="btn-map" v-touch-pan.vertical.prevent.mouse="resizeMapHeight" size="sm" label="Drag to resize" />
         </div>
