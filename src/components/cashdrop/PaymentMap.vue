@@ -12,7 +12,7 @@
 	            :options="mapOptions"
 	            style="height: 334px"
 	            @ready="readyMap"
-	            @moveend="updateMarkerCoordinates"
+	            @move="updateMarkerCoordinates"
 	            ref="myPurelyPeerMap"
           	>
             <l-tile-layer :url="url" :attribution="attribution" />

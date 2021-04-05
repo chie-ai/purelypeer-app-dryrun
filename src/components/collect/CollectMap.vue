@@ -39,7 +39,7 @@
                 :icon-url="(mark.active === 'active' ? (mark.acceptance_tier === 'Upcoming' ? 'PurelyPeer-location-blue.png' : (mark.acceptance_tier === 'Direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')" />
           </l-marker>
 
-          <l-marker :lat-lng="cashDropCoor.coors" v-for="(cashDropCoor, cashDropsIndex) in cashDropsCoordinates">
+          <l-marker :lat-lng="cashDropCoor.coors" v-for="(cashDropCoor, cashDropsIndex) in cashDropsCoordinates" :key="cashDropsIndex+'dropMarker'">
             <l-icon
                 :icon-size="[30, 30]"
                 :icon-anchor="[40, 54]"

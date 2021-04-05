@@ -47,10 +47,10 @@
                   label
                   :label-value="amount.toFixed(8)"
                 />
-              <q-input color="grey-5" :dense="true" class="q-mb-lg" bg-color="white" outlined
+              <q-input color="grey-5" :dense="true" class="q-mb-md" bg-color="white" outlined
                     v-model="feeBreakdown.toFixed(8)" label="Fee Breakdown"
                     input-class="text-right" readonly />
-              <q-btn :label="'Cash Drop \uD83D\uDCA7'" outline type="submit" class="full-width" color="quest-btn"/>
+              <q-btn :label="'Cash Drop \uD83D\uDCA7'" type="submit" class="full-width quest-btn"/>
             </q-form>
           </div>
         </div>
@@ -154,8 +154,8 @@ export default {
             total_cashdrops: this.cashDropCountModel,
             has_physical_presence: this.questPresence,
             amount: this.amount.toFixed(8),
-            payment_address: 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5',
-            pubkey: localStorage.getItem('xPubkey')
+            payment_address: 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5', /*localStorage.getItem('bchAddress')*/
+            pubkey: localStorage.getItem('pubkey')
           }
 
           // console.log('Form: ', questCreate)
@@ -174,12 +174,12 @@ export default {
             this.timer = setTimeout(() => {
               this.$q.loading.hide()
               this.timer = undefined
-              this.$q.notify({
-                message: 'Your quest has been successfully created!',
-                color: 'notify-color',
-                position: 'center',
-                timeout: 2000
-              })
+              // this.$q.notify({
+              //   message: 'Your quest has been successfully created!',
+              //   color: 'notify-color',
+              //   position: 'center',
+              //   timeout: 2000
+              // })
               this.$emit('toogleQuestlist', false)
               this.$refs.questList.classList.remove('hidden')
               document.getElementById('nav-menu').classList.remove('hidden')
@@ -199,12 +199,12 @@ export default {
             this.timer = setTimeout(() => {
               this.$q.loading.hide()
               this.timer = undefined
-              this.$q.notify({
-                message: 'Your quest has been successfully created!',
-                color: 'notify-color',
-                position: 'center',
-                timeout: 2000
-              })
+              // this.$q.notify({
+              //   message: 'Your quest has been successfully created!',
+              //   color: 'notify-color',
+              //   position: 'center',
+              //   timeout: 2000
+              // })
               this.$emit('toogleQuestlist', false)
               this.$refs.questList.classList.remove('hidden')
               document.getElementById('nav-menu').classList.remove('hidden')
@@ -281,8 +281,8 @@ export default {
   font-size: 11px;
   color: #B00303;
 }
-.text-quest-btn {
-  background-color: #0AC18E !important;
+.quest-btn {
+  background: radial-gradient(circle, #0CDEA4 0%, #0AC18E 100%) !important;
   color: white;
 }
 </style>

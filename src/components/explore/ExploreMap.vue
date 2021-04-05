@@ -16,6 +16,7 @@
                   @click="removePopUpinfo"
                   @move="removePopUpinfo"
                   @update:zoom="zoomUpdate"
+                  @update:bounds="udpateQuestList"
                   ref="myPurelyPeerMap"
                 >
 
@@ -40,7 +41,7 @@
                             :icon-url="(mark.active === true ? (mark.acceptance_tier === 'Upcoming' ? 'PurelyPeer-location-blue.png' : (mark.acceptance_tier === 'Direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')" />
                     </l-marker>
 
-                    <l-marker :lat-lng="cashDropCoor.coors" v-for="(cashDropCoor, cashDropsIndex) in cashDropsCoordinates" :key="cashDropsIndex">
+                    <l-marker :lat-lng="cashDropCoor.coors" v-for="(cashDropCoor, cashDropsIndex) in cashDropsCoordinates" :key="cashDropsIndex+'dropMarker'">
                         <l-icon
                             :icon-size="[30, 30]"
                             :icon-anchor="[40, 54]"
@@ -120,7 +121,8 @@ export default {
       counter: 0,
       mapHeight: 0,
       hover: false,
-      questRadius: null
+      questRadius: null,
+      bounds: null
     }
   },
   props: ['moveToTheQuestCoordinates'],
@@ -204,10 +206,15 @@ export default {
         newHeight >= minMapHeight ? map.$el.style.height = newHeight + 'px' : ''
       }
       this.$refs.myPurelyPeerMap.mapObject.invalidateSize()
+    },
+    udpateQuestList (bounds) {
+      this.bounds = bounds
+      console.log('Bounds: ', bounds)
     }
   },
   async mounted () {
     await this.$store.dispatch('cashdrop/fetchQuestList').then(res => {
+      console.log('Response: ', res)
       this.quests = res.data.results.map(quest => ({ ...quest, infoWinOpen: false, radiusVisibility: false }))
     }).catch(err => {
       console.error('Error: ', err)
