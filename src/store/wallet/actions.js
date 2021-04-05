@@ -6,6 +6,7 @@ export function createUser ({dispatch}, wallet) {
   return new Promise((resolve, reject) => {
     axios.post('https://staging.purelypeer.cash/api/anonymous_user/')
     .then(response => {
+      console.log('Success in creating UUID')
       localStorage.setItem('user_id', response.data.id)
       dispatch('createWallet', wallet)
       .then(res => {
@@ -24,8 +25,9 @@ export function createWallet ({commit}, wallet) {
   return new Promise((resolve, reject) => {
     axios.post('https://staging.purelypeer.cash/api/wallet/', wallet)
     .then(response => {
-      // console.log('Wallet return: ', response.data)
-      commit('mutateAddresses', response.data.addresses)
+      console.log('BCH: ', response.data.addresses[0].bch_address)
+      console.log('SLP: ', response.data.addresses[0].slp_address)
+      // commit('mutateAddresses', response.data.addresses)
       commit('mutateKeys', response.data)
 
       let addresses = {

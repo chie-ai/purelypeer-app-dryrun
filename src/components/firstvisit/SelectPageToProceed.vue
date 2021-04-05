@@ -77,6 +77,12 @@ export default {
       //   }, 2000)
       // }).catch(error => console.log('Failed importing', error))
     }
+  },
+  created () {
+    console.log('BCH: ', localStorage.getItem('bchAddress'))
+    console.log('SLP: ', localStorage.getItem('slpAddress'))
+    console.log('Seed Hash: ', localStorage.getItem('seedHash'))
+    console.log('Public key: ', localStorage.getItem('pubkey'))
   }
 }
 </script>

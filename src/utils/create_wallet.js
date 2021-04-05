@@ -11,8 +11,9 @@ export default async function createWallet (walletIndex = 0) {
   console.log('Seed hash generated', seedHash)
   const masterHDNode = server.NETWORK === 'mainnet' ? bchjs.HDNode.fromSeed(seedBuffer) : bchjs.HDNode.fromSeed(seedBuffer, 'testnet');
   // const xPubKey = bchjs.HDNode.toXPub(masterHDNode)
-  const childNode = masterHDNode.derivePath("m/44'/145'/0'/0" + walletIndex)
+  const childNode = masterHDNode.derivePath("m/44'/145'/0'/" + walletIndex)
   const bchAddress = bchjs.HDNode.toCashAddress(childNode)
+  const slpAddress = bchjs.SLP.HDNode.toSLPAddress(childNode)
   const publicKey = bchjs.HDNode.toPublicKey(childNode).toString('hex')
   console.log(bchAddress)
   const returnValues = {
@@ -20,8 +21,8 @@ export default async function createWallet (walletIndex = 0) {
     seedHash,
     // xPubKey
     // childNode,
-    masterHDNode,
     bchAddress,
+    slpAddress,
     publicKey
   }
 

@@ -136,15 +136,19 @@ export default {
       })
 
       createWallet().then(response => {
-        console.log('Response: ', response)
+        console.log('Creation of wallet response: ', response)
 
         this.$store.commit('wallet/mutateSeedPhrase', response.mnemonic)
 
-        const xPubKey = server.bchjs.HDNode.toXPub(response.masterHDNode)
+        let addresses = [{ bch_address: response.bchAddress, slp_address: response.slpAddress }]
+        this.$store.commit('wallet/mutateAddresses', addresses)
+
+        let pkeyAndSeedhash = { seed_hash: response.seedHash, pubkey: response.publicKey }
+        this.$store.commit('wallet/mutateKeys', pkeyAndSeedhash)
 
         const wallet = {
           seed_hash: response.seedHash,
-          xpubkey: xPubKey
+          xpubkey: response.publicKey
         }
 
         this.$store.dispatch('wallet/createUser', wallet)
@@ -154,7 +158,7 @@ export default {
           this.$router.push({ path: 'seed-phrase' })
         }, 3000)
       }).catch(error => {
-        console.log('Error: ', error)
+        console.log('Error in creating wallet: ', error)
         this.routeTimer = setTimeout(() => {
           this.$q.loading.hide()
           this.routeTimer = 0

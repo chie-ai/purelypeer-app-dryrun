@@ -105,7 +105,7 @@ export default {
     return {
       seedPhrase: null,
       seedHash: null,
-      xPubKey: null,
+      pubKey: null,
       bchAddress: null,
       slpAddress: null
     }
@@ -139,10 +139,10 @@ export default {
 
         this.$refs.seed_phrase.classList.add('hidden')
 
-        // Store wallet seed phrase, seed hash and xpubkey to localstorage (will be used for importing wallet)
+        // Store wallet seed phrase, seed hash, pubkey and address to localstorage (will be used for importing wallet)
         localStorage.setItem('seedPhrase', this.seedPhrase)
         localStorage.setItem('seedHash', this.seedHash)
-        localStorage.setItem('xPubkey', this.xPubKey)
+        localStorage.setItem('pubkey', this.pubKey)
         localStorage.setItem('bchAddress', this.bchAddress)
         localStorage.setItem('slpAddress', this.slpAddress)
 
@@ -167,9 +167,15 @@ export default {
   created () {
     this.seedPhrase = this.$store.state.wallet.wallet.seedPhrase
     this.seedHash = this.$store.state.wallet.seedhash
-    this.xPubKey = this.$store.state.wallet.xPubKey
+    this.pubKey = this.$store.state.wallet.pubKey
     this.bchAddress = this.$store.state.wallet.wallet.addresses[0].bch
     this.slpAddress = this.$store.state.wallet.wallet.addresses[0].slp
+
+    console.log('Seed Phrase: ', this.seedPhrase)
+    console.log('Seed Hash: ', this.seedHash)
+    console.log('Public Key: ', this.pubKey)
+    console.log('BCH: ', this.bchAddress)
+    console.log('SLP: ', this.slpAddress)
 
     this.$q.notify({
           message: 'Wallet has been successfully created!',
