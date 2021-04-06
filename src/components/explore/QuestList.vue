@@ -1,7 +1,7 @@
 <template>
   <div id="quest-list">
-    <div class="col-12 quest-container q-mt-lg">
-      <h5 class="text-center q-mt-md q-mb-sm">Quests</h5>
+    <div class="col-12 quest-container q-mt-none q-mb-none q-pt-xs">
+      <h5 class="text-center q-mt-md q-mb-md">Quests</h5>
 
       <div class="quest-main q-mx-md">
         <div class="column quest-body">

@@ -120,5 +120,5 @@ span.balance {
     box-shadow: 1px 2px 2px 1px rgba(99, 103, 103, .1);
     border: 4px solid #0AC18E;
     background: white;
-  }
+}
 </style>

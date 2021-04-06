@@ -61,28 +61,7 @@ export default {
         this.$q.loading.hide()
         this.$router.push({ path: `${destination}` })
       }, 2000)
-
-      // TODO - Import should only happen if wallet details are not found in localstorage
-      // const wallet = {
-      //   seed_hash: localStorage.getItem('seedHash'),
-      //   xpubkey: localStorage.getItem('xPubkey')
-      // }
-      // const url = 'https://staging.purelypeer.cash/api/wallet/import_wallet/'
-      // this.$axios.post(url, wallet).then(response => {
-      //   // console.log('Mutate Addresses', response)
-      //   this.$store.commit('wallet/mutateAddresses', response.data.addresses)
-      //   setTimeout(() => {
-      //     this.$q.loading.hide()
-      //     this.$router.push({ path: `${destination}` })
-      //   }, 2000)
-      // }).catch(error => console.log('Failed importing', error))
     }
-  },
-  created () {
-    console.log('BCH: ', localStorage.getItem('bchAddress'))
-    console.log('SLP: ', localStorage.getItem('slpAddress'))
-    console.log('Seed Hash: ', localStorage.getItem('seedHash'))
-    console.log('Public key: ', localStorage.getItem('pubkey'))
   }
 }
 </script>

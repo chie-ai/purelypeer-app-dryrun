@@ -96,13 +96,21 @@ p, div > span {
   font-family: PurelyPeer-Regular;
   color: #175477;
 }
-#quest-list, #payment {
+#payment {
   width: 100%;
   border: 1px solid #ACDED0;
   border-bottom: none;
   background: #B5ECDD;
   // box-shadow: inset 6px 6px 12px #a8dbce,
   //             inset -6px -6px 12px #c2fdec;
+}
+#quest-list {
+  width: 100%;
+  border-bottom: none;
+}
+.quest-container {
+  background: #B5ECDD;
+  height: 100%;
 }
 .quest-list {
   border-bottom: 1px solid #B2B2B2;

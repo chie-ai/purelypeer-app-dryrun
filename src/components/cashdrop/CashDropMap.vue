@@ -1,5 +1,5 @@
 <template>
-  <q-layout>
+  <q-layout class="exploreMap">
     <q-page-container>
       <div id="explore-map" class="row" ref="exploreMap">
           <div class="q-mt-md zoom-controls">
