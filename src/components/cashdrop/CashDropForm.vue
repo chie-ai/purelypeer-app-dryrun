@@ -59,14 +59,15 @@
     </div>
 
     <BCHAddress class="hidden" ref="bchAddress" v-on:cancelQuest="cancelQuest"/>
-    <Confirmation class="hidden" ref="confirmation"/>
+    <!-- <Confirmation :confirmation-dialog="confirmationDialog"/> -->
   </div>
 </template>
 
 <script>
-import { QSpinnerFacebook } from 'quasar'
+import { QSpinnerFacebook, QSpinner } from 'quasar'
 import BCHAddress from '../../components/cashdrop/flash-components/BchAddress.vue'
 import Confirmation from '../../components/cashdrop/flash-components/Confirmation.vue'
+import Confirmation2 from '../../components/cashdrop/flash-components/Confirmation2.vue'
 import server from '../../utils/getAPIServer.js'
 
 export default {
@@ -104,17 +105,16 @@ export default {
       feeBreakdown: 0.00002000,
       amountBoolean: false,
       questPresence: null,
-
+      balanceWatcher: null
     }
   },
   components: {
     BCHAddress,
-    Confirmation
   },
   props: ['questCoordinates'],
   watch: {
     radiusModel (newRadius, oldRadius) {
-      this.changeRadius()
+      newRadius ? this.changeRadius() : ''
     },
     tierModel (newTier, oldTier) {
       this.changeTier()
@@ -136,40 +136,40 @@ export default {
       document.getElementsByClassName('exploreMap')[0].classList.remove('hidden')
       document.getElementById('nav-menu').classList.add('animate-in-load')
       document.getElementsByClassName('cashdrop-form')[0].classList.add('animate-in-load')
+      document.getElementsByClassName('btn-cancel')[0].classList.add('hidden')
+
     },
     cancelQuest () {
       this.toggleCashDropForm()
+      this.$emit('routeStatus', true)
       for (let i = 0; this.refModels.length > i; i++) {
         this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
         this.$refs[this.refModels[i]].resetValidation()
       }
       this.$q.notify({
-                message: 'Your quest has been canceled!',
-                color: 'notify-color',
+                message: 'The quest has been canceled!',
+                color: 'spinner-color',
                 position: 'bottom',
                 timeout: 3000
               })
+      clearInterval(this.balanceWatcher)
     },
     onSubmitQuest (evt) {
-
-      console.log('Submit')
-
-      this.$refs.questList.classList.add('hidden')
-      document.getElementById('nav-menu').classList.add('hidden')
-      document.getElementsByClassName('exploreMap')[0].classList.add('hidden')
-
-      this.$q.loading.show({
-        spinner: QSpinnerFacebook,
-        spinnerColor: 'spinner-color',
-        spinnerSize: 140,
-        backgroundColor: 'white',
-        message: '<b>Creating of quest is in progress. <br/><span style="color: #0AC18E;">Hang on...</span>',
-        messageColor: 'black'
-      })
 
       this.$refs.questForm.validate().then(success => {
 
         if (success) {
+
+          const balanceLoader = this.$q.dialog({
+            message: 'Checking your wallet balance...',
+            progress: {
+              spinner: QSpinner,
+              color: 'balance-spinner-color'
+            }, // we enable default settings
+            persistent: true, // we want the user to not be able to close it
+            ok: false // we want the user to not be able to close it
+          })
+
           const coordinates = []
           for (let i = 0; Object.keys(this.questCoordinates).length > i; i++) {
             coordinates.push(Object.values(this.questCoordinates)[i])
@@ -188,93 +188,110 @@ export default {
             total_cashdrops: this.cashDropCountModel,
             has_physical_presence: this.questPresence,
             amount: this.amount.toFixed(8),
-            payment_address: localStorage.getItem('bchAddress'),
+            payment_address: 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5',
             pubkey: localStorage.getItem('pubkey')
           }
-          // console.log('Form: ', questCreate)
 
           let overAllAmount = (Number(this.amount.toFixed(8)) + Number(this.feeBreakdown.toFixed(8)))
 
           const questInfoForMap = [ coordinates, this.cashDropFormModels.radius, this.cashDropFormModels.tier ]
 
+          this.$emit('routeStatus', false)
+
           //Check the BCH Address if has a balance before proceeding to creation of quest
-          server.bchjs.Electrumx.balance(localStorage.getItem('bchAddress'))
+          server.bchjs.Electrumx.balance('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5')
           .then(res => {
             let walletBal = (server.bchjs.BitcoinCash.toBitcoinCash(res.balance.confirmed)).toFixed(8)
-            // console.log('BCH: ', walletBal)
+            console.log('BCH: ', walletBal)
+
+            balanceLoader.hide()
 
             if (walletBal > overAllAmount)
             {
-              this.$store.dispatch('cashdrop/createQuest', questCreate).then(response => {
-                console.log('Response: ', response)
-                for (let i = 0; this.refModels.length > i; i++) {
-                  this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
-                  this.$refs[this.refModels[i]].resetValidation()
-                }
 
-                this.$store.commit('cashdrop/mutateForMapInfo', questInfoForMap)
-
-                this.timer = setTimeout(() => {
-                  this.$q.loading.hide()
-                  this.timer = undefined
-                  // this.$q.notify({
-                  //   message: 'Your quest has been successfully created!',
-                  //   color: 'notify-color',
-                  //   position: 'center',
-                  //   timeout: 2000
-                  // })
-                  this.$refs.questList.classList.remove('hidden')
-                  document.getElementById('nav-menu').classList.remove('hidden')
-
-                  this.$router.push({ path: 'payment' })
-                }, 1000)
-
-              }).catch(error => {
-                console.log('Error: ', error)
-                for (let i = 0; this.refModels.length > i; i++) {
-                  this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
-                  this.$refs[this.refModels[i]].resetValidation()
-                }
-
-                this.$store.commit('cashdrop/mutateForMapInfo', questInfoForMap)
-
-                this.timer = setTimeout(() => {
-                  this.$q.loading.hide()
-                  this.timer = undefined
-                  // this.$q.notify({
-                  //   message: 'Your quest has been successfully created!',
-                  //   color: 'notify-color',
-                  //   position: 'center',
-                  //   timeout: 2000
-                  // })
-                  this.$refs.questList.classList.remove('hidden')
-                  document.getElementById('nav-menu').classList.remove('hidden')
-
-                  this.$router.push({ path: 'cash-drop/payment' })
-                }, 1000)
+              this.$q.dialog({
+                component: Confirmation,
+                parent: this,
               })
+              .onOk(() => {
+
+                this.$refs.questList.classList.add('hidden')
+                document.getElementById('nav-menu').classList.add('hidden')
+                document.getElementsByClassName('exploreMap')[0].classList.add('hidden')
+
+                this.$q.loading.show({
+                  spinner: QSpinnerFacebook,
+                  spinnerColor: 'spinner-color',
+                  spinnerSize: 140,
+                  backgroundColor: 'white',
+                  message: '<b>Creating of quest is in progress. <br/><span style="color: #0AC18E;">Hang on...</span>',
+                  messageColor: 'black'
+                })
+                this.createQuest(questInfoForMap, questCreate)
+
+              })
+              .onCancel(() => {
+                this.$emit('routeStatus', true)
+              })
+
             }
             else {
 
+
               this.$q.loading.hide()
+              this.$refs.questList.classList.add('hidden')
+              document.getElementById('nav-menu').classList.add('hidden')
+              document.getElementsByClassName('exploreMap')[0].classList.add('hidden')
               this.$refs.bchAddress.$el.classList.remove('hidden')
+
               setTimeout(() => {
                 document.getElementsByClassName('btn-cancel')[0].classList.remove('hidden')
-              }, 5000)
+              }, 60000)
 
               // 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5'
-              let balanceWatcher = setInterval(() => {
+              let pullingBalance = () => {
+
                                       server.bchjs.Electrumx.balance(localStorage.getItem('bchAddress'))
                                       .then(res => {
-                                        console.log('Balance watcher: ', res)
+
+                                        console.log('Balance: ', res.balance.confirmed)
+
                                         let checkBalance = (server.bchjs.BitcoinCash.toBitcoinCash(res.balance.confirmed)).toFixed(8)
-                                        checkBalance > overAllAmount ? clearInterval(balanceWatcher) : ''
-                                        checkBalance > overAllAmount ? this.resubmitForm() : ''
+                                        checkBalance > overAllAmount ? clearInterval(this.balanceWatcher) : ''
+
+                                        if (checkBalance > overAllAmount) {
+
+                                          this.$q.dialog({
+                                            component: Confirmation2,
+                                            parent: this,
+                                          })
+                                          .onOk(() => {
+                                            this.$refs.bchAddress.$el.classList.add('hidden')
+
+                                            this.$q.loading.show({
+                                              spinner: QSpinnerFacebook,
+                                              spinnerColor: 'spinner-color',
+                                              spinnerSize: 140,
+                                              backgroundColor: 'white',
+                                              message: '<b>Creating of quest is in progress. <br/><span style="color: #0AC18E;">Hang on...</span>',
+                                              messageColor: 'black'
+                                            })
+
+                                            this.createQuest(questInfoForMap, questCreate)
+                                          })
+                                          .onCancel(() => {
+                                            this.cancelQuest()
+                                          })
+
+                                        }
+
                                       })
                                       .catch(err => {
                                         console.error(err)
                                       })
-                                  }, 5000)
+                                  }
+
+              this.balanceWatcher = setInterval(pullingBalance, 15000)
             }
           })
           .catch(err => {
@@ -283,10 +300,57 @@ export default {
         }
       })
     },
-    resubmitForm () {
-      console.log('Resubmitting')
-      this.toggleCashDropForm()
-      this.$refs.questForm.submit()
+    createQuest (questInfoForMap, questCreate) {
+      console.log('form: ', questCreate)
+      console.log('map: ', questInfoForMap)
+      this.$store.dispatch('cashdrop/createQuest', questCreate).then(response => {
+        console.log('Response: ', response)
+        for (let i = 0; this.refModels.length > i; i++) {
+          this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
+          this.$refs[this.refModels[i]].resetValidation()
+        }
+
+        this.$store.commit('cashdrop/mutateForMapInfo', questInfoForMap)
+
+        this.timer = setTimeout(() => {
+          this.$q.loading.hide()
+          this.timer = undefined
+          this.$q.notify({
+            message: 'Your quest has been successfully created!',
+            color: 'notify-color',
+            position: 'center',
+            timeout: 2000
+          })
+          this.$refs.questList.classList.remove('hidden')
+          document.getElementById('nav-menu').classList.remove('hidden')
+          document.getElementsByClassName('exploreMap')[0].classList.remove('hidden')
+
+        }, 1000)
+
+      }).catch(error => {
+        console.log('Error: ', error)
+        for (let i = 0; this.refModels.length > i; i++) {
+          this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
+          this.$refs[this.refModels[i]].resetValidation()
+        }
+
+        this.$store.commit('cashdrop/mutateForMapInfo', questInfoForMap)
+
+        this.timer = setTimeout(() => {
+          this.$q.loading.hide()
+          this.timer = undefined
+          this.$q.notify({
+            message: 'Your quest has been successfully created!',
+            color: 'notify-color',
+            position: 'center',
+            timeout: 2000
+          })
+          this.$refs.questList.classList.remove('hidden')
+          document.getElementById('nav-menu').classList.remove('hidden')
+          document.getElementsByClassName('exploreMap')[0].classList.remove('hidden')
+
+        }, 1000)
+      })
     },
     changeTier () {
       let tierIcon = 'PurelyPeer-icon-black.png'
@@ -332,7 +396,7 @@ export default {
         this.cashDropFormModels.radius = radius
       }
       this.$emit('changeQuestRadius', radius)
-    }
+    },
   }
 }
 </script>
@@ -343,6 +407,9 @@ export default {
 }
 .bg-notify-color {
   background-color: #0AC18E;
+}
+.text-balance-spinner-color {
+  color: #0AC18E;
 }
 .amount-range-slider {
   color: #0AC18E;

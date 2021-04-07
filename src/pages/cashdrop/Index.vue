@@ -1,7 +1,8 @@
 <template>
   <div class="row cashdrop-form animate-in-load">
     <CashDropMap :change-quest-radius="radius" :change-quest-tier="tier" v-on:passCoordinatesToForm="passCoordinatesToForm" />
-    <CashDropForm v-on:changeQuestRadius="changeQuestRadius" v-on:changeQuestTier="changeQuestTier" :quest-coordinates="coordinates" />
+    <CashDropForm v-on:changeQuestRadius="changeQuestRadius" v-on:changeQuestTier="changeQuestTier"
+    v-on:routeStatus="updateRouteStatus" :quest-coordinates="coordinates" />
   </div>
 </template>
 
@@ -15,7 +16,8 @@ export default {
       radius: 1000,
       tier: 'inactive',
       coordinates: null,
-      visibility: null
+      visibility: null,
+      routable: true
     }
   },
   components: {
@@ -31,7 +33,13 @@ export default {
     },
     passCoordinatesToForm (coors) {
       this.coordinates = coors
+    },
+    updateRouteStatus (status) {
+      this.routable = status
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    this.routable ? next() : next(false)
   }
 }
 </script>
