@@ -9,8 +9,8 @@
             <q-form ref="questForm" class="q-gutter-y-sm" method="post" @submit="onSubmitQuest" >
               <q-input ref="merchantName" color="grey-5" :dense="true" bg-color="white" outlined label="Merchant Name" type="text" lazy-rules v-model="merchantName"
                 :rules="[val => !!val || 'Merchant name is required']" />
-              <q-input ref="phoneNumber" color="grey-5" :dense="true" bg-color="white" outlined label="Phone number" type="number" v-model="phoneNumber"
-                mask="(###) #### - ####" fill-mask unmasked-value class="q-mb-lg" />
+              <q-input ref="phoneNumber" color="grey-5" :dense="true" bg-color="white" outlined label="Phone number" v-model="phoneNumber"
+                mask="(+##) ###-###-####" fill-mask unmasked-value class="q-mb-lg" />
               <q-input ref="contactUrl" color="grey-5" :dense="true" bg-color="white" outlined label="Contact URL" type="url" v-model="contactUrl" class="q-mb-lg" />
               <q-input ref="memo" color="grey-5" :dense="true" bg-color="white" outlined label="Memo" type="text" v-model="memo" class="q-mb-lg" />
               <q-select ref="tierModel" outlined color="grey-5" :dense="true" bg-color="white" v-model="tierModel"
@@ -170,7 +170,7 @@ export default {
             user: localStorage.getItem('user_id'),
             token: '-',
             name: this.merchantName,
-            phone_no: this.phoneNumber,
+            phone_no: '+' + this.phoneNumber,
             contact_url: this.contactUrl,
             memo: this.memo,
             acceptance_tier: this.cashDropFormModels.tier,
