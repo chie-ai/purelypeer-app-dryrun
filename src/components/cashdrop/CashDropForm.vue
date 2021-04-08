@@ -40,7 +40,7 @@
                 </q-badge>
                 <q-slider class="q-mt-none q-mb-none amount-range-slider"
                   :value="0.00000000"
-                  v-model="amount"  
+                  v-model="amount"
                   :min="0.00000000"
                   :max="1.00000000"
                   :step="0.00000001"
@@ -128,8 +128,7 @@ export default {
     }
   },
   methods: {
-    toggleCashDropForm ()
-    {
+    toggleCashDropForm () {
       this.$refs.questList.classList.remove('hidden')
       this.$refs.bchAddress.$el.classList.add('hidden')
       document.getElementById('nav-menu').classList.remove('hidden')
@@ -137,7 +136,6 @@ export default {
       document.getElementById('nav-menu').classList.add('animate-in-load')
       document.getElementsByClassName('cashdrop-form')[0].classList.add('animate-in-load')
       document.getElementsByClassName('btn-cancel')[0].classList.add('hidden')
-
     },
     cancelQuest () {
       this.toggleCashDropForm()
@@ -150,11 +148,9 @@ export default {
       clearInterval(this.balanceWatcher)
     },
     onSubmitQuest (evt) {
-
+      const bchAddress = localStorage.getItem('bchAddress')
       this.$refs.questForm.validate().then(success => {
-
         if (success) {
-
           const balanceLoader = this.$q.dialog({
             message: 'Checking your wallet balance...',
             progress: {
@@ -183,33 +179,28 @@ export default {
             total_cashdrops: this.cashDropCountModel,
             has_physical_presence: this.questPresence,
             amount: this.amount.toFixed(8),
-            payment_address: 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5',
+            payment_address: bchAddress,
             pubkey: localStorage.getItem('pubkey')
           }
 
-          let overAllAmount = (Number(this.amount.toFixed(8)) + Number(this.feeBreakdown.toFixed(8)))
-
-          const questInfoForMap = [ coordinates, this.cashDropFormModels.radius, this.cashDropFormModels.tier ]
+          const overAllAmount = (Number(this.amount.toFixed(8)) + Number(this.feeBreakdown.toFixed(8)))
+          const questInfoForMap = [coordinates, this.cashDropFormModels.radius, this.cashDropFormModels.tier]
 
           this.$emit('routeStatus', false)
 
-          //Check the BCH Address if has a balance before proceeding to creation of quest
-          server.bchjs.Electrumx.balance('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5')
-          .then(res => {
-            let walletBal = (server.bchjs.BitcoinCash.toBitcoinCash(res.balance.confirmed)).toFixed(8)
-            console.log('BCH: ', walletBal)
+          // Check the BCH Address if has a balance before proceeding to creation of quest
+          server.bchjs.Electrumx.balance(bchAddress).then(res => {
+            const sumSatoshis = res.balance.confirmed + res.balance.unconfirmed
+            const balance = (server.bchjs.BitcoinCash.toBitcoinCash(sumSatoshis)).toFixed(8)
+            console.log('Balance: ', balance)
 
             balanceLoader.hide()
 
-            if (walletBal > overAllAmount)
-            {
-
+            if (balance > overAllAmount) {
               this.$q.dialog({
                 component: Confirmation,
-                parent: this,
-              })
-              .onOk(() => {
-
+                parent: this
+              }).onOk(() => {
                 this.$refs.questList.classList.add('hidden')
                 document.getElementById('nav-menu').classList.add('hidden')
                 document.getElementsByClassName('exploreMap')[0].classList.add('hidden')
@@ -223,16 +214,10 @@ export default {
                   messageColor: 'black'
                 })
                 this.createQuest(questInfoForMap, questCreate)
-
-              })
-              .onCancel(() => {
+              }).onCancel(() => {
                 this.$emit('routeStatus', true)
               })
-
-            }
-            else {
-
-
+            } else {
               this.$q.loading.hide()
               this.$refs.questList.classList.add('hidden')
               document.getElementById('nav-menu').classList.add('hidden')
@@ -242,54 +227,41 @@ export default {
               setTimeout(() => {
                 document.getElementsByClassName('btn-cancel')[0].classList.remove('hidden')
               }, 5000)
+              const pollingBalance = () => {
+                server.bchjs.Electrumx.balance(bchAddress).then(res => {
+                  const sumSatoshis = res.balance.confirmed + res.balance.unconfirmed
+                  const balance = (server.bchjs.BitcoinCash.toBitcoinCash(sumSatoshis)).toFixed(8)
+                  console.log('Balance: ', balance)
+                  balance > overAllAmount ? clearInterval(this.balanceWatcher) : ''
 
-              // 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5'
-              let pollingBalance = () => {
+                  if (balance > overAllAmount) {
+                    this.$q.dialog({
+                      component: Confirmation2,
+                      parent: this
+                    }).onOk(() => {
+                      this.$refs.bchAddress.$el.classList.add('hidden')
 
-                                      server.bchjs.Electrumx.balance(localStorage.getItem('bchAddress'))
-                                      .then(res => {
+                      this.$q.loading.show({
+                        spinner: QSpinnerFacebook,
+                        spinnerColor: 'spinner-color',
+                        spinnerSize: 140,
+                        backgroundColor: 'white',
+                        message: '<b>Creating of quest is in progress. <br/><span style="color: #0AC18E;">Hang on...</span>',
+                        messageColor: 'black'
+                      })
 
-                                        console.log('Balance: ', res.balance.confirmed)
-
-                                        let checkBalance = (server.bchjs.BitcoinCash.toBitcoinCash(res.balance.confirmed)).toFixed(8)
-                                        checkBalance > overAllAmount ? clearInterval(this.balanceWatcher) : ''
-
-                                        if (checkBalance > overAllAmount) {
-
-                                          this.$q.dialog({
-                                            component: Confirmation2,
-                                            parent: this,
-                                          })
-                                          .onOk(() => {
-                                            this.$refs.bchAddress.$el.classList.add('hidden')
-
-                                            this.$q.loading.show({
-                                              spinner: QSpinnerFacebook,
-                                              spinnerColor: 'spinner-color',
-                                              spinnerSize: 140,
-                                              backgroundColor: 'white',
-                                              message: '<b>Creating of quest is in progress. <br/><span style="color: #0AC18E;">Hang on...</span>',
-                                              messageColor: 'black'
-                                            })
-
-                                            this.createQuest(questInfoForMap, questCreate)
-                                          })
-                                          .onCancel(() => {
-                                            this.cancelQuest()
-                                          })
-
-                                        }
-
-                                      })
-                                      .catch(err => {
-                                        console.error(err)
-                                      })
-                                  }
-
-              this.balanceWatcher = setInterval(pollingBalance, 15000)
+                      this.createQuest(questInfoForMap, questCreate)
+                    }).onCancel(() => {
+                      this.cancelQuest()
+                    })
+                  }
+                }).catch(err => {
+                  console.error(err)
+                })
+              }
+              this.balanceWatcher = setInterval(pollingBalance, 10000)
             }
-          })
-          .catch(err => {
+          }).catch(err => {
             console.log('Error: ', err)
           })
         }
@@ -319,9 +291,7 @@ export default {
           this.$refs.questList.classList.remove('hidden')
           document.getElementById('nav-menu').classList.remove('hidden')
           document.getElementsByClassName('exploreMap')[0].classList.remove('hidden')
-
         }, 1000)
-
       }).catch(error => {
         console.log('Error: ', error)
         for (let i = 0; this.refModels.length > i; i++) {
@@ -343,7 +313,6 @@ export default {
           this.$refs.questList.classList.remove('hidden')
           document.getElementById('nav-menu').classList.remove('hidden')
           document.getElementsByClassName('exploreMap')[0].classList.remove('hidden')
-
         }, 1000)
       })
     },
