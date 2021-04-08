@@ -7,6 +7,7 @@ export function createUser ({dispatch}, wallet) {
     axios.post('https://staging.purelypeer.cash/api/anonymous_user/')
     .then(response => {
       console.log('Success in creating UUID')
+      wallet.user = response.data.id
       localStorage.setItem('user_id', response.data.id)
       dispatch('createWallet', wallet)
       .then(res => {

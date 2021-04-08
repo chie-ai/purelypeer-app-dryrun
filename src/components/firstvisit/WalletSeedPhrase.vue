@@ -61,7 +61,6 @@
       </q-dialog>
     </template>
 
-
     <div class="btn-seed-phrase q-px-sm">
       <div class="q-mt-lg q-px-lg">
           <q-btn
@@ -111,58 +110,57 @@ export default {
     }
   },
   methods: {
-      showSeedPhrase () {
-          this.$refs.seed_phrase_dialog.show()
-      },
-      hideSeedPhrase () {
-          this.$refs.seed_phrase_dialog.hide()
-      },
-      onDialogHide () {
-          this.$emit('hideSeedPhrase')
-      },
-      closeSeedPhrase () {
-          this.hideSeedPhrase()
-      },
-      next () {
-          this.$refs.cashdrop_option_dialog.show()
-      },
-      backupSeedPhrase () {
+    showSeedPhrase () {
+      this.$refs.seed_phrase_dialog.show()
+    },
+    hideSeedPhrase () {
+      this.$refs.seed_phrase_dialog.hide()
+    },
+    onDialogHide () {
+      this.$emit('hideSeedPhrase')
+    },
+    closeSeedPhrase () {
+      this.hideSeedPhrase()
+    },
+    next () {
+      this.$refs.cashdrop_option_dialog.show()
+    },
+    backupSeedPhrase () {
+      this.$q.loading.show({
+        spinner: QSpinnerFacebook,
+        spinnerColor: 'spinner-color',
+        spinnerSize: 140,
+        backgroundColor: 'white',
+        message: '<b>Backing up of seed phrase is in progress.</b> <br/><strong style="color: #0AC18E;">Hang on...</strong>',
+        messageColor: 'black'
+      })
 
-        this.$q.loading.show({
-            spinner: QSpinnerFacebook,
-            spinnerColor: 'spinner-color',
-            spinnerSize: 140,
-            backgroundColor: 'white',
-            message: '<b>Backing up of seed phrase is in progress.</b> <br/><strong style="color: #0AC18E;">Hang on...</strong>',
-            messageColor: 'black'
+      this.$refs.seed_phrase.classList.add('hidden')
+
+      // Store wallet seed phrase, seed hash, pubkey and address to localstorage (will be used for importing wallet)
+      localStorage.setItem('seedPhrase', this.seedPhrase)
+      localStorage.setItem('seedHash', this.seedHash)
+      localStorage.setItem('pubkey', this.pubKey)
+      localStorage.setItem('bchAddress', this.bchAddress)
+      localStorage.setItem('slpAddress', this.slpAddress)
+
+      this.routeTimer = setTimeout(() => {
+        this.$q.loading.hide()
+        this.routeTimer = void 0
+        this.$refs.seed_phrase.classList.remove('hidden')
+        this.$q.notify({
+          message: 'Backing up of seed phrase is done!',
+          color: 'notify-color',
+          position: 'top',
+          timeout: 2000
         })
-
-        this.$refs.seed_phrase.classList.add('hidden')
-
-        // Store wallet seed phrase, seed hash, pubkey and address to localstorage (will be used for importing wallet)
-        localStorage.setItem('seedPhrase', this.seedPhrase)
-        localStorage.setItem('seedHash', this.seedHash)
-        localStorage.setItem('pubkey', this.pubKey)
-        localStorage.setItem('bchAddress', this.bchAddress)
-        localStorage.setItem('slpAddress', this.slpAddress)
-
-        this.routeTimer = setTimeout(() => {
-          this.$q.loading.hide()
-          this.routeTimer = void 0
-          this.$refs.seed_phrase.classList.remove('hidden')
-          this.$q.notify({
-            message: 'Backing up of seed phrase is done!',
-            color: 'notify-color',
-            position: 'top',
-            timeout: 2000
-          })
-          this.$refs.btn_seedPhrase_backup.classList.add('hidden')
-          this.$refs.btn_next.classList.remove('hidden')
-        }, 3000)
-      },
-      proceed (destination) {
-        this.$router.push({path:`${destination}`})
-      }
+        this.$refs.btn_seedPhrase_backup.classList.add('hidden')
+        this.$refs.btn_next.classList.remove('hidden')
+      }, 3000)
+    },
+    proceed (destination) {
+      this.$router.push({ path: `${destination}` })
+    }
   },
   created () {
     this.seedPhrase = this.$store.state.wallet.wallet.seedPhrase
@@ -178,11 +176,11 @@ export default {
     console.log('SLP: ', this.slpAddress)
 
     this.$q.notify({
-          message: 'Wallet has been successfully created!',
-          color: 'notify-color',
-          position: 'top',
-          timeout: 3000
-        })
+      message: 'Wallet has been successfully created!',
+      color: 'notify-color',
+      position: 'top',
+      timeout: 3000
+    })
   }
 }
 </script>

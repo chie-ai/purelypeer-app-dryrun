@@ -110,7 +110,7 @@
 
 <script>
 import createWallet from '../../utils/create_wallet.js'
-import server from '../../utils/getAPIServer.js'
+// import server from '../../utils/getAPIServer.js'
 import { QSpinnerFacebook } from 'quasar'
 
 export default {
@@ -140,15 +140,17 @@ export default {
 
         this.$store.commit('wallet/mutateSeedPhrase', response.mnemonic)
 
-        let addresses = [{ bch_address: response.bchAddress, slp_address: response.slpAddress }]
+        const addresses = [{ bch_address: response.bchAddress, slp_address: response.slpAddress }]
         this.$store.commit('wallet/mutateAddresses', addresses)
 
-        let pkeyAndSeedhash = { seed_hash: response.seedHash, pubkey: response.publicKey }
+        const pkeyAndSeedhash = { seed_hash: response.seedHash, pubkey: response.publicKey }
         this.$store.commit('wallet/mutateKeys', pkeyAndSeedhash)
 
         const wallet = {
           seed_hash: response.seedHash,
-          xpubkey: response.publicKey
+          bch_address: response.bchAddress,
+          slp_address: response.slpAddress,
+          pubkey: response.publicKey
         }
 
         this.$store.dispatch('wallet/createUser', wallet)

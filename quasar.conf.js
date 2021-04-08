@@ -19,7 +19,7 @@ module.exports = function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/boot-files
     boot: [
-      'route-if-backup-exist',
+      // 'route-if-backup-exist',
       'i18n',
       'axios',
       'vue-browser-geolocation',
