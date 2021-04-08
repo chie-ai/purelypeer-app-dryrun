@@ -179,6 +179,11 @@ export default {
       this.$refs.myPurelyPeerMap.mapObject.invalidateSize()
     }
   },
+  created () {
+    Geolocation.getCurrentPosition().then(position => {
+      console.log('Location: ', position)
+    }).catch(error => console.log('Unable to retreive your location: ', error))
+  },
   async mounted () {
     await this.$store.dispatch('cashdrop/fetchQuestList').then(res => {
       this.quests = res.data.results.map(quest => ({ ...quest, infoWinOpen: false, radiusVisibility: false }))

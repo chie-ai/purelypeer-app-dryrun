@@ -212,6 +212,12 @@ export default {
       console.log('Bounds: ', bounds)
     }
   },
+  created () {
+    Geolocation.getCurrentPosition().then(position => {
+      console.log('Location: ', position)
+    })
+    .catch(error => console.log('Unable to retreive your location: ', error))
+  },
   async mounted () {
     await this.$store.dispatch('cashdrop/fetchQuestList').then(res => {
       console.log('Response: ', res)

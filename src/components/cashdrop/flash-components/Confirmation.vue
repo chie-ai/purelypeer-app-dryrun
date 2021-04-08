@@ -4,7 +4,7 @@
 
 	      	<q-card-section>
 	    		<p class="text-h5"><strong>Confirmation</strong></p>
-	    		<p class="q-my-none">Do you wish to proceed creating the quest?</p>
+	    		<p class="q-my-none">Sufficient wallet balance is confirmed. Do you wish to proceed creating the quest?</p>
 	      	</q-card-section>
 
 	      	<q-card-actions align="right">

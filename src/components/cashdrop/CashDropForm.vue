@@ -146,12 +146,7 @@ export default {
         this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
         this.$refs[this.refModels[i]].resetValidation()
       }
-      this.$q.notify({
-                message: 'The quest has been canceled!',
-                color: 'spinner-color',
-                position: 'bottom',
-                timeout: 3000
-              })
+      this.$q.notify({ message: 'The quest has been canceled!', color: 'alert-color', position: 'bottom', timeout: 3000 })
       clearInterval(this.balanceWatcher)
     },
     onSubmitQuest (evt) {
@@ -165,7 +160,7 @@ export default {
             progress: {
               spinner: QSpinner,
               color: 'balance-spinner-color'
-            }, // we enable default settings
+            },
             persistent: true, // we want the user to not be able to close it
             ok: false // we want the user to not be able to close it
           })
@@ -246,10 +241,10 @@ export default {
 
               setTimeout(() => {
                 document.getElementsByClassName('btn-cancel')[0].classList.remove('hidden')
-              }, 60000)
+              }, 5000)
 
               // 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5'
-              let pullingBalance = () => {
+              let pollingBalance = () => {
 
                                       server.bchjs.Electrumx.balance(localStorage.getItem('bchAddress'))
                                       .then(res => {
@@ -291,7 +286,7 @@ export default {
                                       })
                                   }
 
-              this.balanceWatcher = setInterval(pullingBalance, 15000)
+              this.balanceWatcher = setInterval(pollingBalance, 15000)
             }
           })
           .catch(err => {
@@ -404,6 +399,9 @@ export default {
 <style>
 .text-spinner-color {
   color: #0AC18E !important;
+}
+.bg-alert-color {
+  background-color: #0AC18E !important;
 }
 .bg-notify-color {
   background-color: #0AC18E;

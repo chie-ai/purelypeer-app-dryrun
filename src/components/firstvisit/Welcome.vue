@@ -181,8 +181,7 @@ export default {
     }
   },
   created () {
-    if (localStorage.getItem('seedPhrase')) this.$router.push({path:'select-page-to-proceed'})
-    // localStorage.clear()
+    localStorage.clear()
   }
 }
 </script>

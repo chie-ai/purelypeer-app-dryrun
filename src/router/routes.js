@@ -5,7 +5,7 @@ const routes = [
     component: () => import('layouts/firstvisit/StartLayout.vue'),
     children: [
       { 
-        path: '', component: () => import('pages/firstvisit/Index.vue')
+        path: '', component: () => (localStorage.getItem('seedPhrase') ? import('pages/firstvisit/SelectPageToProceed.vue') : import('pages/firstvisit/Index.vue'))
       },
       { 
         path: '/seed-phrase', component: () => import('pages/firstvisit/WalletSeedPhrase.vue')

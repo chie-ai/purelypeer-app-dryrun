@@ -19,7 +19,7 @@
               		<div class="col row justify-center q-my-lg q-mx-lg">
       					<qr-code :text="bchAddress" color="#404543" :size="220" error-level="H" class="seed-phrase q-mt-none"></qr-code>
               		</div>
-              		<p class="q-my-none" id="bch-address-text" style="text-overflow: ellipsis; overflow: hidden; font-size: 14px;"><b>{{ bchAddress }}</b></p>
+              		<p class="q-my-none ellipsis" id="bch-address-text" style="font-size: 14px;"><b>{{ bchAddress }}</b></p>
             	</div>
           	</div>
       	</div>
@@ -37,7 +37,8 @@
 </template>
 
 <script>
-import { copyToClipboard } from 'quasar'
+import { Plugins } from '@capacitor/core'
+const { Clipboard } = Plugins
 	
 export default {
 	data () {
@@ -49,14 +50,16 @@ export default {
 		cancelQuest () {
 			this.$emit('cancelQuest')
 		},
-		copyBCHAddress () {
-			copyToClipboard(this.bchAddress)
-			.then(() => {
-			    console.log('Copy to clipboard')
+		async copyBCHAddress () {
+
+			console.log('Clipboard', Clipboard)
+
+			Clipboard.write({
+			  string: this.bchAddress
 			})
-			.catch(() => {
-			    console.log('Failed')
-			})
+
+			let result = await Clipboard.read()
+			console.log('Got', result.type, 'from clipboard:', result.value)
 		}
 	},
 	created () {
@@ -74,10 +77,10 @@ export default {
     background: white;
 }
 .btn-copy-address {
-  background: radial-gradient(circle, #0CDAA1 0%, #0AC18E 100%);
-  padding-top: 4px;
-  padding-bottom: 4px;
-  width: 100% !important;
+	background: radial-gradient(circle, #0CDAA1 0%, #0AC18E 100%);
+	padding-top: 4px;
+	padding-bottom: 4px;
+	width: 100% !important;
 }
 .btn-cancel {
 	position: absolute;
