@@ -72,7 +72,7 @@
 <script>
 import { Plugins } from '@capacitor/core'
 import { latLng, icon } from 'leaflet'
-import { LMap, LTileLayer, LMarker, LCircle, LPopup, LIcon, LControl } from 'vue2-leaflet'
+import { LMap, LTileLayer, LMarker, LCircle, LPopup, LIcon } from 'vue2-leaflet'
 import 'leaflet/dist/leaflet.css'
 
 const { Geolocation } = Plugins

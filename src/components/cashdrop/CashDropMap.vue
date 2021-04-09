@@ -39,9 +39,12 @@
 </template>
 
 <script>
-import { latLng, icon } from "leaflet";
-import { LMap, LTileLayer, LMarker, LCircle, LIcon, LControl } from "vue2-leaflet";
-import 'leaflet/dist/leaflet.css';
+import { Plugins } from '@capacitor/core'
+import { latLng, icon } from "leaflet"
+import { LMap, LTileLayer, LMarker, LCircle, LIcon, LControl } from "vue2-leaflet"
+import 'leaflet/dist/leaflet.css'
+
+const { Geolocation } = Plugins
 
 export default {
   name: 'Create-quest-map',
@@ -155,7 +158,7 @@ export default {
     Geolocation.getCurrentPosition().then(position => {
       console.log('Location: ', position)
     }).catch(error => console.log('Unable to retreive your location: ', error))
-  },
+  }
 }
 </script>
 
