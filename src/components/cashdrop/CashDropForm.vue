@@ -69,6 +69,7 @@ import BCHAddress from '../../components/cashdrop/flash-components/BchAddress.vu
 import Confirmation from '../../components/cashdrop/flash-components/Confirmation.vue'
 import Confirmation2 from '../../components/cashdrop/flash-components/Confirmation2.vue'
 import server from '../../utils/getAPIServer.js'
+import { getPrivateKey, signInputs } from '../../utils/buildTransaction.js'
 
 export default {
   data () {
@@ -109,12 +110,14 @@ export default {
     }
   },
   components: {
-    BCHAddress,
+    BCHAddress
   },
   props: ['questCoordinates'],
   watch: {
     radiusModel (newRadius, oldRadius) {
-      newRadius ? this.changeRadius() : ''
+      if (newRadius) {
+        this.changeRadius()
+      }
     },
     tierModel (newTier, oldTier) {
       this.changeTier()
@@ -146,6 +149,9 @@ export default {
       }
       this.$q.notify({ message: 'The quest has been canceled!', color: 'alert-color', position: 'bottom', timeout: 3000 })
       clearInterval(this.balanceWatcher)
+    },
+    async signUtxos (bchAddress, privkey, contract, amount) {
+      signInputs(bchAddress, privkey, contract, amount)
     },
     onSubmitQuest (evt) {
       const bchAddress = localStorage.getItem('bchAddress')
@@ -232,8 +238,9 @@ export default {
                   const sumSatoshis = res.balance.confirmed + res.balance.unconfirmed
                   const balance = (server.bchjs.BitcoinCash.toBitcoinCash(sumSatoshis)).toFixed(8)
                   console.log('Balance: ', balance)
-                  balance > overAllAmount ? clearInterval(this.balanceWatcher) : ''
-
+                  if (balance > overAllAmount) {
+                    clearInterval(this.balanceWatcher)
+                  }
                   if (balance > overAllAmount) {
                     this.$q.dialog({
                       component: Confirmation2,
@@ -250,7 +257,9 @@ export default {
                         messageColor: 'black'
                       })
 
-                      this.createQuest(questInfoForMap, questCreate)
+                      this.signUtxos(bchAddress).then(function (signedUtxos) {
+                        this.createQuest(questInfoForMap, questCreate)
+                      })
                     }).onCancel(() => {
                       this.cancelQuest()
                     })
@@ -341,7 +350,6 @@ export default {
         tier
       }
       this.$emit('changeQuestTier', tierObject)
-
     },
     changeRadius () {
       let radius = 1500000
@@ -360,7 +368,17 @@ export default {
         this.cashDropFormModels.radius = radius
       }
       this.$emit('changeQuestRadius', radius)
-    },
+    }
+  },
+  async created () {
+    const bchAddress = localStorage.getItem('bchAddress')
+    const privkey = await getPrivateKey(bchAddress, 0)
+    this.signUtxos(
+      bchAddress,
+      privkey,
+      'bitcoincash:qp3et5cla7jju6z2lfc5v9nr0r4q54edqqpylqnfvx',
+      1000
+    )
   }
 }
 </script>
