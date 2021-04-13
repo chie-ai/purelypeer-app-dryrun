@@ -140,11 +140,18 @@ export default {
 
         this.$store.commit('wallet/mutateSeedPhrase', response.mnemonic)
 
-        const addresses = [{ bch_address: response.bchAddress, slp_address: response.slpAddress }]
-        this.$store.commit('wallet/mutateAddresses', addresses)
+        // const addresses = [{ bch_address: response.bchAddress, slp_address: response.slpAddress }]
+        // this.$store.commit('wallet/mutateAddresses', addresses)
 
-        const pkeyAndSeedhash = { seed_hash: response.seedHash, pubkey: response.publicKey }
-        this.$store.commit('wallet/mutateKeys', pkeyAndSeedhash)
+        // const pkeyAndSeedhash = { seed_hash: response.seedHash, pubkey: response.publicKey }
+        // this.$store.commit('wallet/mutateKeys', pkeyAndSeedhash)
+
+        // Store wallet seed phrase, seed hash, pubkey and address to localstorage (will be used for importing wallet)
+        localStorage.setItem('seedPhrase', response.mnemonic)
+        localStorage.setItem('seedHash', response.seedHash)
+        localStorage.setItem('pubkey', response.publicKey)
+        localStorage.setItem('bchAddress', response.bchAddress)
+        localStorage.setItem('slpAddress', response.slpAddress)
 
         const wallet = {
           seed_hash: response.seedHash,
@@ -181,9 +188,6 @@ export default {
         this.notifier = false
       }
     }
-  },
-  created () {
-    localStorage.clear()
   }
 }
 </script>

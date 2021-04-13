@@ -16,7 +16,7 @@
 import AppLogo from '../components/AppLogo.vue'
 
 export default {
-  data() {
+  data () {
     return {}
   },
   components: {
@@ -25,5 +25,5 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 </style>

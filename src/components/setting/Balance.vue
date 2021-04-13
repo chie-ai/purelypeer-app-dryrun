@@ -3,7 +3,7 @@
     <div class="col-12">
       <h5 class="text-white text-center setting-caption q-mt-md q-mb-none">Setting</h5>
 
-      <p class="mnemonic text-left q-px-md q-mb-none q-mt-md"><strong>Mnemonic:</strong></p>  
+      <p class="mnemonic text-left q-px-md q-mb-none q-mt-md"><strong>Mnemonic:</strong></p>
       <div class="row justify-evenly q-pa-md text-center q-gutter-md">
         <q-badge color="teal" v-for="(seed, index) in seedPhrase" class="text-center" :key="index">
           {{ seed }}
@@ -17,14 +17,13 @@
 <script>
 
 export default {
-  data () { 
+  data () {
     return {
       seedPhrase: null
     }
   },
   created () {
-    this.seedPhrase = localStorage.getItem('seedPhrase').split(" ")
-
+    this.seedPhrase = localStorage.getItem('seedPhrase').split(' ')
   }
 }
 </script>

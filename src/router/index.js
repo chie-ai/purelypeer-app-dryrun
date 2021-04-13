@@ -15,7 +15,6 @@ Vue.use(VueRouter)
  */
 
 export default function (/* { store, ssrContext } */) {
-
   const Router = new VueRouter({
     scrollBehavior: () => ({ x: 0, y: 0 }),
     routes,
@@ -25,6 +24,14 @@ export default function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> publicPath
     mode: process.env.VUE_ROUTER_MODE,
     base: process.env.VUE_ROUTER_BASE
+  })
+
+  Router.beforeEach((to, from, next) => {
+    if (to.path === '/' && localStorage.getItem('seedPhrase')) {
+      next({ path: '/explore' })
+    } else {
+      next()
+    }
   })
 
   return Router

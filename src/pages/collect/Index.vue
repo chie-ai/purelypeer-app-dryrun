@@ -1,7 +1,7 @@
 <template>
   <div class="row animate-in-load">
     <CollectMap :move-to-the-quest-coordinates="coordinates" />
-    <!-- <Gallery v-on:moveToTheQuestCoordinates="questCoordinates" /> -->
+    <Gallery v-on:moveToTheQuestCoordinates="questCoordinates" />
   </div>
 </template>
 
@@ -23,7 +23,7 @@ export default {
     questCoordinates (coordinates) {
       this.coordinates = coordinates
     }
-  },
+  }
 }
 </script>
 

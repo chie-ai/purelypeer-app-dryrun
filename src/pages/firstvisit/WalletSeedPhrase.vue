@@ -9,7 +9,7 @@ import WalletSeedPhrase from '../../components/firstvisit/WalletSeedPhrase.vue'
 
 export default {
   components: {
-    WalletSeedPhrase,
+    WalletSeedPhrase
   }
 }
 </script>

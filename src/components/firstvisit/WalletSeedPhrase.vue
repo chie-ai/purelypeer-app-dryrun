@@ -24,7 +24,6 @@
       </q-dialog>
     </template>
 
-
     <template>
       <q-dialog ref="cashdrop_option_dialog">
         <q-card class="q-dialog-plugin">
@@ -102,11 +101,7 @@ import { QSpinnerFacebook } from 'quasar'
 export default {
   data () {
     return {
-      seedPhrase: null,
-      seedHash: null,
-      pubKey: null,
-      bchAddress: null,
-      slpAddress: null
+      seedPhrase: null
     }
   },
   methods: {
@@ -146,7 +141,7 @@ export default {
 
       this.routeTimer = setTimeout(() => {
         this.$q.loading.hide()
-        this.routeTimer = void 0
+        this.routeTimer = false
         this.$refs.seed_phrase.classList.remove('hidden')
         this.$q.notify({
           message: 'Backing up of seed phrase is done!',
@@ -164,16 +159,6 @@ export default {
   },
   created () {
     this.seedPhrase = this.$store.state.wallet.wallet.seedPhrase
-    this.seedHash = this.$store.state.wallet.seedhash
-    this.pubKey = this.$store.state.wallet.pubKey
-    this.bchAddress = this.$store.state.wallet.wallet.addresses[0].bch
-    this.slpAddress = this.$store.state.wallet.wallet.addresses[0].slp
-
-    console.log('Seed Phrase: ', this.seedPhrase)
-    console.log('Seed Hash: ', this.seedHash)
-    console.log('Public Key: ', this.pubKey)
-    console.log('BCH: ', this.bchAddress)
-    console.log('SLP: ', this.slpAddress)
 
     this.$q.notify({
       message: 'Wallet has been successfully created!',

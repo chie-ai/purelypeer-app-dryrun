@@ -69,12 +69,12 @@ module.exports = function (/* ctx */) {
 
       // https://quasar.dev/quasar-cli/handling-webpack
       extendWebpack (cfg) {
-        // cfg.module.rules.push({
-        //   enforce: 'pre',
-        //   test: /\.(js|vue)$/,
-        //   loader: 'eslint-loader',
-        //   exclude: /node_modules/
-        // })
+        cfg.module.rules.push({
+          enforce: 'pre',
+          test: /\.(js|vue)$/,
+          loader: 'eslint-loader',
+          exclude: /node_modules/
+        })
       }
     },
 
@@ -82,7 +82,7 @@ module.exports = function (/* ctx */) {
     devServer: {
       https: true,
       port: 3000,
-      open: true, // opens browser window automatically
+      open: true // opens browser window automatically
     },
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
@@ -108,7 +108,8 @@ module.exports = function (/* ctx */) {
       plugins: [
         'Loading',
         'Notify',
-        'Dialog'
+        'Dialog',
+        'SessionStorage'
       ]
     },
 

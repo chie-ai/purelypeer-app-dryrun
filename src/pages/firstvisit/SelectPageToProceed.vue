@@ -9,7 +9,7 @@ import SelectPageToProceed from '../../components/firstvisit/SelectPageToProceed
 
 export default {
   components: {
-    SelectPageToProceed,
+    SelectPageToProceed
   }
 }
 </script>

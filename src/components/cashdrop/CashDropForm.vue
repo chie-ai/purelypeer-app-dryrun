@@ -33,7 +33,7 @@
                   :step="1"
                  label/>
               <q-input ref="amount" color="grey-5" :dense="true" bg-color="white" outlined label="Amount for the cashdrops" type="text"
-              v-model="amount.toFixed(8)" lazy-rules :rules="[val => val > 0.00000000 || 'Amount field is required to be set']"
+              v-model="amount2" lazy-rules :rules="[val => val > 0.00000000 || 'Amount field is required to be set']"
               input-class="text-right" />
                 <q-badge class="slider-badge text-caption">
                   <b>Set amount</b>
@@ -45,10 +45,10 @@
                   :max="1.00000000"
                   :step="0.00000001"
                   label
-                  :label-value="amount.toFixed(8)"
+                  :label-value="amount"
                 />
               <q-input color="grey-5" :dense="true" class="q-mb-md" bg-color="white" outlined
-                    v-model="feeBreakdown.toFixed(8)" label="Fee Breakdown"
+                    v-model="feeBreakdown" label="Fee Breakdown"
                     input-class="text-right" readonly />
               <q-btn :label="'Cash Drop \uD83D\uDCA7'" type="submit" class="full-width quest-btn"/>
             </q-form>
@@ -74,7 +74,7 @@ import { getPrivateKey, signInputs } from '../../utils/buildTransaction.js'
 export default {
   data () {
     return {
-      refModels: ['merchantName','phoneNumber','contactUrl','memo','tierModel','presenceModel','radiusModel','amount'],
+      refModels: ['merchantName', 'phoneNumber', 'contactUrl', 'memo', 'tierModel', 'presenceModel', 'radiusModel', 'amount'],
       merchantName: null,
       phoneNumber: null,
       contactUrl: null,
@@ -82,7 +82,7 @@ export default {
       tierModel: null,
       tier: {
         options: [
-          'Direct \uD83D\uDC9A', 'Indirect \uD83E\uDDE1', 'Upcoming \uD83D\uDC99', 'Inactive \uD83D\uDDA4'
+          'Direct \uD83D\uDC9A', 'Indirect \uD83E\uDDE1', 'Upcoming \uD83D\uDC99'
         ]
       },
       presenceModel: null,
@@ -98,6 +98,7 @@ export default {
         ]
       },
       amount: 0.00000000,
+      amount2: 0.00000000,
       cashDropCountModel: 2,
       cashDropFormModels: {
         tier: null,
@@ -123,11 +124,18 @@ export default {
       this.changeTier()
     },
     cashDropCountModel (newBreakdown, oldBreakdown) {
-      let C = 0.00050000, T = 0.00002000, N = this.cashDropCountModel, OT = N*T
+      const T = 0.00002000, N = this.cashDropCountModel, OT = N * T
       this.feeBreakdown = OT
+      this.feeBreakdown = this.feeBreakdown.toFixed(8)
     },
     presenceModel (newPresence, oldPresence) {
-      this.questPresence = this.presence.options.indexOf(newPresence) === 0 ? true : false
+      if (this.presence.options.indexOf(newPresence) === 0) {
+        this.questPresence = true
+      }
+    },
+    amount (newAmount, oldAmount) {
+      this.amount2 = this.amount.toFixed(8)
+      return newAmount.toFixed(8)
     }
   },
   methods: {
@@ -151,6 +159,7 @@ export default {
       clearInterval(this.balanceWatcher)
     },
     async signUtxos (bchAddress, privkey, contract, amount) {
+      console.log('sign')
       signInputs(bchAddress, privkey, contract, amount)
     },
     onSubmitQuest (evt) {
@@ -176,7 +185,7 @@ export default {
             user: localStorage.getItem('user_id'),
             token: '-',
             name: this.merchantName,
-            phone_no: '+' + this.phoneNumber,
+            phone_no: this.phoneNumber !== null ? ('+' + this.phoneNumber) : null,
             contact_url: this.contactUrl,
             memo: this.memo,
             acceptance_tier: this.cashDropFormModels.tier,
@@ -185,9 +194,11 @@ export default {
             total_cashdrops: this.cashDropCountModel,
             has_physical_presence: this.questPresence,
             amount: this.amount.toFixed(8),
-            payment_address: bchAddress,
-            pubkey: localStorage.getItem('pubkey')
+            payment_address: 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5', /* bchAddress */
+            pubkey: '03244d61d760c1aa9e322906b586d5949a18edaea287b5b07033c9f007f86ebdba' /* localStorage.getItem('pubkey') */
           }
+
+          console.log('Form model values: ', questCreate)
 
           const overAllAmount = (Number(this.amount.toFixed(8)) + Number(this.feeBreakdown.toFixed(8)))
           const questInfoForMap = [coordinates, this.cashDropFormModels.radius, this.cashDropFormModels.tier]
@@ -195,7 +206,7 @@ export default {
           this.$emit('routeStatus', false)
 
           // Check the BCH Address if has a balance before proceeding to creation of quest
-          server.bchjs.Electrumx.balance(bchAddress).then(res => {
+          server.bchjs.Electrumx.balance('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5').then(res => { /* bchAddress */
             const sumSatoshis = res.balance.confirmed + res.balance.unconfirmed
             const balance = (server.bchjs.BitcoinCash.toBitcoinCash(sumSatoshis)).toFixed(8)
             console.log('Balance: ', balance)
@@ -219,7 +230,11 @@ export default {
                   message: '<b>Creating of quest is in progress. <br/><span style="color: #0AC18E;">Hang on...</span>',
                   messageColor: 'black'
                 })
-                this.createQuest(questInfoForMap, questCreate)
+                const vm = this
+                this.signUtxos('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5').then(function (signedUtxos) {
+                  console.log('signedUtxos: ', signedUtxos)
+                  vm.createQuest(questInfoForMap, questCreate)
+                })
               }).onCancel(() => {
                 this.$emit('routeStatus', true)
               })
@@ -234,7 +249,7 @@ export default {
                 document.getElementsByClassName('btn-cancel')[0].classList.remove('hidden')
               }, 5000)
               const pollingBalance = () => {
-                server.bchjs.Electrumx.balance(bchAddress).then(res => {
+                server.bchjs.Electrumx.balance('bitcoincash:pp8skudq3x5hzw8ew7vzsw8tn4k8wxsqsv0lt0mf3g').then(res => {
                   const sumSatoshis = res.balance.confirmed + res.balance.unconfirmed
                   const balance = (server.bchjs.BitcoinCash.toBitcoinCash(sumSatoshis)).toFixed(8)
                   console.log('Balance: ', balance)
@@ -257,8 +272,10 @@ export default {
                         messageColor: 'black'
                       })
 
+                      const vm = this
                       this.signUtxos(bchAddress).then(function (signedUtxos) {
-                        this.createQuest(questInfoForMap, questCreate)
+                        console.log('call sign')
+                        vm.createQuest(questInfoForMap, questCreate)
                       })
                     }).onCancel(() => {
                       this.cancelQuest()
@@ -301,6 +318,7 @@ export default {
           document.getElementById('nav-menu').classList.remove('hidden')
           document.getElementsByClassName('exploreMap')[0].classList.remove('hidden')
         }, 1000)
+        this.$emit('routeStatus', true)
       }).catch(error => {
         console.log('Error: ', error)
         for (let i = 0; this.refModels.length > i; i++) {
@@ -323,6 +341,7 @@ export default {
           document.getElementById('nav-menu').classList.remove('hidden')
           document.getElementsByClassName('exploreMap')[0].classList.remove('hidden')
         }, 1000)
+        this.$emit('routeStatus', true)
       })
     },
     changeTier () {
@@ -371,14 +390,14 @@ export default {
     }
   },
   async created () {
-    const bchAddress = localStorage.getItem('bchAddress')
+    const bchAddress = 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5' /* localStorage.getItem('bchAddress') */
     const privkey = await getPrivateKey(bchAddress, 0)
-    this.signUtxos(
+    console.log('Sign utxos: ', this.signUtxos(
       bchAddress,
       privkey,
       'bitcoincash:qp3et5cla7jju6z2lfc5v9nr0r4q54edqqpylqnfvx',
       1000
-    )
+    ))
   }
 }
 </script>

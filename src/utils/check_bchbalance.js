@@ -1,7 +1,7 @@
 
 import server from './getAPIServer.js'
 
- // Get the balance of the wallet.
+// Get the balance of the wallet.
 export default async function getBCHBalance (bchAddress) {
   try {
     // first get BCH balance

@@ -4,28 +4,25 @@ const routes = [
     path: '/',
     component: () => import('layouts/firstvisit/StartLayout.vue'),
     children: [
-      { 
-        path: '', component: () => (localStorage.getItem('seedPhrase') ? import('pages/firstvisit/SelectPageToProceed.vue') : import('pages/firstvisit/Index.vue'))
+      {
+        path: '', component: () => import('pages/firstvisit/Index.vue')
       },
-      { 
+      {
         path: '/seed-phrase', component: () => import('pages/firstvisit/WalletSeedPhrase.vue')
-      },
-      { 
-        path: '/select-page-to-proceed', component: () => import('pages/firstvisit/SelectPageToProceed.vue')
-      },
+      }
     ]
   },
   {
     path: '/explore',
     component: () => import('layouts/explore/ExploreLayout.vue'),
     children: [
-      { 
+      {
         path: '', component: () => import('pages/explore/Index.vue')
       },
       {
         path: '/bch-wallet-balance',
         component: () => import('pages/explore/bchwallet.vue')
-      },
+      }
     ]
   },
   {
@@ -33,7 +30,7 @@ const routes = [
     component: () => import('layouts/setting/SettingLayout.vue'),
     children: [
       { path: '', component: () => import('pages/setting/Index.vue') },
-      { path: 'receive', component: () => import('pages/setting/Receive.vue') },
+      { path: 'receive', component: () => import('pages/setting/Receive.vue') }
     ]
   },
   {

@@ -9,7 +9,7 @@ import Welcome from '../../components/firstvisit/Welcome.vue'
 
 export default {
   components: {
-    Welcome,
+    Welcome
   }
 }
 </script>

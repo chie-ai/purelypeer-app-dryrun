@@ -26,7 +26,7 @@ async function signInputs (address, wif, contract, amountPerCashDrop) {
 
   // Add inputs
   utxos.map(function (utxo, index) {
-    console.log(utxo)
+    console.log('utxos: ', utxo)
 
     transactionBuilder.addInput(
       utxo.tx_hash,
@@ -45,7 +45,7 @@ async function signInputs (address, wif, contract, amountPerCashDrop) {
   })
 
   const tx = transactionBuilder.transaction.buildIncomplete()
-  console.log(tx.toHex())
+  console.log('HEX: ', tx.toHex())
 }
 
 export { getPrivateKey, signInputs }
