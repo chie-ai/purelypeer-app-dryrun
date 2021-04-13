@@ -20,7 +20,7 @@
 
           <l-tile-layer :url="url" :attribution="attribution" />
 
-          <l-marker :icon="icon" :lat-lng="markerLocation"></l-marker>
+          <l-marker v-if="isLocationShared" :icon="icon" :lat-lng="markerLocation"></l-marker>
 
           <l-marker v-for="(mark, markerIndex) in quests" :key="markerIndex+'marker'"
           :lat-lng="mark.coors" @click="toggleWindowInfo(markerIndex)">
@@ -47,7 +47,7 @@
           </l-marker>
 
           <l-circle
-            v-for="(pin, index) in quests":key="index"
+            v-for="(pin, index) in quests" :key="index"
             :lat-lng="pin.coors"
             :radius="pin.radius"
             :color="circle.color"
@@ -101,7 +101,7 @@ export default {
       },
       center: latLng(0, 0),
       icon: icon({
-        iconUrl: "PurelyPeer-location-current-A.png",
+        iconUrl: 'PurelyPeer-location-current-A.png',
         iconSize: [80, 80],
         iconAnchor: [40, 54]
       }),
@@ -115,7 +115,8 @@ export default {
       cashDropsCoordinates: null,
       startY: 0,
       counter: 0,
-      mapHeight: 0
+      mapHeight: 0,
+      isLocationShared: false
     }
   },
   props: ['moveToTheQuestCoordinates'],
@@ -138,11 +139,40 @@ export default {
         const coors = latLng(coordinates.lat, coordinates.lng)
         this.center = coors
         this.circle.center = coors
+        this.$q.sessionStorage.set('location-shared', true)
         this.isLocationShared = true
-      }).catch(error => console.log('Unable to retreive your location: ', error))
+      }).catch(error => {
+        this.$q.dialog({
+          title: 'Alert',
+          message: 'To proceed to collect mode you must first enable your location. Do you wish to enable your location?',
+          persistent: true,
+          cancel: true
+        }).onOk(() => {
+          Geolocation.getCurrentPosition().then(position => {
+            const coors = latLng(
+              position.coords.latitude,
+              position.coords.longitude
+            )
+            this.center = coors
+            this.circle.center = coors
+            this.$q.sessionStorage.set('location-shared', true)
+            this.isLocationShared = true
+          }).catch(error => {
+            this.zoomScale = 1
+            console.log('Unable to retreive your location: ', error)
+          })
+        }).onCancel(() => {
+          this.$router.push({ path: 'explore' })
+        }).onDismiss(() => {
+          // console.log('I am triggered on both OK and Cancel')
+        })
+        console.log('Unable to retreive your location: ', error)
+      })
     },
     toggleWindowInfo (infoIndex) {
-      this.activeIndex !== infoIndex ? this.quests[this.activeIndex].radiusVisibility = false : ''
+      if (this.activeIndex !== infoIndex) {
+        this.quests[this.activeIndex].radiusVisibility = false
+      }
       this.quests[infoIndex].infoWinOpen = !this.quests[infoIndex].infoWinOpen
       this.quests[infoIndex].radiusVisibility = !this.quests[infoIndex].radiusVisibility
       this.cashDropsCoordinates = this.quests[infoIndex].infoWinOpen === true ? this.quests[infoIndex].cashdrops : ''
@@ -150,7 +180,9 @@ export default {
     },
     removePopUpinfo () {
       if (this.quests !== null) {
-        this.quests[this.activeIndex].infoWinOpen === true ? document.getElementsByClassName('leaflet-popup-close-button')[0].click() : ''
+        if (this.quests[this.activeIndex].infoWinOpen === true) {
+          document.getElementsByClassName('leaflet-popup-close-button')[0].click()
+        }
         this.quests[this.activeIndex].infoWinOpen = false
         this.quests[this.activeIndex].radiusVisibility = false
         this.cashDropsCoordinates = null
@@ -177,19 +209,16 @@ export default {
       const minMapHeight = 334
 
       if (((80 / 100) * window.innerHeight) >= newHeight) {
-        newHeight >= minMapHeight ? map.$el.style.height = newHeight + 'px' : ''
+        if (newHeight >= minMapHeight) {
+          map.$el.style.height = newHeight + 'px'
+        }
       }
       this.$refs.myPurelyPeerMap.mapObject.invalidateSize()
     }
   },
-  created () {
-    Geolocation.getCurrentPosition().then(position => {
-      console.log('Location: ', position)
-    }).catch(error => console.log('Unable to retreive your location: ', error))
-  },
   async mounted () {
     await this.$store.dispatch('cashdrop/fetchQuestList').then(res => {
-      this.quests = res.data.results.map(quest => ({ ...quest, infoWinOpen: false, radiusVisibility: false }))
+      this.quests = res.data.results.length > 0 ? res.data.results.map(quest => ({ ...quest, infoWinOpen: false, radiusVisibility: false })) : ''
     }).catch(err => {
       console.log('Error: ', err)
     })
@@ -204,8 +233,7 @@ export default {
 }
 .zoom-controls {
   position: absolute;
-  text-align: center;
-  width: 100%;
+  left: calc(52vw - (100px / 2));
   z-index: 1000;
 }
 .zoom-controls span {

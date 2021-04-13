@@ -2,68 +2,68 @@
     <q-layout>
         <q-page-container>
             <div id="explore-map" class="row">
-                <div class="example-custom-control q-mt-md zoom-controls">
-                    <span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
-                    <span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
-                </div>
-                <l-map
-                  :zoom="zoomScale"
-                  :center="center"
-                  :options="mapOptions"
-                  style="height: 334px;"
-                  @update:center="centerUpdate"
-                  @ready="readyMap"
-                  @click="removePopUpinfo"
-                  @move="removePopUpinfo"
-                  @update:zoom="zoomUpdate"
-                  @update:bounds="udpateQuestList"
-                  ref="myPurelyPeerMap"
-                >
+              <!-- <div class="example-custom-control q-mt-md zoom-controls">
+                  <span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
+                  <span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
+              </div> -->
+              <l-map
+                :zoom="zoomScale"
+                :center="center"
+                :options="mapOptions"
+                style="height: 334px;"
+                @update:center="centerUpdate"
+                @ready="readyMap"
+                @click="removePopUpinfo"
+                @move="removePopUpinfo"
+                @update:zoom="zoomUpdate"
+                @update:bounds="udpateQuestList"
+                ref="myPurelyPeerMap"
+              >
+                <l-control-zoom position="topright"></l-control-zoom>
 
-                    <l-tile-layer :url="url" :attribution="attribution" />
+                <l-tile-layer :url="url" :attribution="attribution" />
 
-                    <l-marker :icon="icon" :lat-lng="markerLocation"></l-marker>
+                <l-marker v-if="isLocationShared" :icon="icon" :lat-lng="markerLocation"></l-marker>
 
-                    <l-marker v-for="(mark, markerIndex) in quests" :key="markerIndex+'marker'"
-                    :lat-lng="mark.coors" @click="toggleWindowInfo(markerIndex)">
-                        <l-popup :options="popUpOptions" @remove="removePopUpinfo" ref="pops">
-                            <div class="infowindow">
-                                <p class="text-h6 info-header"><strong>Quest Info</strong></p>
-                                <p><strong>Quest Name: </strong>{{ mark.name }}</p>
-                                <p><strong>PurelyPeer Tier: </strong>{{ (mark.acceptance_tier).charAt(0).toUpperCase()+(mark.acceptance_tier).slice(1) }}</p>
-                                <p><strong>Remaining Cash Drop: </strong>{{ mark.cashdrops_remaining }}</p>
-                                <p><strong>Cash Drop Count: </strong>{{ mark.total_cashdrops }}</p>
-                            </div>
-                        </l-popup>
-                        <l-icon
-                            :icon-size="[mark.active === true ? 30 : 50, mark.active === true ? 40 : 50]"
-                            :icon-anchor="[mark.active === true ? 1 : 12, mark.active === true ? 40 : 44]"
-                            :icon-url="(mark.active === true ? (mark.acceptance_tier === 'Upcoming' ? 'PurelyPeer-location-blue.png' : (mark.acceptance_tier === 'Direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')" />
-                    </l-marker>
+                <l-marker v-for="(mark, markerIndex) in quests" :key="markerIndex+'marker'"
+                :lat-lng="mark.coors" @click="toggleWindowInfo(markerIndex)">
+                    <l-popup :options="popUpOptions" @remove="removePopUpinfo" ref="pops">
+                        <div class="infowindow">
+                            <p><strong>Quest Name: </strong>{{ mark.name }}</p>
+                            <p><strong>PurelyPeer Tier: </strong>{{ (mark.acceptance_tier).charAt(0).toUpperCase()+(mark.acceptance_tier).slice(1) }}</p>
+                            <p><strong>Remaining Cash Drop: </strong>{{ mark.cashdrops_remaining }}</p>
+                            <p><strong>Cash Drop Count: </strong>{{ mark.total_cashdrops }}</p>
+                        </div>
+                    </l-popup>
+                    <l-icon
+                        :icon-size="[mark.active === true ? 30 : 50, mark.active === true ? 40 : 50]"
+                        :icon-anchor="[mark.active === true ? 1 : 12, mark.active === true ? 40 : 44]"
+                        :icon-url="(mark.active === true ? (mark.acceptance_tier === 'Upcoming' ? 'PurelyPeer-location-blue.png' : (mark.acceptance_tier === 'Direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')" />
+                </l-marker>
 
-                    <l-marker :lat-lng="cashDropCoor.coors" v-for="(cashDropCoor, cashDropsIndex) in cashDropsCoordinates" :key="cashDropsIndex+'dropMarker'">
-                        <l-icon
-                            :icon-size="[30, 30]"
-                            :icon-anchor="[40, 54]"
-                            :icon-url="'PurelyPeer-location-current-B.png'" />
-                    </l-marker>
+                <l-marker :lat-lng="cashDropCoor.coors" v-for="(cashDropCoor, cashDropsIndex) in cashDropsCoordinates" :key="cashDropsIndex+'dropMarker'">
+                    <l-icon
+                        :icon-size="[30, 30]"
+                        :icon-anchor="[40, 54]"
+                        :icon-url="'PurelyPeer-location-current-B.png'" />
+                </l-marker>
 
-                    <l-circle
-                        v-for="(pin, index) in quests":key="index"
-                        :lat-lng="pin.coors"
-                        :radius="pin.radius"
-                        :color="circle.color"
-                        :fillColor="circle.fillColor"
-                        :weight="1"
-                        :visible="pin.radiusVisibility"
-                        @click="toggleWindowInfo(index)" />
-                    <!-- <l-control :position="'topleft'" class="purelypeer-watermark" >
-                        PurelyPeer
-                    </l-control> -->
-                </l-map>
-                <div class="adjust-map-height q-px-md">
-                    <q-btn color="btn-map-resizer text-btn-color" class="btn-map" v-touch-pan.vertical.prevent.mouse="resizeMapHeight" size="sm" label="Drag to resize" />
-                </div>
+                <l-circle
+                    v-for="(pin, index) in quests" :key="index"
+                    :lat-lng="pin.coors"
+                    :radius="pin.radius"
+                    :color="circle.color"
+                    :fillColor="circle.fillColor"
+                    :weight="1"
+                    :visible="pin.radiusVisibility"
+                    @click="toggleWindowInfo(index)" />
+              </l-map>
+              <div class="adjust-map-height q-px-md">
+                  <q-btn color="btn-map-resizer text-btn-color" rounded v-touch-pan.vertical.prevent.mouse="resizeMapHeight" size="sm" label="Pinch to resize" />
+              </div>
+              <div class="current-location">
+                <q-btn color="btn-map-resizer text-btn-color" rounded @click="currentLocation" size="sm" label="Current location" />
+              </div>
             </div>
         </q-page-container>
     </q-layout>
@@ -72,7 +72,7 @@
 <script>
 import { Plugins } from '@capacitor/core'
 import { latLng, icon } from 'leaflet'
-import { LMap, LTileLayer, LMarker, LCircle, LPopup, LIcon } from 'vue2-leaflet'
+import { LMap, LTileLayer, LMarker, LCircle, LPopup, LIcon, LControlZoom } from 'vue2-leaflet'
 import 'leaflet/dist/leaflet.css'
 
 const { Geolocation } = Plugins
@@ -86,7 +86,7 @@ export default {
     LCircle,
     LPopup,
     LIcon,
-    // LControl
+    LControlZoom
   },
   data () {
     return {
@@ -122,7 +122,8 @@ export default {
       mapHeight: 0,
       hover: false,
       questRadius: null,
-      bounds: null
+      bounds: null,
+      isLocationShared: false
     }
   },
   props: ['moveToTheQuestCoordinates'],
@@ -132,7 +133,6 @@ export default {
       this.questRadius = this.moveToTheQuestCoordinates.radius
 
       this.center = coords
-      this.markerLocation = coords
 
       setTimeout(() => {
         if (this.questRadius === 1500) {
@@ -149,13 +149,17 @@ export default {
     }
   },
   methods: {
+    currentLocation () {
+      this.center = this.markerLocation
+    },
     zoomUpdate (scale) {
       this.zoomScale = scale
     },
     centerUpdate (center) {
-      this.markerLocation = center
+      this.center = center
     },
     readyMap () {
+      // if (this.$q.sessionStorage.getItem('location-shared')) {
       Geolocation.getCurrentPosition().then(position => {
         const coords = latLng(
           position.coords.latitude,
@@ -164,11 +168,20 @@ export default {
         console.log(coords)
         this.center = coords
         this.circle.center = coords
+        this.markerLocation = coords
         this.isLocationShared = true
-      }).catch(error => console.log('Unable to retreive your location: ', error))
+      }).catch(error => {
+        this.zoomScale = 1
+        console.log('Unable to retreive your location: ', error)
+      })
+      // } else {
+      //   this.zoomScale = 1
+      // }
     },
     toggleWindowInfo (infoIndex) {
-      this.activeIndex !== infoIndex ? this.quests[this.activeIndex].radiusVisibility = false : ''
+      if (this.activeIndex !== infoIndex) {
+        this.quests[this.activeIndex].radiusVisibility = false
+      }
       this.quests[infoIndex].infoWinOpen = !this.quests[infoIndex].infoWinOpen
       this.quests[infoIndex].radiusVisibility = !this.quests[infoIndex].radiusVisibility
       this.cashDropsCoordinates = this.quests[infoIndex].infoWinOpen === true ? this.quests[infoIndex].cashdrops : ''
@@ -176,13 +189,15 @@ export default {
     },
     removePopUpinfo () {
       if (this.quests !== null) {
-        this.quests[this.activeIndex].infoWinOpen === true ? document.getElementsByClassName('leaflet-popup-close-button')[0].click() : ''
+        if (this.quests[this.activeIndex].infoWinOpen === true) {
+          document.getElementsByClassName('leaflet-popup-close-button')[0].click()
+        }
         this.quests[this.activeIndex].infoWinOpen = false
         this.quests[this.activeIndex].radiusVisibility = false
         this.cashDropsCoordinates = null
       }
 
-      this.markerLocation = this.$refs.myPurelyPeerMap.mapObject.getCenter()
+      // this.markerLocation = this.$refs.myPurelyPeerMap.mapObject.getCenter()
     },
     resizeMapHeight ({ evt, ...info }) {
       const map = this.$refs.myPurelyPeerMap.$el
@@ -203,7 +218,9 @@ export default {
       const minMapHeight = 334
 
       if (((80 / 100) * window.innerHeight) >= newHeight) {
-        newHeight >= minMapHeight ? map.$el.style.height = newHeight + 'px' : ''
+        if (newHeight >= minMapHeight) {
+          map.$el.style.height = newHeight + 'px'
+        }
       }
       this.$refs.myPurelyPeerMap.mapObject.invalidateSize()
     },
@@ -212,16 +229,10 @@ export default {
       console.log('Bounds: ', bounds)
     }
   },
-  created () {
-    Geolocation.getCurrentPosition().then(position => {
-      console.log('Location: ', position)
-    })
-    .catch(error => console.log('Unable to retreive your location: ', error))
-  },
   async mounted () {
     await this.$store.dispatch('cashdrop/fetchQuestList').then(res => {
       console.log('Response: ', res)
-      this.quests = res.data.results.map(quest => ({ ...quest, infoWinOpen: false, radiusVisibility: false }))
+      this.quests = res.data.results.length > 0 ? res.data.results.map(quest => ({ ...quest, infoWinOpen: false, radiusVisibility: false })) : ''
     }).catch(err => {
       console.error('Error: ', err)
     })
@@ -234,17 +245,16 @@ export default {
     color: #676767;
     margin: 0;
 }
-.zoom-controls {
+/* .zoom-controls {
     position: absolute;
-    text-align: center;
-    width: 100%;
+    left: calc(52vw - (100px / 2));
     z-index: 1000;
 }
 .zoom-controls span {
     cursor: pointer;
     font-size: 28px;
     z-index: 1000;
-}
+} */
 .q-layout--standard {
     min-height: 334px !important;
 }
@@ -254,9 +264,15 @@ export default {
 }
 .adjust-map-height {
     position: absolute;
-    text-align: center;
+    padding: 0;
+    right: 8px;
     bottom: 18px;
-    width: 100%;
+    z-index: 1000;
+}
+.current-location {
+    position: absolute;
+    left: 8px;
+    bottom: 18px;
     z-index: 1000;
 }
 .bg-btn-map-resizer {
@@ -265,21 +281,5 @@ export default {
 }
 .text-btn-color {
     color: rgba(0, 0, 0, 0.7) !important;
-}
-.btn-map {
-    width: 80%;
-    /*display: none*/
-}
-/*.show-btn {
-    display: inline-block;
-}*/
-.purelypeer-watermark {
-    font-size: 150%;
-    font-weight: bolder;
-    color: #676767;
-    text-shadow: #555;
-    margin-left: 10px;
-    opacity: 0.5;
-    padding-bottom: 0px;
 }
 </style>

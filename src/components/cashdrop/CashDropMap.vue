@@ -2,10 +2,10 @@
   <q-layout class="exploreMap">
     <q-page-container>
       <div id="explore-map" class="row" ref="exploreMap">
-          <div class="q-mt-md zoom-controls">
+          <!-- <div class="q-mt-md zoom-controls">
             <span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
             <span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
-          </div>
+          </div> -->
           <l-map
             :zoom="zoomScale"
             :center="center"
@@ -16,7 +16,7 @@
             @move="updateMarkerCoordinates"
             ref="myPurelyPeerMap"
           >
-
+            <l-control-zoom position="topright"></l-control-zoom>
             <l-tile-layer :url="url" :attribution="attribution" />
             <l-marker :icon="icon" :lat-lng="markerLocation"></l-marker>
 
@@ -26,12 +26,12 @@
               :color="circle.color"
               :fillColor="circle.fillColor"
               :weight="1" />
-          <!-- <l-control :position="'topleft'" class="purelypeer-watermark" >
-              PurelyPeer
-          </l-control> -->
         </l-map>
         <div class="adjust-map-height q-px-md">
-          <q-btn color="btn-map-resizer text-btn-color" class="btn-map" v-touch-pan.vertical.prevent.mouse="resizeMapHeight" size="sm" label="Drag to resize" />
+          <q-btn color="btn-map-resizer text-btn-color" rounded class="btn-map" v-touch-pan.vertical.prevent.mouse="resizeMapHeight" size="sm" label="Pinch to resize" />
+        </div>
+        <div class="current-location">
+          <q-btn color="btn-map-resizer text-btn-color" rounded @click="currentLocation" size="sm" label="Current location" />
         </div>
       </div>
     </q-page-container>
@@ -40,8 +40,8 @@
 
 <script>
 import { Plugins } from '@capacitor/core'
-import { latLng, icon } from "leaflet"
-import { LMap, LTileLayer, LMarker, LCircle, LIcon, LControl } from "vue2-leaflet"
+import { latLng, icon } from 'leaflet'
+import { LMap, LTileLayer, LMarker, LCircle, LControlZoom } from 'vue2-leaflet'
 import 'leaflet/dist/leaflet.css'
 
 const { Geolocation } = Plugins
@@ -53,8 +53,7 @@ export default {
     LTileLayer,
     LMarker,
     LCircle,
-    // LIcon,
-    // LControl
+    LControlZoom
   },
   data () {
     return {
@@ -87,7 +86,7 @@ export default {
       tierVariation: 'inactive'
     }
   },
-  props: ['changeQuestRadius','changeQuestTier','mapVisibility'],
+  props: ['changeQuestRadius', 'changeQuestTier', 'mapVisibility'],
   watch: {
     changeQuestRadius (newRadius, oldRadius) {
       this.questRadius = newRadius
@@ -125,7 +124,10 @@ export default {
         this.center = coors
         this.circle.center = coors
         this.isLocationShared = true
-      }).catch(error => console.log('Unable to retreive your location: ', error))
+      }).catch(error => {
+        this.zoomScale = 1
+        console.log('Unable to retreive your location: ', error)
+      })
     },
     updateMarkerCoordinates () {
       this.markerLocation = this.$refs.myPurelyPeerMap.mapObject.getCenter()
@@ -149,7 +151,9 @@ export default {
       const minMapHeight = 334
 
       if (((80 / 100) * window.innerHeight) >= newHeight) {
-        newHeight >= minMapHeight ? map.$el.style.height = newHeight + 'px' : ''
+        if (newHeight >= minMapHeight) {
+          map.$el.style.height = newHeight + 'px'
+        }
       }
       this.$refs.myPurelyPeerMap.mapObject.invalidateSize()
     }
@@ -163,26 +167,30 @@ export default {
 </script>
 
 <style>
-.zoom-controls {
+/* .zoom-controls {
   position: absolute;
-  text-align: center;
-  width: 100%;
+  left: calc(52vw - (100px / 2));
   z-index: 1000;
 }
 .zoom-controls span {
   cursor: pointer;
   font-size: 28px;
   z-index: 1000;
-}
+} */
 .q-layout--standard {
   min-height: 334px !important;
 }
 .adjust-map-height {
   position: absolute;
-  text-align: center;
+  right: -8px;
   bottom: 18px;
-  width: 100%;
   z-index: 1000;
+}
+.current-location {
+    position: absolute;
+    left: 8px;
+    bottom: 18px;
+    z-index: 1000;
 }
 .bg-btn-map-resizer {
   background-color: rgba(255, 255, 255, 0.4);
@@ -190,9 +198,6 @@ export default {
 }
 .text-btn-color {
   color: rgba(0, 0, 0, 0.7) !important;
-}
-.btn-map {
-  width: 80%;
 }
 .purelypeer-watermark {
   font-size: 150%;
