@@ -71,7 +71,7 @@
           />
       </div>
 
-      <div class="q-mt-lg q-px-lg" ref="btn_seedPhrase_backup">
+      <div class="q-mt-lg q-px-lg hidden" ref="btn_seedPhrase_backup">
           <q-btn
           rounded
           class="btn-seedPhrase text-white"
@@ -81,7 +81,7 @@
           />
       </div>
 
-      <div class="q-mt-lg q-px-lg hidden" ref="btn_next">
+      <div class="q-mt-lg q-px-lg" ref="btn_next">
           <q-btn
           rounded
           class="btn-seedPhrase text-white"

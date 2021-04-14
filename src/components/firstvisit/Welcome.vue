@@ -135,6 +135,7 @@ export default {
         messageColor: 'black'
       })
 
+      // Create a wallet
       createWallet().then(response => {
         console.log('Creation of wallet response: ', response)
 
@@ -159,7 +160,7 @@ export default {
           slp_address: response.slpAddress,
           pubkey: response.publicKey
         }
-
+        // Create user
         this.$store.dispatch('wallet/createUser', wallet)
         this.routeTimer = setTimeout(() => {
           this.$q.loading.hide()
