@@ -3,27 +3,30 @@
     <div class="col-12 quest-container q-mt-none q-mb-none q-pt-lg q-pt-xs">
 
       <div class="q-px-md">
-        <q-card class="my-card">
+        <q-card class="my-card" ref="questListCard">
           <q-card-section>
-            <div class="text-h6 quest-caption">Explore Quests</div>
+            <div class="text-h6 quest-caption">
+              Explore Quests
+              <q-btn color="white" @click="toggleQuestList" style="position: absolute; right: 16px; top: 14px" rounded :dense="true" text-color="black" :icon="questExpanderIcon" />
+            </div>
           </q-card-section>
 
           <q-separator/>
 
           <q-card-section class="q-pt-sm">
-            <div class="quest-main">
-              <div class="col-12 q-py-md q-mt-sm quest-list q-px-sm" style="background: #B5ECDD; border-top-left-radius: 14px; border-top-right-radius: 14px;" v-for="(quest, questIndex) in quests" :key="questIndex"
+            <div class="quest-main" ref="questMain">
+              <div class="col-12 q-py-md q-mt-sm quest-list q-px-sm" v-for="(quest, questIndex) in quests" :key="questIndex"
                 @click="showQuestCoordinatesOnMap(quest, questIndex)">
                 <div class="row">
                   <div class="col-12 q-px-sm">
-                    <p class="q-mb-xs"><span class="text-weight-bold">Quest Name: </span><span class="text-subtitle2">{{ quest.name }}</span></p>
-                    <p class="q-mb-xs"><span class="text-weight-bold">X/Y: </span><span class="text-subtitle2">{{ quest.cashdrops_remaining + '/' + quest.total_cashdrops }}</span></p>
-                    <p class="q-mb-xs" v-if="quest.phone_no"><span class="text-weight-bold">Phone Number: </span><span class="text-subtitle2">{{ quest.phone_no }}</span></p>
-                    <p class="q-mb-xs" v-if="quest.contactUrl"><span class="text-weight-bold">Contact URL: </span><a href="www.facebook.com" class="text-caption">{{ quest.contactUrl }}</a></p>
+                    <p class="q-mb-xs"><span class="text-weight-bold quest-label">Quest Name: </span><span class="text-subtitle2">{{ quest.name }}</span></p>
+                    <p class="q-mb-xs"><span class="text-weight-bold quest-label">X/Y: </span><span class="text-subtitle2">{{ quest.cashdrops_remaining + '/' + quest.total_cashdrops }}</span></p>
+                    <p class="q-mb-xs" v-if="quest.phone_no"><span class="text-weight-bold quest-label">Phone Number: </span><span class="text-subtitle2">{{ quest.phone_no }}</span></p>
+                    <p class="q-mb-xs" v-if="quest.contactUrl"><span class="text-weight-bold quest-label">Contact URL: </span><a href="www.facebook.com" class="text-caption">{{ quest.contactUrl }}</a></p>
 
                     <div class="questMoreInfo" :ref="questIndex">
-                      <p class="q-mb-xs"><span class="text-weight-bold" v-if="quest.memo">Memo: </span><span>{{ quest.memo }}</span></p>
-                      <p class="q-mb-xs"><span class="text-weight-bold">PurelyPeer Tier | Presence | Radius: </span>
+                      <p class="q-mb-xs"><span class="text-weight-bold quest-label" v-if="quest.memo">Memo: </span><span>{{ quest.memo }}</span></p>
+                      <p class="q-mb-xs"><span class="text-weight-bold quest-label">PurelyPeer Tier | Presence | Radius: </span>
                       <br>
                         <span>
                           {{ quest.acceptance_tier === 'Direct' ? 'Direct \uD83D\uDC9A' : quest.acceptance_tier === 'Indirect' ? 'Indirect \uD83E\uDDE1' : quest.acceptance_tier === 'Upcoming' ? 'Upcoming \uD83D\uDC99' : 'Inactive \uD83D\uDDA4' }}
@@ -42,7 +45,7 @@
           </q-card-section>
         </q-card>
       </div>
-      <div id="ratio-option" class="q-mt-lg">
+      <div id="ratio-option" class="q-mt-lg q-px-md">
         <ul>
           <li><a href="#?" class="fs-2" @click="changeTier"><span v-html="purelyPeertier.options[purelyPeertier.number]"></span></a></li>
           <li><a href="#?" class="fs-2" @click="changePhysicalPresence">&#129521;<span v-html="phyicalPresence.options[phyicalPresence.number]"></span></a></li>
@@ -82,7 +85,8 @@ export default {
         number: 0
       },
       quests: null,
-      questIndexer: null
+      questIndexer: null,
+      questExpanderIcon: 'mdi-arrow-expand-all'
     }
   },
   methods: {
@@ -126,6 +130,11 @@ export default {
     changeQuestRadius () {
       this.questRadius.number++
       this.questRadius.number = this.questRadius.number === 5 ? 0 : this.questRadius.number
+    },
+    toggleQuestList () {
+      this.$refs.questListCard.$el.classList.toggle('card-expander')
+      this.questExpanderIcon = this.$refs.questListCard.$el.classList.contains('card-expander') ? 'mdi-arrow-collapse-all' : 'mdi-arrow-expand-all'
+      this.$refs.questMain.classList.toggle('quest-visible')
     }
   },
   async mounted () {
@@ -154,5 +163,13 @@ export default {
 }
 p {
   color: #676767;
+}
+.card-expander {
+  position: absolute;
+  width: 100%;
+  top: 0pt;
+  left: 0pt;
+  z-index: 3000;
+  border-radius: 0;
 }
 </style>
