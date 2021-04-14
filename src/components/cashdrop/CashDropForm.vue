@@ -1,61 +1,73 @@
 <template>
   <div id="quest-list">
-    <div class="col-12 quest-container q-mt-none q-mb-none q-pt-sm" ref="questList">
-      <h5 class="text-center q-mt-md q-mb-sm">Quest Form</h5>
+    <div class="col-12 quest-container q-mt-none q-mb-none q-pt-lg q-pt-xs" ref="questList">
+      <div class="q-px-md">
+        <q-card class="my-card q-mx-none q-mb-md" ref="formCard">
+          <q-card-section>
+            <div class="text-h6 quest-caption">
+              Quest Form
+              <q-btn color="white" @click="toggleQuestList" style="position: absolute; right: 16px; top: 14px" rounded :dense="true" text-color="black" :icon="questExpanderIcon" />
+            </div>
+          </q-card-section>
 
-      <div class="q-mx-md q-mt-md">
-        <div class="row justify-center q-mb-md">
-          <div class="col-11">
-            <q-form ref="questForm" class="q-gutter-y-sm" method="post" @submit="onSubmitQuest" >
-              <q-input ref="merchantName" color="grey-5" :dense="true" bg-color="white" outlined label="Merchant Name" type="text" lazy-rules v-model="merchantName"
-                :rules="[val => !!val || 'Merchant name is required']" />
-              <q-input ref="phoneNumber" color="grey-5" :dense="true" bg-color="white" outlined label="Phone number" v-model="phoneNumber"
-                mask="(+##) ###-###-####" fill-mask unmasked-value class="q-mb-lg" />
-              <q-input ref="contactUrl" color="grey-5" :dense="true" bg-color="white" outlined label="Contact URL" type="url" v-model="contactUrl" class="q-mb-lg" />
-              <q-input ref="memo" color="grey-5" :dense="true" bg-color="white" outlined label="Memo" type="text" v-model="memo" class="q-mb-lg" />
-              <q-select ref="tierModel" outlined color="grey-5" :dense="true" bg-color="white" v-model="tierModel"
-                :options="tier.options" label="PurelyPeer Tier"
-                lazy-rules :rules="[val => !!val || 'PurelyPeer tier is required']" />
-              <q-select ref="presenceModel" outlined color="grey-5" :dense="true" bg-color="white" v-model="presenceModel"
-                :options="presence.options" label="Physical Presence"
-                lazy-rules :rules="[val => !!val || 'Physical presence is required']" />
-              <q-select ref="radiusModel" outlined color="grey-5" :dense="true" bg-color="white" v-model="radiusModel"
-                :options="radius.options" label="Quest Radius"
-                lazy-rules :rules="[val => !!val || 'Quest radius is required']" />
-                <q-badge class="slider-badge text-caption">
-                  <b>Number of cashdrops : {{ cashDropCountModel }}</b>
-                </q-badge>
-              <q-slider class="q-mt-none q-mb-sm amount-range-slider"
-                  :value="2"
-                  v-model="cashDropCountModel"
-                  :min="2"
-                  :max="100"
-                  :step="1"
-                 label/>
-              <q-input ref="amount" color="grey-5" :dense="true" bg-color="white" outlined label="Amount for the cashdrops" type="text"
-              v-model="amount2" lazy-rules :rules="[val => val > 0.00000000 || 'Amount field is required to be set']"
-              input-class="text-right" />
-                <q-badge class="slider-badge text-caption">
-                  <b>Set amount</b>
-                </q-badge>
-                <q-slider class="q-mt-none q-mb-none amount-range-slider"
-                  :value="0.00000000"
-                  v-model="amount"
-                  :min="0.00000000"
-                  :max="1.00000000"
-                  :step="0.00000001"
-                  label
-                  :label-value="amount"
-                />
-              <q-input color="grey-5" :dense="true" class="q-mb-md" bg-color="white" outlined
-                    v-model="feeBreakdown" label="Fee Breakdown"
-                    input-class="text-right" readonly />
-              <q-btn :label="'Cash Drop \uD83D\uDCA7'" type="submit" class="full-width quest-btn"/>
-            </q-form>
-          </div>
-        </div>
+          <q-separator/>
+
+          <q-card-section class="q-pt-sm">
+            <div>
+              <div class="row q-mb-md">
+                <div class="col-12 q-pt-md">
+                  <q-form ref="questForm" class="q-gutter-y-sm q-mx-none" method="post" @submit="onSubmitQuest" >
+                    <q-select ref="radiusModel" bg-color="input-bg" filled color="input-color" :dense="true" v-model="radiusModel"
+                      :options="radius.options" label="Quest Radius"
+                      lazy-rules :rules="[val => !!val || 'Quest radius is required']" />
+                    <q-input ref="merchantName" bg-color="input-bg" filled color="input-color" :dense="true" label="Merchant Name" type="text" lazy-rules v-model="merchantName"
+                      :rules="[val => !!val || 'Merchant name is required']" />
+                    <q-input ref="phoneNumber" bg-color="input-bg" filled color="input-color" :dense="true" label="Phone number" v-model="phoneNumber"
+                      mask="(+##) ###-###-####" fill-mask unmasked-value class="q-mb-lg" />
+                    <q-input ref="contactUrl" bg-color="input-bg" filled color="input-color" :dense="true" label="Contact URL" type="url" v-model="contactUrl" class="q-mb-lg" />
+                    <q-input ref="memo" bg-color="input-bg" filled color="input-color" :dense="true" label="Memo" type="text" v-model="memo" class="q-mb-lg" />
+                    <q-select ref="tierModel" bg-color="input-bg" filled color="input-color" :dense="true" v-model="tierModel"
+                      :options="tier.options" label="PurelyPeer Tier"
+                      lazy-rules :rules="[val => !!val || 'PurelyPeer tier is required']" />
+                    <q-select ref="presenceModel" bg-color="input-bg" filled color="input-color" :dense="true" v-model="presenceModel"
+                      :options="presence.options" label="Physical Presence"
+                      lazy-rules :rules="[val => !!val || 'Physical presence is required']" />
+                      <q-badge class="slider-badge text-caption">
+                        <b>Number of cashdrops : {{ cashDropCountModel }}</b>
+                      </q-badge>
+                    <q-slider class="q-mt-none q-mb-sm amount-range-slider"
+                        :value="2"
+                        v-model="cashDropCountModel"
+                        :min="2"
+                        :max="100"
+                        :step="1"
+                      label/>
+                    <q-input ref="amount" bg-color="input-bg" filled color="input-color" :dense="true" outlined label="Amount for the cashdrops" type="text"
+                    v-model="amount2" lazy-rules :rules="[val => val > 0.00000000 || 'Amount field is required to be set']"
+                    input-class="text-right" />
+                      <q-badge class="slider-badge text-caption">
+                        <b>Set amount</b>
+                      </q-badge>
+                      <q-slider class="q-mt-none q-mb-none amount-range-slider"
+                        :value="0.00000000"
+                        v-model="amount"
+                        :min="0.00000000"
+                        :max="1.00000000"
+                        :step="0.00000001"
+                        label
+                        :label-value="amount"
+                      />
+                    <q-input bg-color="input-bg" filled color="input-color" :dense="true" outlined
+                          v-model="feeBreakdown" label="Fee Breakdown"
+                          input-class="text-right" readonly />
+                    <q-btn :label="'Cash Drop \uD83D\uDCA7'" type="submit" class="full-width quest-btn"/>
+                  </q-form>
+                </div>
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
       </div>
-
     </div>
 
     <BCHAddress class="hidden" ref="bchAddress" v-on:cancelQuest="cancelQuest"/>
@@ -107,7 +119,8 @@ export default {
       feeBreakdown: 0.00002000,
       amountBoolean: false,
       questPresence: null,
-      balanceWatcher: null
+      balanceWatcher: null,
+      questExpanderIcon: 'mdi-arrow-expand-all'
     }
   },
   components: {
@@ -178,7 +191,7 @@ export default {
 
           const coordinates = []
           for (let i = 0; Object.keys(this.questCoordinates).length > i; i++) {
-            coordinates.push(Object.values(this.questCoordinates)[i])
+            coordinates.push((Object.values(this.questCoordinates)[i]).toFixed(8))
           }
 
           const questCreate = {
@@ -195,12 +208,12 @@ export default {
             has_physical_presence: this.questPresence,
             amount: this.amount.toFixed(8),
             payment_address: 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5', /* bchAddress */
-            pubkey: '03244d61d760c1aa9e322906b586d5949a18edaea287b5b07033c9f007f86ebdba' /* localStorage.getItem('pubkey') */
+            pubkey: '02c767c747b2923587841d56db9036ad9f480930f0307e325debb60abffc444d74' /* localStorage.getItem('pubkey') */
           }
 
           console.log('Form model values: ', questCreate)
 
-          const overAllAmount = (Number(this.amount.toFixed(8)) + Number(this.feeBreakdown.toFixed(8)))
+          const overAllAmount = (Number(this.amount.toFixed(8)) + Number(this.feeBreakdown))
           const questInfoForMap = [coordinates, this.cashDropFormModels.radius, this.cashDropFormModels.tier]
 
           this.$emit('routeStatus', false)
@@ -387,6 +400,10 @@ export default {
         this.cashDropFormModels.radius = radius
       }
       this.$emit('changeQuestRadius', radius)
+    },
+    toggleQuestList (e) {
+      this.$refs.formCard.$el.classList.toggle('card-expander')
+      this.questExpanderIcon = this.$refs.formCard.$el.classList.contains('card-expander') ? 'mdi-arrow-collapse-all' : 'mdi-arrow-expand-all'
     }
   },
   async created () {
@@ -398,6 +415,8 @@ export default {
       'bitcoincash:qp3et5cla7jju6z2lfc5v9nr0r4q54edqqpylqnfvx',
       1000
     ))
+
+    console.log('user id: ', localStorage.getItem('user_id'))
   }
 }
 </script>
@@ -428,5 +447,19 @@ export default {
 .quest-btn {
   background: radial-gradient(circle, #0CDAA1 0%, #0AC18E 100%) !important;
   color: white;
+}
+.bg-input-bg {
+  background: #B5ECDD !important;
+}
+.text-input-color {
+  color: #089C73;
+}
+.card-expander {
+  position: absolute;
+  width: 100%;
+  top: 0pt;
+  left: 0pt;
+  z-index: 3000;
+  border-radius: 0;
 }
 </style>
