@@ -2,10 +2,10 @@
     <q-layout>
         <q-page-container>
             <div id="explore-map" class="row">
-              <!-- <div class="example-custom-control q-mt-md zoom-controls">
-                  <span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
-                  <span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
-              </div> -->
+              <div class="example-custom-control q-mt-md zoom-controls">
+                  <span class="q-mr-xs q-pa-sm bg-white" style="border-radius: 8px; box-shadow: 0px 1px 1px 1px #D9D9D9;" @click="zoomScale++">&#10133;</span>
+                  <span class="q-pa-sm bg-white" style="border-radius: 8px; box-shadow: 0px 1px 1px 1px #D9D9D9;" @click="zoomScale--">&#10134;</span>
+              </div>
               <l-map
                 :zoom="zoomScale"
                 :center="center"
@@ -19,11 +19,11 @@
                 @update:bounds="udpateQuestList"
                 ref="myPurelyPeerMap"
               >
-                <l-control-zoom position="topright"></l-control-zoom>
+                <!-- <l-control-zoom position="bottomright"></l-control-zoom> -->
 
                 <l-tile-layer :url="url" :attribution="attribution" />
 
-                <l-marker v-if="isLocationShared" :icon="icon" :lat-lng="markerLocation"></l-marker>
+                <l-marker :icon="icon" :lat-lng="markerLocation"></l-marker>
 
                 <l-marker v-for="(mark, markerIndex) in quests" :key="markerIndex+'marker'"
                 :lat-lng="mark.coors" @click="toggleWindowInfo(markerIndex)">
@@ -72,7 +72,7 @@
 <script>
 import { Plugins } from '@capacitor/core'
 import { latLng, icon } from 'leaflet'
-import { LMap, LTileLayer, LMarker, LCircle, LPopup, LIcon, LControlZoom } from 'vue2-leaflet'
+import { LMap, LTileLayer, LMarker, LCircle, LPopup, LIcon } from 'vue2-leaflet'
 import 'leaflet/dist/leaflet.css'
 
 const { Geolocation } = Plugins
@@ -85,8 +85,7 @@ export default {
     LMarker,
     LCircle,
     LPopup,
-    LIcon,
-    LControlZoom
+    LIcon
   },
   data () {
     return {
@@ -122,8 +121,7 @@ export default {
       mapHeight: 0,
       hover: false,
       questRadius: null,
-      bounds: null,
-      isLocationShared: false
+      bounds: null
     }
   },
   props: ['moveToTheQuestCoordinates'],
@@ -161,15 +159,14 @@ export default {
     readyMap () {
       // if (this.$q.sessionStorage.getItem('location-shared')) {
       Geolocation.getCurrentPosition().then(position => {
-        const coords = latLng(
+        const coors = latLng(
           position.coords.latitude,
           position.coords.longitude
         )
-        console.log(coords)
-        this.center = coords
-        this.circle.center = coords
-        this.markerLocation = coords
-        this.isLocationShared = true
+        console.log(coors)
+        this.center = coors
+        this.circle.center = coors
+        this.markerLocation = coors
       }).catch(error => {
         this.zoomScale = 1
         console.log('Unable to retreive your location: ', error)
@@ -229,6 +226,14 @@ export default {
       console.log('Bounds: ', bounds)
     }
   },
+  created () {
+    Geolocation.getCurrentPosition()
+      .then(position => {
+      }).catch(error => {
+        this.zoomScale = 1
+        console.log('Unable to retreive your location: ', error)
+      })
+  },
   async mounted () {
     await this.$store.dispatch('cashdrop/fetchQuestList').then(res => {
       console.log('Response: ', res)
@@ -245,16 +250,17 @@ export default {
     color: #676767;
     margin: 0;
 }
-/* .zoom-controls {
+.zoom-controls {
     position: absolute;
-    left: calc(52vw - (100px / 2));
+    right: 10px;
+    bottom: 23px;
     z-index: 1000;
 }
 .zoom-controls span {
     cursor: pointer;
-    font-size: 28px;
+    font-size: 10px;
     z-index: 1000;
-} */
+}
 .q-layout--standard {
     min-height: 334px !important;
 }
@@ -265,7 +271,7 @@ export default {
 .adjust-map-height {
     position: absolute;
     padding: 0;
-    right: 8px;
+    right: 78px;
     bottom: 18px;
     z-index: 1000;
 }

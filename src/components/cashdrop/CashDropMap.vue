@@ -2,10 +2,10 @@
   <q-layout class="exploreMap">
     <q-page-container>
       <div id="explore-map" class="row" ref="exploreMap">
-          <!-- <div class="q-mt-md zoom-controls">
-            <span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
-            <span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
-          </div> -->
+          <div class="example-custom-control q-mt-md zoom-controls">
+              <span class="q-mr-xs q-pa-sm bg-white" style="border-radius: 8px; box-shadow: 0px 1px 1px 1px #D9D9D9;" @click="zoomScale++">&#10133;</span>
+              <span class="q-pa-sm bg-white" style="border-radius: 8px; box-shadow: 0px 1px 1px 1px #D9D9D9;" @click="zoomScale--">&#10134;</span>
+          </div>
           <l-map
             :zoom="zoomScale"
             :center="center"
@@ -16,7 +16,6 @@
             @move="updateMarkerCoordinates"
             ref="myPurelyPeerMap"
           >
-            <l-control-zoom position="topright"></l-control-zoom>
             <l-tile-layer :url="url" :attribution="attribution" />
             <l-marker :icon="icon" :lat-lng="markerLocation"></l-marker>
 
@@ -41,7 +40,7 @@
 <script>
 import { Plugins } from '@capacitor/core'
 import { latLng, icon } from 'leaflet'
-import { LMap, LTileLayer, LMarker, LCircle, LControlZoom } from 'vue2-leaflet'
+import { LMap, LTileLayer, LMarker, LCircle } from 'vue2-leaflet'
 import 'leaflet/dist/leaflet.css'
 
 const { Geolocation } = Plugins
@@ -52,8 +51,7 @@ export default {
     LMap,
     LTileLayer,
     LMarker,
-    LCircle,
-    LControlZoom
+    LCircle
   },
   data () {
     return {
@@ -83,7 +81,8 @@ export default {
       isLocationShared: false,
       questRadius: 1000,
       questTier: 'inactive',
-      tierVariation: 'inactive'
+      tierVariation: 'inactive',
+      staticLocation: null
     }
   },
   props: ['changeQuestRadius', 'changeQuestTier', 'mapVisibility'],
@@ -112,10 +111,11 @@ export default {
     }
   },
   methods: {
+    currentLocation () {
+      this.center = this.staticLocation
+    },
     centerUpdate (center) {
-      this.markerLocation = center
-      this.circle.center = center
-      this.$emit('passCoordinatesToForm', center)
+      this.center = center
     },
     readyMap () {
       // this.$watchLocation({})
@@ -123,7 +123,8 @@ export default {
         const coors = latLng(coordinates.lat, coordinates.lng)
         this.center = coors
         this.circle.center = coors
-        this.isLocationShared = true
+        this.markerLocation = coors
+        this.staticLocation = coors
       }).catch(error => {
         this.zoomScale = 1
         console.log('Unable to retreive your location: ', error)
@@ -167,22 +168,24 @@ export default {
 </script>
 
 <style>
-/* .zoom-controls {
-  position: absolute;
-  left: calc(52vw - (100px / 2));
-  z-index: 1000;
+.zoom-controls {
+    position: absolute;
+    right: 10px;
+    bottom: 23px;
+    z-index: 1000;
 }
 .zoom-controls span {
-  cursor: pointer;
-  font-size: 28px;
-  z-index: 1000;
-} */
+    cursor: pointer;
+    font-size: 10px;
+    z-index: 1000;
+}
 .q-layout--standard {
   min-height: 334px !important;
 }
 .adjust-map-height {
   position: absolute;
-  right: -8px;
+  padding: 0;
+  right: 78px;
   bottom: 18px;
   z-index: 1000;
 }
