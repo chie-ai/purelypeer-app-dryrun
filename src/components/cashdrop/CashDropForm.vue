@@ -3,14 +3,14 @@
     <div class="col-12 quest-container q-mt-none q-mb-none q-pt-lg q-pt-xs" ref="questList">
       <div class="q-px-md">
         <q-card class="my-card q-mx-none q-mb-md" ref="formCard">
-          <q-card-section>
+          <q-card-section ref="questCardHeader">
             <div class="text-h6 quest-caption">
               Quest Form
               <q-btn color="white" @click="toggleQuestList" style="position: absolute; right: 16px; top: 14px" rounded :dense="true" text-color="black" :icon="questExpanderIcon" />
             </div>
           </q-card-section>
 
-          <q-separator/>
+          <q-separator ref="cardSeparator"/>
 
           <q-card-section class="q-pt-sm">
             <div>
@@ -43,24 +43,25 @@
                         :step="1"
                       label/>
                     <q-input ref="amount" bg-color="input-bg" filled color="input-color" :dense="true" outlined label="Amount for the cashdrops" type="text"
-                    v-model="amount2" lazy-rules :rules="[val => val > 0.00000000 || 'Amount field is required to be set']"
+                    v-model="amount2" mask="#.########" fill-mask="0.00000000"
+                    lazy-rules :rules="[val => val > 0.00000000 || 'Amount field is required to be set']"
                     input-class="text-right" />
-                      <q-badge class="slider-badge text-caption">
-                        <b>Set amount</b>
-                      </q-badge>
-                      <q-slider class="q-mt-none q-mb-none amount-range-slider"
-                        :value="0.00000000"
-                        v-model="amount"
-                        :min="0.00000000"
-                        :max="1.00000000"
-                        :step="0.00000001"
-                        label
-                        :label-value="amount"
-                      />
+                    <q-badge class="slider-badge text-caption">
+                      <b>Set amount for cashdrops</b>
+                    </q-badge>
+                    <q-slider class="q-mt-none q-mb-none amount-range-slider"
+                      :value="amount"
+                      v-model="amount"
+                      :min="0.00000000"
+                      :max="1.00000000"
+                      :step="0.00000001"
+                      label
+                      :label-value="amount"
+                    />
                     <q-input bg-color="input-bg" filled color="input-color" :dense="true" outlined
-                          v-model="feeBreakdown" label="Fee Breakdown"
+                          v-model="feeBreakdown" mask="#.########" fill-mask="0.00000000" label="Fee Breakdown"
                           input-class="text-right" readonly />
-                    <q-btn :label="'Cash Drop \uD83D\uDCA7'" type="submit" class="full-width quest-btn"/>
+                    <q-btn :label="'Cash Drop \uD83D\uDCA7'" type="submit" class="full-width q-mt-md quest-btn"/>
                   </q-form>
                 </div>
               </div>
@@ -91,19 +92,19 @@ export default {
       phoneNumber: null,
       contactUrl: null,
       memo: null,
-      tierModel: null,
+      tierModel: 'Upcoming \uD83D\uDC99',
       tier: {
         options: [
           'Direct \uD83D\uDC9A', 'Indirect \uD83E\uDDE1', 'Upcoming \uD83D\uDC99'
         ]
       },
-      presenceModel: null,
+      presenceModel: 'Yes \uD83E\uDDF1\u2714\uFE0F',
       presence: {
         options: [
           'Yes \uD83E\uDDF1\u2714\uFE0F', 'No \uD83E\uDDF1\u274C'
         ]
       },
-      radiusModel: null,
+      radiusModel: '15 min \uD83D\uDD7A\u267F\uD83D\uDC83',
       radius: {
         options: [
           '15 min \uD83D\uDD7A\u267F\uD83D\uDC83', 'Urban \uD83C\uDFD9\uFE0F', 'Regional \uD83D\uDEE3\uFE0F', 'Continental \uD83C\uDF10'
@@ -116,11 +117,12 @@ export default {
         tier: null,
         radius: null
       },
-      feeBreakdown: 0.00002000,
+      feeBreakdown: 0.00004000,
       amountBoolean: false,
       questPresence: null,
       balanceWatcher: null,
-      questExpanderIcon: 'mdi-arrow-expand-all'
+      questExpanderIcon: 'mdi-arrow-expand-all',
+      price: null
     }
   },
   components: {
@@ -137,8 +139,9 @@ export default {
       this.changeTier()
     },
     cashDropCountModel (newBreakdown, oldBreakdown) {
+      console.table('Cashdrop Count: ', this.cashDropCountModel)
       const T = 0.00002000, N = this.cashDropCountModel, OT = N * T
-      this.feeBreakdown = OT
+      this.feeBreakdown = OT.toFixed(8)
       this.feeBreakdown = this.feeBreakdown.toFixed(8)
     },
     presenceModel (newPresence, oldPresence) {
@@ -147,8 +150,14 @@ export default {
       }
     },
     amount (newAmount, oldAmount) {
+      console.log('Working...')
       this.amount2 = this.amount.toFixed(8)
-      return newAmount.toFixed(8)
+      // return newAmount.toFixed(8)
+    },
+    amount2 (newAmount, oldAmount) {
+      console.log('Working...')
+      this.amount = this.amount2.toFixed(8)
+      // return newAmount.toFixed(8)
     }
   },
   methods: {
@@ -175,6 +184,7 @@ export default {
       console.log('sign')
       signInputs(bchAddress, privkey, contract, amount)
     },
+    // Submits the quest form
     onSubmitQuest (evt) {
       const bchAddress = localStorage.getItem('bchAddress')
       this.$refs.questForm.validate().then(success => {
@@ -261,6 +271,7 @@ export default {
               setTimeout(() => {
                 document.getElementsByClassName('btn-cancel')[0].classList.remove('hidden')
               }, 5000)
+
               const pollingBalance = () => {
                 server.bchjs.Electrumx.balance('bitcoincash:pp8skudq3x5hzw8ew7vzsw8tn4k8wxsqsv0lt0mf3g').then(res => {
                   const sumSatoshis = res.balance.confirmed + res.balance.unconfirmed
@@ -306,6 +317,7 @@ export default {
         }
       })
     },
+    // Create quest
     createQuest (questInfoForMap, questCreate) {
       console.log('form: ', questCreate)
       console.log('map: ', questInfoForMap)
@@ -404,6 +416,8 @@ export default {
     toggleQuestList (e) {
       this.$refs.formCard.$el.classList.toggle('card-expander')
       this.questExpanderIcon = this.$refs.formCard.$el.classList.contains('card-expander') ? 'mdi-arrow-collapse-all' : 'mdi-arrow-expand-all'
+      this.$refs.questCardHeader.$el.classList.toggle('card-header')
+      this.$refs.cardSeparator.$el.classList.toggle('card-ceparator')
     }
   },
   async created () {
@@ -461,5 +475,17 @@ export default {
   left: 0pt;
   z-index: 3000;
   border-radius: 0;
+}
+.card-header {
+  position: fixed;
+  top: 0pt;
+  height: 61px;
+  width: 100%;
+  background: white;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  z-index: 3000;
+}
+.card-ceparator {
+  margin-top: 60px;
 }
 </style>
