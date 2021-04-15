@@ -3,7 +3,7 @@
     <q-page-container>
       <div id="explore-map" class="row" ref="exploreMap">
           <div class="example-custom-control q-mt-md zoom-controls">
-              <span class="q-mr-xs q-pa-sm bg-white" style="border-radius: 8px; box-shadow: 0px 1px 1px 1px #D9D9D9;" @click="zoomScale++">&#10133;</span>
+              <span class="q-mr-sm q-pa-sm bg-white" style="border-radius: 8px; box-shadow: 0px 1px 1px 1px #D9D9D9;" @click="zoomScale++">&#10133;</span>
               <span class="q-pa-sm bg-white" style="border-radius: 8px; box-shadow: 0px 1px 1px 1px #D9D9D9;" @click="zoomScale--">&#10134;</span>
           </div>
           <l-map
@@ -185,7 +185,7 @@ export default {
 .adjust-map-height {
   position: absolute;
   padding: 0;
-  right: 78px;
+  right: 80px;
   bottom: 18px;
   z-index: 1000;
 }
