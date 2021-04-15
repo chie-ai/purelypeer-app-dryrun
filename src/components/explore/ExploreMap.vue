@@ -3,7 +3,7 @@
         <q-page-container>
             <div id="explore-map" class="row">
               <div class="example-custom-control q-mt-md zoom-controls">
-                  <span class="q-mr-xs q-pa-sm bg-white" style="border-radius: 8px; box-shadow: 0px 1px 1px 1px #D9D9D9;" @click="zoomScale++">&#10133;</span>
+                  <span class="q-mr-sm q-pa-sm bg-white" style="border-radius: 8px; box-shadow: 0px 1px 1px 1px #D9D9D9;" @click="zoomScale++">&#10133;</span>
                   <span class="q-pa-sm bg-white" style="border-radius: 8px; box-shadow: 0px 1px 1px 1px #D9D9D9;" @click="zoomScale--">&#10134;</span>
               </div>
               <l-map
@@ -26,13 +26,12 @@
                 <l-marker :icon="icon" :lat-lng="markerLocation"></l-marker>
 
                 <l-marker v-for="(mark, markerIndex) in quests" :key="markerIndex+'marker'"
-                :lat-lng="mark.coors" @click="toggleWindowInfo(markerIndex)">
+                :lat-lng="mark.coors" :ref="'markerIndexer'+markerIndex" @click="toggleWindowInfo(markerIndex)">
                     <l-popup :options="popUpOptions" @remove="removePopUpinfo" ref="pops">
                         <div class="infowindow">
-                            <p><strong>Quest Name: </strong>{{ mark.name }}</p>
-                            <p><strong>PurelyPeer Tier: </strong>{{ (mark.acceptance_tier).charAt(0).toUpperCase()+(mark.acceptance_tier).slice(1) }}</p>
-                            <p><strong>Remaining Cash Drop: </strong>{{ mark.cashdrops_remaining }}</p>
-                            <p><strong>Cash Drop Count: </strong>{{ mark.total_cashdrops }}</p>
+                            <p>Quest Name: <span class="text-weight-bold">{{ mark.name }}</span></p>
+                            <p>PurelyPeer Tier: <span class="text-weight-bold">{{ (mark.acceptance_tier).charAt(0).toUpperCase()+(mark.acceptance_tier).slice(1) }}</span></p>
+                            <p>X/Y: <span class="text-weight-bold">{{ mark.cashdrops_remaining + '/' + mark.total_cashdrops }}</span></p>
                         </div>
                     </l-popup>
                     <l-icon
@@ -127,11 +126,11 @@ export default {
   props: ['moveToTheQuestCoordinates'],
   watch: {
     moveToTheQuestCoordinates () {
-      const coords = this.moveToTheQuestCoordinates.coors
+      const coors = this.moveToTheQuestCoordinates.coors
       this.questRadius = this.moveToTheQuestCoordinates.radius
+      this.center = coors
 
-      this.center = coords
-
+      // Zoom in based on the radius
       setTimeout(() => {
         if (this.questRadius === 1500) {
           this.zoomScale = 14
@@ -142,7 +141,20 @@ export default {
         } else {
           this.zoomScale = 4
         }
-      }, 600)
+      }, 1000)
+
+      // Closes the popup and radius of other quest
+      this.quests[this.activeIndex].radiusVisibility = false
+      this.$refs['markerIndexer' + this.activeIndex][0].mapObject.closePopup()
+
+      // Show the popup after zooming in
+      setTimeout(() => {
+        this.$refs['markerIndexer' + this.moveToTheQuestCoordinates.index][0].mapObject.openPopup()
+        this.quests[this.moveToTheQuestCoordinates.index].radiusVisibility = true
+      }, 2000)
+
+      this.activeIndex = this.moveToTheQuestCoordinates.index !== undefined ? this.moveToTheQuestCoordinates.index : this.activeIndex
+
       this.removePopUpinfo()
     }
   },
@@ -157,7 +169,6 @@ export default {
       this.center = center
     },
     readyMap () {
-      // if (this.$q.sessionStorage.getItem('location-shared')) {
       Geolocation.getCurrentPosition().then(position => {
         const coors = latLng(
           position.coords.latitude,
@@ -171,9 +182,6 @@ export default {
         this.zoomScale = 1
         console.log('Unable to retreive your location: ', error)
       })
-      // } else {
-      //   this.zoomScale = 1
-      // }
     },
     toggleWindowInfo (infoIndex) {
       if (this.activeIndex !== infoIndex) {
@@ -186,12 +194,14 @@ export default {
     },
     removePopUpinfo () {
       if (this.quests !== null) {
+        console.log('Info Window: ', this.quests[this.activeIndex].infoWinOpen)
         if (this.quests[this.activeIndex].infoWinOpen === true) {
           document.getElementsByClassName('leaflet-popup-close-button')[0].click()
         }
         this.quests[this.activeIndex].infoWinOpen = false
         this.quests[this.activeIndex].radiusVisibility = false
         this.cashDropsCoordinates = null
+        this.$refs['markerIndexer' + this.activeIndex][0].mapObject.closePopup()
       }
 
       // this.markerLocation = this.$refs.myPurelyPeerMap.mapObject.getCenter()
@@ -271,7 +281,7 @@ export default {
 .adjust-map-height {
     position: absolute;
     padding: 0;
-    right: 78px;
+    right: 80px;
     bottom: 18px;
     z-index: 1000;
 }
