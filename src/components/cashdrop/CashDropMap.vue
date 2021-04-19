@@ -82,7 +82,9 @@ export default {
       questRadius: 1000,
       questTier: 'inactive',
       tierVariation: 'inactive',
-      staticLocation: null
+      staticLocation: null,
+      startY: 0,
+      counter: 0
     }
   },
   props: ['changeQuestRadius', 'changeQuestTier', 'mapVisibility'],
@@ -116,6 +118,7 @@ export default {
     },
     centerUpdate (center) {
       this.center = center
+      this.$emit('passCoordinatesToForm', center)
     },
     readyMap () {
       // this.$watchLocation({})

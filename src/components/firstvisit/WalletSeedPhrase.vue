@@ -71,16 +71,6 @@
           />
       </div>
 
-      <div class="q-mt-lg q-px-lg hidden" ref="btn_seedPhrase_backup">
-          <q-btn
-          rounded
-          class="btn-seedPhrase text-white"
-          size="md"
-          label="Backup your seed phrase"
-          @click="backupSeedPhrase"
-          />
-      </div>
-
       <div class="q-mt-lg q-px-lg" ref="btn_next">
           <q-btn
           rounded
@@ -96,7 +86,6 @@
 </template>
 
 <script>
-import { QSpinnerFacebook } from 'quasar'
 
 export default {
   data () {
@@ -119,39 +108,6 @@ export default {
     },
     next () {
       this.$refs.cashdrop_option_dialog.show()
-    },
-    backupSeedPhrase () {
-      this.$q.loading.show({
-        spinner: QSpinnerFacebook,
-        spinnerColor: 'spinner-color',
-        spinnerSize: 140,
-        backgroundColor: 'white',
-        message: '<b>Backing up of seed phrase is in progress.</b> <br/><strong style="color: #0AC18E;">Hang on...</strong>',
-        messageColor: 'black'
-      })
-
-      this.$refs.seed_phrase.classList.add('hidden')
-
-      // Store wallet seed phrase, seed hash, pubkey and address to localstorage (will be used for importing wallet)
-      localStorage.setItem('seedPhrase', this.seedPhrase)
-      localStorage.setItem('seedHash', this.seedHash)
-      localStorage.setItem('pubkey', this.pubKey)
-      localStorage.setItem('bchAddress', this.bchAddress)
-      localStorage.setItem('slpAddress', this.slpAddress)
-
-      this.routeTimer = setTimeout(() => {
-        this.$q.loading.hide()
-        this.routeTimer = false
-        this.$refs.seed_phrase.classList.remove('hidden')
-        this.$q.notify({
-          message: 'Backing up of seed phrase is done!',
-          color: 'notify-color',
-          position: 'top',
-          timeout: 2000
-        })
-        this.$refs.btn_seedPhrase_backup.classList.add('hidden')
-        this.$refs.btn_next.classList.remove('hidden')
-      }, 3000)
     },
     proceed (destination) {
       this.$router.push({ path: `${destination}` })

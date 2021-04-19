@@ -15,18 +15,23 @@
 
           <q-card-section class="q-pt-none q-pb-xs">
             <div class="quest-main q-pb-xs" ref="questMain">
+
+              <div v-if="questListLoader" class="quest-list-spinner text-center" style="line-height: inherit; padding: 20%">
+                <span class="mdi mdi-loading mdi-spin mdi-48px" style="color: #0AC18E"></span>
+              </div>
+
               <div class="col-12 q-py-md q-mt-sm quest-list q-px-sm" v-for="(quest, questIndex) in quests" :key="questIndex"
                 @click="showQuestCoordinatesOnMap(quest, questIndex)">
                 <div class="row">
                   <div class="col-12 q-px-sm">
-                    <p class="q-mb-xs"><span>Quest Name: </span><span class="text-subtitle2 quest-label text-weight-bold">{{ quest.name }}</span></p>
-                    <p class="q-mb-xs"><span>X/Y: </span><span class="text-subtitle2 quest-label text-weight-bold">{{ quest.cashdrops_remaining + '/' + quest.total_cashdrops }}</span></p>
-                    <p class="q-mb-xs" v-if="quest.phone_no"><span>Phone Number: </span><span class="text-subtitle2 quest-label text-weight-bold">{{ quest.phone_no }}</span></p>
-                    <p class="q-mb-xs" v-if="quest.contactUrl"><span>Contact URL: </span><a href="www.facebook.com" class="text-caption quest-label text-weight-bold">{{ quest.contactUrl }}</a></p>
+                    <p class="q-mb-none"><span>Quest Name: </span><span class="text-subtitle2 quest-label text-weight-bold">{{ quest.name }}</span></p>
+                    <p class="q-mb-none"><span>X/Y: </span><span class="text-subtitle2 quest-label text-weight-bold">{{ quest.cashdrops_remaining + '/' + quest.total_cashdrops }}</span></p>
+                    <p class="q-mb-none" v-if="quest.phone_no"><span>Phone Number: </span><span class="text-subtitle2 quest-label text-weight-bold">{{ quest.phone_no }}</span></p>
+                    <p class="q-mb-none" v-if="quest.contactUrl"><span>Contact URL: </span><a href="www.facebook.com" class="text-caption quest-label text-weight-bold">{{ quest.contactUrl }}</a></p>
 
                     <div class="questMoreInfo" :ref="questIndex">
-                      <p class="q-mb-xs"><span v-if="quest.memo">Memo: </span><span class="quest-label text-weight-bold">{{ quest.memo }}</span></p>
-                      <p class="q-mb-xs"><span>PurelyPeer Tier | Presence | Radius: </span>
+                      <p class="q-mb-none"><span v-if="quest.memo">Memo: </span><span class="quest-label text-weight-bold">{{ quest.memo }}</span></p>
+                      <p class="q-mb-none"><span>PurelyPeer Tier | Presence | Radius: </span>
                       <br>
                         <span class="quest-label text-weight-bold">
                           {{ quest.acceptance_tier === 'Direct' ? 'Direct \uD83D\uDC9A' : quest.acceptance_tier === 'Indirect' ? 'Indirect \uD83E\uDDE1' : quest.acceptance_tier === 'Upcoming' ? 'Upcoming \uD83D\uDC99' : 'Inactive \uD83D\uDDA4' }}
@@ -36,9 +41,6 @@
                       </p>
                     </div>
                   </div>
-                  <!-- <div class="col-12 q-px-sm q-mt-sm">
-                    <q-btn size="sm" color="purelypeer" rounded :ref="'btn-'+questIndex" :label="quest.btnLabel" @click="showMorequestInfo(questIndex)"/>
-                  </div> -->
                 </div>
               </div>
             </div>
@@ -86,7 +88,8 @@ export default {
       },
       quests: null,
       questIndexer: null,
-      questExpanderIcon: 'mdi-arrow-expand-all'
+      questExpanderIcon: 'mdi-arrow-expand-all',
+      questListLoader: true
     }
   },
   methods: {
@@ -145,6 +148,7 @@ export default {
     await this.$store.dispatch('cashdrop/fetchQuestList')
       .then(res => {
         this.quests = res.data.results.map(quest => ({ ...quest, btnLabel: 'Show more info' }))
+        this.questListLoader = false
         console.log('Quest: ', this.quests)
       })
       .catch(err => {
@@ -183,6 +187,7 @@ p {
   width: 100%;
   background: white;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: none;
   z-index: 3000;
 }
 .card-ceparator {

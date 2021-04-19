@@ -72,17 +72,21 @@
     </div>
 
     <BCHAddress class="hidden" ref="bchAddress" v-on:cancelQuest="cancelQuest"/>
-    <!-- <Confirmation :confirmation-dialog="confirmationDialog"/> -->
+    <LogoLoading v-if="loading" />
   </div>
 </template>
 
 <script>
-import { QSpinnerFacebook, QSpinner } from 'quasar'
+import { Plugins } from '@capacitor/core'
+import { QSpinner } from 'quasar'
+import LogoLoading from '../LogoLoading.vue'
 import BCHAddress from '../../components/cashdrop/flash-components/BchAddress.vue'
 import Confirmation from '../../components/cashdrop/flash-components/Confirmation.vue'
 import Confirmation2 from '../../components/cashdrop/flash-components/Confirmation2.vue'
 import server from '../../utils/getAPIServer.js'
 import { getPrivateKey, signInputs } from '../../utils/buildTransaction.js'
+
+const { Geolocation } = Plugins
 
 export default {
   data () {
@@ -98,7 +102,7 @@ export default {
           'Direct \uD83D\uDC9A', 'Indirect \uD83E\uDDE1', 'Upcoming \uD83D\uDC99'
         ]
       },
-      presenceModel: 'Yes \uD83E\uDDF1\u2714\uFE0F',
+      presenceModel: 'No \uD83E\uDDF1\u274C',
       presence: {
         options: [
           'Yes \uD83E\uDDF1\u2714\uFE0F', 'No \uD83E\uDDF1\u274C'
@@ -114,35 +118,41 @@ export default {
       amount2: 0.00000000,
       cashDropCountModel: 2,
       cashDropFormModels: {
-        tier: null,
-        radius: null
+        tier: 'Upcoming',
+        radius: 1500
       },
       feeBreakdown: 0.00004000,
       amountBoolean: false,
-      questPresence: null,
+      questPresence: false,
       balanceWatcher: null,
       questExpanderIcon: 'mdi-arrow-expand-all',
-      price: null
+      price: null,
+      questCoordinates: null,
+      loading: false,
+      privKey: null
     }
   },
   components: {
-    BCHAddress
+    BCHAddress,
+    LogoLoading
   },
-  props: ['questCoordinates'],
+  props: ['questGivenCoordinates'],
   watch: {
     radiusModel (newRadius, oldRadius) {
       if (newRadius) {
         this.changeRadius()
       }
+
+      console.log('Radius: ', newRadius)
     },
     tierModel (newTier, oldTier) {
       this.changeTier()
     },
     cashDropCountModel (newBreakdown, oldBreakdown) {
-      console.table('Cashdrop Count: ', this.cashDropCountModel)
+      // console.table('Cashdrop Count: ', this.cashDropCountModel)
+      // Calculate the fee of settled cashdrops
       const T = 0.00002000, N = this.cashDropCountModel, OT = N * T
       this.feeBreakdown = OT.toFixed(8)
-      this.feeBreakdown = this.feeBreakdown.toFixed(8)
     },
     presenceModel (newPresence, oldPresence) {
       if (this.presence.options.indexOf(newPresence) === 0) {
@@ -150,14 +160,10 @@ export default {
       }
     },
     amount (newAmount, oldAmount) {
-      console.log('Working...')
-      this.amount2 = this.amount.toFixed(8)
-      // return newAmount.toFixed(8)
+      this.amount2 = newAmount
     },
-    amount2 (newAmount, oldAmount) {
-      console.log('Working...')
-      this.amount = this.amount2.toFixed(8)
-      // return newAmount.toFixed(8)
+    questGivenCoordinates (newCoors, oldCoors) {
+      this.questCoordinates = this.questGivenCoordinates
     }
   },
   methods: {
@@ -170,7 +176,7 @@ export default {
       document.getElementsByClassName('cashdrop-form')[0].classList.add('animate-in-load')
       document.getElementsByClassName('btn-cancel')[0].classList.add('hidden')
     },
-    cancelQuest () {
+    cancelQuest () { // cancels the quest form by refreshing each input
       this.toggleCashDropForm()
       this.$emit('routeStatus', true)
       for (let i = 0; this.refModels.length > i; i++) {
@@ -180,13 +186,12 @@ export default {
       this.$q.notify({ message: 'The quest has been canceled!', color: 'alert-color', position: 'bottom', timeout: 3000 })
       clearInterval(this.balanceWatcher)
     },
-    async signUtxos (bchAddress, privkey, contract, amount) {
+    async signUtxos (bchAddress, privkey, contract, amount) { // signs the transaction of each cashdrop of the created quest
       console.log('sign')
       signInputs(bchAddress, privkey, contract, amount)
     },
-    // Submits the quest form
-    onSubmitQuest (evt) {
-      const bchAddress = localStorage.getItem('bchAddress')
+    onSubmitQuest (evt) { // checks the validity of the data given in the form before proceeding in creating the quest
+      // const bchAddress = 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5'
       this.$refs.questForm.validate().then(success => {
         if (success) {
           const balanceLoader = this.$q.dialog({
@@ -200,6 +205,7 @@ export default {
           })
 
           const coordinates = []
+          console.log('Coordinates: ', this.questCoordinates)
           for (let i = 0; Object.keys(this.questCoordinates).length > i; i++) {
             coordinates.push((Object.values(this.questCoordinates)[i]).toFixed(8))
           }
@@ -218,13 +224,10 @@ export default {
             has_physical_presence: this.questPresence,
             amount: this.amount.toFixed(8),
             payment_address: 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5', /* bchAddress */
-            pubkey: '02c767c747b2923587841d56db9036ad9f480930f0307e325debb60abffc444d74' /* localStorage.getItem('pubkey') */
+            pubkey: localStorage.getItem('pubkey') /* localStorage.getItem('pubkey') */
           }
 
-          console.log('Form model values: ', questCreate)
-
           const overAllAmount = (Number(this.amount.toFixed(8)) + Number(this.feeBreakdown))
-          const questInfoForMap = [coordinates, this.cashDropFormModels.radius, this.cashDropFormModels.tier]
 
           this.$emit('routeStatus', false)
 
@@ -245,19 +248,8 @@ export default {
                 document.getElementById('nav-menu').classList.add('hidden')
                 document.getElementsByClassName('exploreMap')[0].classList.add('hidden')
 
-                this.$q.loading.show({
-                  spinner: QSpinnerFacebook,
-                  spinnerColor: 'spinner-color',
-                  spinnerSize: 140,
-                  backgroundColor: 'white',
-                  message: '<b>Creating of quest is in progress. <br/><span style="color: #0AC18E;">Hang on...</span>',
-                  messageColor: 'black'
-                })
-                const vm = this
-                this.signUtxos('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5').then(function (signedUtxos) {
-                  console.log('signedUtxos: ', signedUtxos)
-                  vm.createQuest(questInfoForMap, questCreate)
-                })
+                this.loading = true
+                this.createQuest(questCreate)
               }).onCancel(() => {
                 this.$emit('routeStatus', true)
               })
@@ -273,7 +265,7 @@ export default {
               }, 5000)
 
               const pollingBalance = () => {
-                server.bchjs.Electrumx.balance('bitcoincash:pp8skudq3x5hzw8ew7vzsw8tn4k8wxsqsv0lt0mf3g').then(res => {
+                server.bchjs.Electrumx.balance('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5').then(res => {
                   const sumSatoshis = res.balance.confirmed + res.balance.unconfirmed
                   const balance = (server.bchjs.BitcoinCash.toBitcoinCash(sumSatoshis)).toFixed(8)
                   console.log('Balance: ', balance)
@@ -287,20 +279,8 @@ export default {
                     }).onOk(() => {
                       this.$refs.bchAddress.$el.classList.add('hidden')
 
-                      this.$q.loading.show({
-                        spinner: QSpinnerFacebook,
-                        spinnerColor: 'spinner-color',
-                        spinnerSize: 140,
-                        backgroundColor: 'white',
-                        message: '<b>Creating of quest is in progress. <br/><span style="color: #0AC18E;">Hang on...</span>',
-                        messageColor: 'black'
-                      })
-
-                      const vm = this
-                      this.signUtxos(bchAddress).then(function (signedUtxos) {
-                        console.log('call sign')
-                        vm.createQuest(questInfoForMap, questCreate)
-                      })
+                      this.loading = true
+                      this.createQuest(questCreate)
                     }).onCancel(() => {
                       this.cancelQuest()
                     })
@@ -317,21 +297,17 @@ export default {
         }
       })
     },
-    // Create quest
-    createQuest (questInfoForMap, questCreate) {
-      console.log('form: ', questCreate)
-      console.log('map: ', questInfoForMap)
+    createQuest (questCreate) { // Create the quest
       this.$store.dispatch('cashdrop/createQuest', questCreate).then(response => {
         console.log('Response: ', response)
+
         for (let i = 0; this.refModels.length > i; i++) {
           this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
           this.$refs[this.refModels[i]].resetValidation()
         }
 
-        this.$store.commit('cashdrop/mutateForMapInfo', questInfoForMap)
-
         this.timer = setTimeout(() => {
-          this.$q.loading.hide()
+          this.loading = false
           this.timer = undefined
           this.$q.notify({
             message: 'Your quest has been successfully created!',
@@ -343,33 +319,22 @@ export default {
           document.getElementById('nav-menu').classList.remove('hidden')
           document.getElementsByClassName('exploreMap')[0].classList.remove('hidden')
         }, 1000)
+
+        // const signtX = {
+        //   signed_txn_hex: response.data.utxo[0].value,
+        //   quest_id: response.data.id
+        // }
+
         this.$emit('routeStatus', true)
+        this.signUtxos('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5', this.privkey, 'bitcoincash:qp3et5cla7jju6z2lfc5v9nr0r4q54edqqpylqnfvx', 1000)
+          .then(function (signedUtxos) {
+            // this.$store.dispatch('cashdrop/signedTransaction', signtX)
+          })
       }).catch(error => {
-        console.log('Error: ', error)
-        for (let i = 0; this.refModels.length > i; i++) {
-          this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
-          this.$refs[this.refModels[i]].resetValidation()
-        }
-
-        this.$store.commit('cashdrop/mutateForMapInfo', questInfoForMap)
-
-        this.timer = setTimeout(() => {
-          this.$q.loading.hide()
-          this.timer = undefined
-          this.$q.notify({
-            message: 'Your quest has been successfully created!',
-            color: 'notify-color',
-            position: 'center',
-            timeout: 2000
-          })
-          this.$refs.questList.classList.remove('hidden')
-          document.getElementById('nav-menu').classList.remove('hidden')
-          document.getElementsByClassName('exploreMap')[0].classList.remove('hidden')
-        }, 1000)
-        this.$emit('routeStatus', true)
+        console.log('Error in creating: ', error)
       })
     },
-    changeTier () {
+    changeTier () { // To emit the changes of tier in the form to the map
       let tierIcon = 'PurelyPeer-icon-black.png'
       let tier = 'inactive'
       this.cashDropFormModels.tier = 'Inactive'
@@ -395,7 +360,7 @@ export default {
       }
       this.$emit('changeQuestTier', tierObject)
     },
-    changeRadius () {
+    changeRadius () { // To emit the changes of radius in the form to the map
       let radius = 1500000
       this.cashDropFormModels.radius = radius
       if (this.radius.options.indexOf(this.radiusModel) === 0) {
@@ -413,7 +378,7 @@ export default {
       }
       this.$emit('changeQuestRadius', radius)
     },
-    toggleQuestList (e) {
+    toggleQuestList (e) { // toggles between full size and normal size of the quest list
       this.$refs.formCard.$el.classList.toggle('card-expander')
       this.questExpanderIcon = this.$refs.formCard.$el.classList.contains('card-expander') ? 'mdi-arrow-collapse-all' : 'mdi-arrow-expand-all'
       this.$refs.questCardHeader.$el.classList.toggle('card-header')
@@ -422,15 +387,13 @@ export default {
   },
   async created () {
     const bchAddress = 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5' /* localStorage.getItem('bchAddress') */
-    const privkey = await getPrivateKey(bchAddress, 0)
-    console.log('Sign utxos: ', this.signUtxos(
-      bchAddress,
-      privkey,
-      'bitcoincash:qp3et5cla7jju6z2lfc5v9nr0r4q54edqqpylqnfvx',
-      1000
-    ))
+    this.privkey = await getPrivateKey(bchAddress, 0)
 
-    console.log('user id: ', localStorage.getItem('user_id'))
+    Geolocation.getCurrentPosition().then(position => {
+      this.questCoordinates = [position.coords.latitude, position.coords.longitude]
+    }).catch(error => console.log('Unable to retreive your location: ', error))
+
+    // console.log('UTXO: ', await server.bchjs.Utxo.get(bchAddress))
   }
 }
 </script>

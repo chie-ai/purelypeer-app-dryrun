@@ -194,7 +194,6 @@ export default {
     },
     removePopUpinfo () {
       if (this.quests !== null) {
-        console.log('Info Window: ', this.quests[this.activeIndex].infoWinOpen)
         if (this.quests[this.activeIndex].infoWinOpen === true) {
           document.getElementsByClassName('leaflet-popup-close-button')[0].click()
         }

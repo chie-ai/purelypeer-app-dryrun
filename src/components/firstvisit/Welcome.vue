@@ -1,4 +1,5 @@
 <template>
+  <div>
     <q-carousel
         v-model="slide"
         transition-prev="slide-right"
@@ -105,13 +106,15 @@
           </div>
         </q-carousel-slide>
     </q-carousel>
-
+    <LogoLoading v-if="loading" />
+  </div>
 </template>
 
 <script>
+import LogoLoading from '../LogoLoading.vue'
 import createWallet from '../../utils/create_wallet.js'
 // import server from '../../utils/getAPIServer.js'
-import { QSpinnerFacebook } from 'quasar'
+// import { QSpinnerFacebook } from 'quasar'
 
 export default {
   data () {
@@ -119,21 +122,27 @@ export default {
       slide: 'welcome',
       lorem: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo.',
       routeTimer: null,
-      notifier: true
+      notifier: true,
+      loading: false
     }
+  },
+  components: {
+    LogoLoading
   },
   methods: {
     createWallet () {
       this.$refs.guide_carousel.$el.classList.add('hidden')
 
-      this.$q.loading.show({
-        spinner: QSpinnerFacebook,
-        spinnerColor: 'spinner-color',
-        spinnerSize: 140,
-        backgroundColor: 'white',
-        message: '<b>Creating of wallet is in progress.</b> <br/><strong style="color: #0AC18E;">Hang on...</strong>',
-        messageColor: 'black'
-      })
+      // this.$q.loading.show({
+      //   spinner: QSpinnerFacebook,
+      //   spinnerColor: 'spinner-color',
+      //   spinnerSize: 140,
+      //   backgroundColor: 'white',
+      //   message: '<b>Creating of wallet is in progress.</b> <br/><strong style="color: #0AC18E;">Hang on...</strong>',
+      //   messageColor: 'black'
+      // })
+
+      this.loading = true
 
       // Create a wallet
       createWallet().then(response => {
@@ -141,13 +150,7 @@ export default {
 
         this.$store.commit('wallet/mutateSeedPhrase', response.mnemonic)
 
-        // const addresses = [{ bch_address: response.bchAddress, slp_address: response.slpAddress }]
-        // this.$store.commit('wallet/mutateAddresses', addresses)
-
-        // const pkeyAndSeedhash = { seed_hash: response.seedHash, pubkey: response.publicKey }
-        // this.$store.commit('wallet/mutateKeys', pkeyAndSeedhash)
-
-        // Store wallet seed phrase, seed hash, pubkey and address to localstorage (will be used for importing wallet)
+        // Store wallet seed phrase, seed hash, pubkey and address in the localstorage (will be used for importing wallet)
         localStorage.setItem('seedPhrase', response.mnemonic)
         localStorage.setItem('seedHash', response.seedHash)
         localStorage.setItem('pubkey', response.publicKey)
@@ -163,17 +166,11 @@ export default {
         // Create user
         this.$store.dispatch('wallet/createUser', wallet)
         this.routeTimer = setTimeout(() => {
-          this.$q.loading.hide()
           this.routeTimer = 0
           this.$router.push({ path: 'seed-phrase' })
         }, 3000)
       }).catch(error => {
         console.log('Error in creating wallet: ', error)
-        this.routeTimer = setTimeout(() => {
-          this.$q.loading.hide()
-          this.routeTimer = 0
-          this.$router.push({ path: 'seed-phrase' })
-        }, 3000)
       })
     },
     readMore () {
