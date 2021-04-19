@@ -2,7 +2,7 @@
   <div class="row cashdrop-form animate-in-load">
     <CashDropMap :change-quest-radius="radius" :change-quest-tier="tier" v-on:passCoordinatesToForm="passCoordinatesToForm" />
     <CashDropForm v-on:changeQuestRadius="changeQuestRadius" v-on:changeQuestTier="changeQuestTier"
-    v-on:routeStatus="updateRouteStatus" :quest-coordinates="coordinates" />
+    v-on:routeStatus="updateRouteStatus" :quest-given-coordinates="coordinates" />
   </div>
 </template>
 

@@ -15,9 +15,23 @@ export function fetchQuestList () {
   })
 }
 
-export function createQuest (questCreate) {
+export function createQuest (context, questCreate) {
   return new Promise((resolve, reject) => {
     axios.post('https://staging.purelypeer.cash/api/quests/', questCreate)
+      .then(response => {
+        console.log('Success :', response)
+        resolve(response)
+      })
+      .catch(error => {
+        console.log('Error: ', error)
+        reject(error)
+      })
+  })
+}
+
+export function signedTransaction (context, transaction) {
+  return new Promise((resolve, reject) => {
+    axios.post('http://staging.purelypeer.cash/api/quests/sign_txn/', transaction)
       .then(response => {
         console.log('Success :', response)
         resolve(response)
