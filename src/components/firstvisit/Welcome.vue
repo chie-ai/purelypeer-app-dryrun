@@ -106,7 +106,7 @@
           </div>
         </q-carousel-slide>
     </q-carousel>
-    <LogoLoading v-if="loading" />
+    <LogoLoading v-if="loading" :animateLoader="loading" />
   </div>
 </template>
 
@@ -133,15 +133,6 @@ export default {
     createWallet () {
       this.$refs.guide_carousel.$el.classList.add('hidden')
 
-      // this.$q.loading.show({
-      //   spinner: QSpinnerFacebook,
-      //   spinnerColor: 'spinner-color',
-      //   spinnerSize: 140,
-      //   backgroundColor: 'white',
-      //   message: '<b>Creating of wallet is in progress.</b> <br/><strong style="color: #0AC18E;">Hang on...</strong>',
-      //   messageColor: 'black'
-      // })
-
       this.loading = true
 
       // Create a wallet
@@ -150,7 +141,7 @@ export default {
 
         this.$store.commit('wallet/mutateSeedPhrase', response.mnemonic)
 
-        // Store wallet seed phrase, seed hash, pubkey and address in the localstorage (will be used for importing wallet)
+        // Stores wallet seed phrase, seed hash, pubkey and address in the localstorage (will be used for importing wallet)
         localStorage.setItem('seedPhrase', response.mnemonic)
         localStorage.setItem('seedHash', response.seedHash)
         localStorage.setItem('pubkey', response.publicKey)

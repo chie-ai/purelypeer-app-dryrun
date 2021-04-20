@@ -72,7 +72,7 @@
     </div>
 
     <BCHAddress class="hidden" ref="bchAddress" v-on:cancelQuest="cancelQuest"/>
-    <LogoLoading v-if="loading" />
+    <LogoLoading v-if="loading" :animateLoader="loading" />
   </div>
 </template>
 
@@ -149,7 +149,6 @@ export default {
       this.changeTier()
     },
     cashDropCountModel (newBreakdown, oldBreakdown) {
-      // console.table('Cashdrop Count: ', this.cashDropCountModel)
       // Calculate the fee of settled cashdrops
       const T = 0.00002000, N = this.cashDropCountModel, OT = N * T
       this.feeBreakdown = OT.toFixed(8)
@@ -306,29 +305,37 @@ export default {
           this.$refs[this.refModels[i]].resetValidation()
         }
 
-        this.timer = setTimeout(() => {
-          this.loading = false
-          this.timer = undefined
-          this.$q.notify({
-            message: 'Your quest has been successfully created!',
-            color: 'notify-color',
-            position: 'center',
-            timeout: 2000
-          })
-          this.$refs.questList.classList.remove('hidden')
-          document.getElementById('nav-menu').classList.remove('hidden')
-          document.getElementsByClassName('exploreMap')[0].classList.remove('hidden')
-        }, 1000)
+        // this.timer = setTimeout(() => {
+        //   this.loading = false
+        //   this.timer = undefined
+        //   this.$q.notify({
+        //     message: 'Your quest has been successfully created!',
+        //     color: 'notify-color',
+        //     position: 'center',
+        //     timeout: 2000
+        //   })
+        //   this.$refs.questList.classList.remove('hidden')
+        //   document.getElementById('nav-menu').classList.remove('hidden')
+        //   document.getElementsByClassName('exploreMap')[0].classList.remove('hidden')
+        // }, 1000)
 
         // const signtX = {
         //   signed_txn_hex: response.data.utxo[0].value,
         //   quest_id: response.data.id
         // }
+        // const utxo = response.data.utxo[0].value
+
+        const amountFunding = server.bchjs.BitcoinCash.toSatoshi(response.data.amount)
+        const quest = response.data
+        quest.fee_break_down = this.feeBreakdown
 
         this.$emit('routeStatus', true)
-        this.signUtxos('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5', this.privkey, 'bitcoincash:qp3et5cla7jju6z2lfc5v9nr0r4q54edqqpylqnfvx', 1000)
+        const vm = this
+        this.signUtxos('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5', this.privkey, 'bitcoincash:qp3et5cla7jju6z2lfc5v9nr0r4q54edqqpylqnfvx', amountFunding)
           .then(function (signedUtxos) {
+            // console.log('TX_HEX: ', signedUtxos)
             // this.$store.dispatch('cashdrop/signedTransaction', signtX)
+            vm.$router.push({ path: 'confirmed-transaction', query: quest })
           })
       }).catch(error => {
         console.log('Error in creating: ', error)

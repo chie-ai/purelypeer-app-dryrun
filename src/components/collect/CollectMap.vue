@@ -2,9 +2,9 @@
   <q-layout>
     <q-page-container>
       <div id="explore-map" class="row">
-        <div class="zoom-controls q-mt-md">
-          <span class="q-mr-xs" @click="zoomScale++">&#x2B06;&#xFE0F;</span>
-          <span class="q-ml-xs" @click="zoomScale--">&#x2B07;&#xFE0F;</span>
+        <div class="example-custom-control q-mt-md zoom-controls">
+            <span class="q-mr-sm q-pa-sm bg-white" style="border-radius: 8px; box-shadow: 0px 1px 1px 1px #D9D9D9;" @click="zoomScale++">&#10133;</span>
+            <span class="q-pa-sm bg-white" style="border-radius: 8px; box-shadow: 0px 1px 1px 1px #D9D9D9;" @click="zoomScale--">&#10134;</span>
         </div>
         <l-map
           :zoom="zoomScale"
@@ -20,7 +20,7 @@
 
           <l-tile-layer :url="url" :attribution="attribution" />
 
-          <l-marker v-if="isLocationShared" :icon="icon" :lat-lng="markerLocation"></l-marker>
+          <l-marker :icon="icon" :lat-lng="markerLocation"></l-marker>
 
           <l-marker v-for="(mark, markerIndex) in quests" :key="markerIndex+'marker'"
           :lat-lng="mark.coors" @click="toggleWindowInfo(markerIndex)">
@@ -34,9 +34,9 @@
             </div>
           </l-popup>
           <l-icon
-                :icon-size="[mark.active === 'active' ? 30 : 50, mark.active === 'active' ? 40 : 50]"
-                :icon-anchor="[mark.active === 'active' ? 1 : 12, mark.active === 'active' ? 40 : 44]"
-                :icon-url="(mark.active === 'active' ? (mark.acceptance_tier === 'Upcoming' ? 'PurelyPeer-location-blue.png' : (mark.acceptance_tier === 'Direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')" />
+              :icon-size="[mark.active === true ? 30 : 50, mark.active === true ? 40 : 50]"
+              :icon-anchor="[mark.active === true ? 1 : 12, mark.active === true ? 40 : 44]"
+              :icon-url="(mark.active === true ? (mark.acceptance_tier === 'Upcoming' ? 'PurelyPeer-location-blue.png' : (mark.acceptance_tier === 'Direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')" />
           </l-marker>
 
           <l-marker :lat-lng="cashDropCoor.coors" v-for="(cashDropCoor, cashDropsIndex) in cashDropsCoordinates" :key="cashDropsIndex+'dropMarker'">
@@ -55,12 +55,12 @@
             :weight="1"
             :visible="pin.radiusVisibility"
             @click="toggleWindowInfo(index)" />
-        <!-- <l-control :position="'bottomleft'" class="purelypeer-watermark" >
-            PurelyPeer
-        </l-control> -->
         </l-map>
         <div class="adjust-map-height q-px-md">
-          <q-btn color="btn-map-resizer text-btn-color" class="btn-map" v-touch-pan.vertical.prevent.mouse="resizeMapHeight" size="sm" label="Drag to resize" />
+            <q-btn color="btn-map-resizer text-btn-color" rounded v-touch-pan.vertical.prevent.mouse="resizeMapHeight" size="sm" label="Pinch to resize" />
+        </div>
+        <div class="current-location">
+          <q-btn color="btn-map-resizer text-btn-color" rounded @click="currentLocation" size="sm" label="Current location" />
         </div>
       </div>
     </q-page-container>
@@ -115,8 +115,7 @@ export default {
       cashDropsCoordinates: null,
       startY: 0,
       counter: 0,
-      mapHeight: 0,
-      isLocationShared: false
+      mapHeight: 0
     }
   },
   props: ['moveToTheQuestCoordinates'],
@@ -130,42 +129,27 @@ export default {
     }
   },
   methods: {
+    currentLocation () {
+      this.center = this.markerLocation
+    },
+    zoomUpdate (scale) {
+      this.zoomScale = scale
+    },
     centerUpdate (center) {
-      this.markerLocation = center
+      this.center = center
     },
     readyMap () {
-    // this.$watchLocation({})
-      this.$getLocation({}).then(coordinates => {
-        const coors = latLng(coordinates.lat, coordinates.lng)
+      Geolocation.getCurrentPosition().then(position => {
+        const coors = latLng(
+          position.coords.latitude,
+          position.coords.longitude
+        )
+        console.log(coors)
         this.center = coors
         this.circle.center = coors
-        this.$q.sessionStorage.set('location-shared', true)
-        this.isLocationShared = true
+        this.markerLocation = coors
       }).catch(error => {
-        this.$q.dialog({
-          title: 'Alert',
-          message: 'To proceed to collect mode you must first enable your location. Do you wish to enable your location?',
-          persistent: true,
-          cancel: true
-        }).onOk(() => {
-          Geolocation.getCurrentPosition().then(position => {
-            const coors = latLng(
-              position.coords.latitude,
-              position.coords.longitude
-            )
-            this.center = coors
-            this.circle.center = coors
-            this.$q.sessionStorage.set('location-shared', true)
-            this.isLocationShared = true
-          }).catch(error => {
-            this.zoomScale = 1
-            console.log('Unable to retreive your location: ', error)
-          })
-        }).onCancel(() => {
-          this.$router.push({ path: 'explore' })
-        }).onDismiss(() => {
-          // console.log('I am triggered on both OK and Cancel')
-        })
+        this.zoomScale = 1
         console.log('Unable to retreive your location: ', error)
       })
     },
@@ -186,9 +170,10 @@ export default {
         this.quests[this.activeIndex].infoWinOpen = false
         this.quests[this.activeIndex].radiusVisibility = false
         this.cashDropsCoordinates = null
+        this.$refs['markerIndexer' + this.activeIndex][0].mapObject.closePopup()
       }
 
-      this.markerLocation = this.$refs.myPurelyPeerMap.mapObject.getCenter()
+      // this.markerLocation = this.$refs.myPurelyPeerMap.mapObject.getCenter()
     },
     resizeMapHeight ({ evt, ...info }) {
       const map = this.$refs.myPurelyPeerMap.$el
@@ -233,12 +218,13 @@ export default {
 }
 .zoom-controls {
   position: absolute;
-  left: calc(52vw - (100px / 2));
+  right: 10px;
+  bottom: 23px;
   z-index: 1000;
 }
 .zoom-controls span {
   cursor: pointer;
-  font-size: 28px;
+  font-size: 10px;
   z-index: 1000;
 }
 .q-layout--standard {
@@ -246,14 +232,20 @@ export default {
 }
 .adjust-map-height {
   position: absolute;
-  text-align: center;
+  padding: 0;
+  right: 80px;
   bottom: 18px;
-  width: 100%;
   z-index: 1000;
 }
+.current-location {
+    position: absolute;
+    left: 8px;
+    bottom: 18px;
+    z-index: 1000;
+}
 .bg-btn-map-resizer {
-  background-color: rgba(255, 255, 255, 0.4);
-  box-shadow: none !important;
+    background-color: rgba(255, 255, 255, 0.4);
+    box-shadow: none !important;
 }
 .text-btn-color {
   color: rgba(0, 0, 0, 0.7) !important;

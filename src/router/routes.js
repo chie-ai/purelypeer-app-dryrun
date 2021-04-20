@@ -48,6 +48,13 @@ const routes = [
       { path: '', component: () => import('pages/collect/Index.vue') }
     ]
   },
+  {
+    path: '/confirmed-transaction',
+    component: () => import('layouts/confirmedTxn/confirmedTransaction.vue'),
+    children: [
+      { path: '', component: () => import('pages/confirmedTxn/Index.vue') }
+    ]
+  },
 
   // Always leave this as last one,
   // but you can also remove it

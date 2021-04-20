@@ -138,6 +138,7 @@ export default {
     },
     toggleQuestList () {
       this.$refs.questListCard.$el.classList.toggle('card-expander')
+      this.$refs.questListCard.$el.classList.toggle('no-shadow')
       this.questExpanderIcon = this.$refs.questListCard.$el.classList.contains('card-expander') ? 'mdi-arrow-collapse-all' : 'mdi-arrow-expand-all'
       this.$refs.questMain.classList.toggle('quest-visible')
       this.$refs.questCardHeader.$el.classList.toggle('card-header')

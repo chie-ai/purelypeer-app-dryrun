@@ -273,10 +273,6 @@ export default {
 .q-layout--standard {
     min-height: 334px !important;
 }
-.resize-controller {
-    position: relative;
-    cursor: pointer;
-}
 .adjust-map-height {
     position: absolute;
     padding: 0;

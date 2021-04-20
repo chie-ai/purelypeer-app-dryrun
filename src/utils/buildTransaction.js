@@ -46,6 +46,8 @@ async function signInputs (address, wif, contract, amountPerCashDrop) {
 
   const tx = transactionBuilder.transaction.buildIncomplete()
   console.log('HEX: ', tx.toHex())
+
+  return tx.toHex()
 }
 
 export { getPrivateKey, signInputs }
