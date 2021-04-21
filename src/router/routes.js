@@ -18,10 +18,6 @@ const routes = [
     children: [
       {
         path: '', component: () => import('pages/explore/Index.vue')
-      },
-      {
-        path: '/bch-wallet-balance',
-        component: () => import('pages/explore/bchwallet.vue')
       }
     ]
   },
@@ -53,6 +49,13 @@ const routes = [
     component: () => import('layouts/confirmedTxn/confirmedTransaction.vue'),
     children: [
       { path: '', component: () => import('pages/confirmedTxn/Index.vue') }
+    ]
+  },
+  {
+    path: '/purelypeer-menu',
+    component: () => import('layouts/menu/PurelyPeerMenu.vue'),
+    children: [
+      { path: '', component: () => import('pages/menu/Index.vue') }
     ]
   },
 

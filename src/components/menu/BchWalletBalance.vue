@@ -1,6 +1,6 @@
 <template>
   <div id="bch-balance">
-    <div class="col-12 text-center q-py-sm">
+    <div class="col-12 text-center q-pt-lg">
       <div class="bch-menu-list">
         <ul>
           <li>
@@ -14,8 +14,8 @@
           <li><a href="#?">Send</a></li>
         </ul>
       </div>
-      <p class="bch-amount q-my-none q-mt-xs">{{ BCHBalance }} BCH</p>
-      <p class="bch-amount q-my-none">~ X.YZ fiat</p>
+      <p class="bch-amount q-my-sm q-mt-sm" style="color: #6C9E91; font-weight: bolder;"><span style="font-family: Monospace;">{{ BCHBalance }}</span> BCH</p>
+      <!-- <p class="bch-amount q-my-none">~ X.YZ fiat</p> -->
     </div>
   </div>
 </template>
@@ -32,12 +32,12 @@ export default {
   },
   computed: {
     BCHBalance () {
-      return bchjs.BitcoinCash.toBitcoinCash(Number(this.balance))
+      return bchjs.bchjs.BitcoinCash.toBitcoinCash(Number(this.balance))
     }
   },
   created () {
-    console.log('BCH Add: ', this.$store.state.wallet.wallet.addresses[0].bch)
-    checkBCHBalance(this.$store.state.wallet.wallet.addresses[0].bch).then(response => {
+    console.log('BCH Add: ', localStorage.getItem('bchAddress'))
+    checkBCHBalance(localStorage.getItem('bchAddress')).then(response => {
       console.log('Success: ', response)
       // this.balance = Number((response.balance.confirmed).toFixed(4)).toLocaleString(undefined, { minimumFractionDigits: 2 })
       this.balance = response.balance.confirmed
@@ -48,5 +48,5 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 </style>

@@ -168,11 +168,11 @@ table tbody.quest-table tr.quest-row {
   box-shadow: 0px 1px 1px 1px #D9D9D9;
 }
 #menu-list {
-  height: 450px;
+  // height: 450px;
   width: 100%;
-  background: #0AC18E;
-  box-shadow: inset 6px 3px 12px #09b283,
-              inset -6px -3px 12px #0bd099;
+  // background: #0AC18E;
+  // box-shadow: inset 6px 3px 12px #09b283,
+  //             inset -6px -3px 12px #0bd099;
 }
 h5 {
   font-family: PurelyPeer-Bold
@@ -189,12 +189,11 @@ h5 {
 
 // BCH Wallet
 #bch-balance {
-  // height: 114px;
+  height: 100px;
   width: 100%;
-  background: #0AC18E;
-  box-shadow: inset 6px 3px 12px #09b283,
-              inset -6px -1px 12px #0bd099;
-  margin-top: 60px;
+  // background: #0AC18E;
+  // box-shadow: inset 6px 3px 12px #09b283,
+  //             inset -6px -1px 12px #0bd099;
 }
 .bch-menu-list ul {
   display: block;
@@ -204,6 +203,7 @@ h5 {
   margin: 0;
   width: 100%;
   text-align: center;
+  
 }
 .bch-menu-list ul li {
   position: relative;
@@ -212,23 +212,21 @@ h5 {
 }
 .bch-menu-list ul li a {
   display: block;
-  color: #03392A;
+  color: #54796F;
   text-align: center;
   text-decoration: none;
-  padding: 4px 24px 0 24px;
+  padding: 4px 26px 2px 26px;
   font-weight: bolder;
+  font-size: 15px;
+  width: 100%;
 }
 .divider {
   position: absolute;
   height: 14px;
-  border-left: 2px solid #056047;
+  border-left: 2px solid #0AC18E;
   right: -.45px;
-  top: 8px;
+  top: 6px;
   z-index: 11;
-}
-p.bch-amount {
-  color: #03392A;
-  font-weight: bolder;
 }
 
 // Cash Drop

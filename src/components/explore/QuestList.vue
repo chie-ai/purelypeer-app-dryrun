@@ -16,8 +16,12 @@
           <q-card-section class="q-pt-none q-pb-xs">
             <div class="quest-main q-pb-xs" ref="questMain">
 
-              <div v-if="questListLoader" class="quest-list-spinner text-center" style="line-height: inherit; padding: 20%">
-                <span class="mdi mdi-loading mdi-spin mdi-48px" style="color: #0AC18E"></span>
+              <div v-if="questListLoader" class="text-center" style="line-height: inherit; padding: 30%">
+                <q-spinner
+                  color="purelypeer"
+                  size="3em"
+                  :thickness="2"
+                />
               </div>
 
               <div class="col-12 q-py-md q-mt-sm quest-list q-px-sm" v-for="(quest, questIndex) in quests" :key="questIndex"
@@ -155,6 +159,8 @@ export default {
       .catch(err => {
         console.log('Error: ', err)
       })
+
+    console.log('Pubkey: ', localStorage.getItem('pubkey'))
   }
 }
 </script>
@@ -193,5 +199,8 @@ p {
 }
 .card-ceparator {
   margin-top: 60px;
+}
+.text-purelypeer {
+  color: rgb(197, 206, 203)
 }
 </style>
