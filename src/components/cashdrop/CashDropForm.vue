@@ -325,18 +325,20 @@ export default {
         // }
         // const utxo = response.data.utxo[0].value
 
-        const amountFunding = server.bchjs.BitcoinCash.toSatoshi(response.data.amount)
-        const quest = response.data
-        quest.fee_break_down = this.feeBreakdown
+        // const amountFunding = server.bchjs.BitcoinCash.toSatoshi(response.data.amount)
+        // const quest = response.data
+        // quest.fee_break_down = this.feeBreakdown
+
+        this.$router.push({ path: 'confirmed-transaction', query: response.data })
 
         this.$emit('routeStatus', true)
-        const vm = this
-        this.signUtxos('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5', this.privkey, 'bitcoincash:qp3et5cla7jju6z2lfc5v9nr0r4q54edqqpylqnfvx', amountFunding)
-          .then(function (signedUtxos) {
-            // console.log('TX_HEX: ', signedUtxos)
-            // this.$store.dispatch('cashdrop/signedTransaction', signtX)
-            vm.$router.push({ path: 'confirmed-transaction', query: quest })
-          })
+        // const vm = this
+        // this.signUtxos('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5', this.privkey, 'bitcoincash:qp3et5cla7jju6z2lfc5v9nr0r4q54edqqpylqnfvx', amountFunding)
+        //   .then(function (signedUtxos) {
+        //     // console.log('TX_HEX: ', signedUtxos)
+        //     // this.$store.dispatch('cashdrop/signedTransaction', signtX)
+        //     vm.$router.push({ path: 'confirmed-transaction', query: quest })
+        //   })
       }).catch(error => {
         console.log('Error in creating: ', error)
       })

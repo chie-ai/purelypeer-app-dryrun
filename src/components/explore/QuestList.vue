@@ -2,7 +2,7 @@
   <div id="quest-list">
     <div class="col-12 quest-container q-mt-none q-mb-none q-pt-lg q-pt-xs">
 
-      <div class="q-px-md">
+      <div class="q-px-md q-mb-md">
         <q-card class="my-card" ref="questListCard">
           <q-card-section ref="questCardHeader">
             <div class="text-h6 quest-caption">
@@ -13,14 +13,14 @@
 
           <q-separator ref="cardSeparator"/>
 
-          <q-card-section class="q-pt-none q-pb-xs">
+          <q-card-section class="q-pt-none q-pb-xs shadow-4" style="height: 75%">
             <div class="quest-main q-pb-xs" ref="questMain">
 
-              <div v-if="questListLoader" class="text-center" style="line-height: inherit; padding-top: 28%">
+              <div v-if="questListLoader" class="text-center" style="line-height: inherit; padding-top: 30%">
                 <q-spinner
                   color="purelypeer"
                   size="3em"
-                  :thickness="2"
+                  :thickness="3"
                 />
               </div>
 
@@ -49,32 +49,35 @@
               </div>
             </div>
           </q-card-section>
+          <q-card-section ref="questCardFooter" style="background: white !important">
+            <q-separator ref="cardSeparatorBottom"  style="position: absolute; display: block; left: 0pt; width: 100%;"/>
+            <div id="ratio-option" class="q-mb-sm q-mt-md">
+              <ul>
+                <li class="text-left"><a href="#?" class="fs-2" @click="changeTier"><span v-html="purelyPeertier.options[purelyPeertier.number]"></span></a></li>
+                <li class="text-center"><a href="#?" class="fs-2" @click="changePhysicalPresence">&#129521;<span v-html="phyicalPresence.options[phyicalPresence.number]"></span></a></li>
+                <li class="text-right"><a href="#?" class="fs-2" @click="changeQuestRadius"><span v-html="questRadius.options[questRadius.number]"></span></a></li>
+              </ul>
+            </div>
+            <div>
+              <div class="row justify-center">
+                <div class="col-12 q-mb-sm">
+                  <q-input :dense="true" bg-color="input-bg" outlined color="input-color" label="Search. . .">
+                        <template v-slot:append>
+                          <q-icon name="search" />
+                        </template>
+                    </q-input>
+                </div>
+              </div>
+            </div>
+          </q-card-section>
         </q-card>
-      </div>
-      <div id="ratio-option" class="q-mt-lg q-px-md">
-        <ul>
-          <li><a href="#?" class="fs-2" @click="changeTier"><span v-html="purelyPeertier.options[purelyPeertier.number]"></span></a></li>
-          <li><a href="#?" class="fs-2" @click="changePhysicalPresence">&#129521;<span v-html="phyicalPresence.options[phyicalPresence.number]"></span></a></li>
-          <li><a href="#?" class="fs-2" @click="changeQuestRadius"><span v-html="questRadius.options[questRadius.number]"></span></a></li>
-        </ul>
-      </div>
-      <div class="q-mx-md">
-        <div class="row justify-center">
-          <div class="col-12 q-mb-md">
-            <q-input :dense="true" color="grey-5" bg-color="white" outlined label="Search. . .">
-                  <template v-slot:append>
-                    <q-icon name="search" />
-                  </template>
-              </q-input>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import cashDropCovenant from '../../utils/p2sh.js'
+<script lang="ts">
+// import Cashscript from '../../utils/p2sh.ts'
 
 export default {
   data () {
@@ -148,6 +151,7 @@ export default {
       this.$refs.questMain.classList.toggle('quest-visible')
       this.$refs.questCardHeader.$el.classList.toggle('card-header')
       this.$refs.cardSeparator.$el.classList.toggle('card-ceparator')
+      this.$refs.questCardFooter.$el.classList.toggle('card-footer')
     }
   },
   async mounted () {
@@ -160,7 +164,10 @@ export default {
       .catch(err => {
         console.log('Error: ', err)
       })
-    console.log('Cashdrop: ', cashDropCovenant())
+
+    // console.log('Cashscrpt: ', Cashscript().then(response => {
+    //   // console.log('Cashscript: ', response)
+    // }))
     console.log('Pubkey: ', localStorage.getItem('pubkey'))
   }
 }
@@ -204,5 +211,16 @@ p {
 }
 .text-purelypeer {
   color: rgb(197, 206, 203)
+}
+.card-footer {
+  position: absolute;
+  bottom: 0pt;
+  width: 100%;
+}
+.bg-input-bg {
+  background: #B5ECDD !important;
+}
+.text-input-color {
+  color: #0AC18E;
 }
 </style>
