@@ -136,7 +136,8 @@ table tbody.quest-table tr.quest-row {
   // border-bottom: 1px solid #B2B2B2;
 }
 .quest-visible {
-  height: 100%;
+  height: 100% !important;
+  bottom: 0pt;
   overflow: visible !important;
 }
 #ratio-option ul {
@@ -223,7 +224,7 @@ h5 {
 .divider {
   position: absolute;
   height: 14px;
-  border-left: 2px solid #0AC18E;
+  border-left: 2px solid #54796F;
   right: -.45px;
   top: 6px;
   z-index: 11;

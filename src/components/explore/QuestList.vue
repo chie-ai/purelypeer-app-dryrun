@@ -16,7 +16,7 @@
           <q-card-section class="q-pt-none q-pb-xs">
             <div class="quest-main q-pb-xs" ref="questMain">
 
-              <div v-if="questListLoader" class="text-center" style="line-height: inherit; padding: 30%">
+              <div v-if="questListLoader" class="text-center" style="line-height: inherit; padding-top: 28%">
                 <q-spinner
                   color="purelypeer"
                   size="3em"
@@ -74,6 +74,7 @@
 </template>
 
 <script>
+import cashDropCovenant from '../../utils/p2sh.js'
 
 export default {
   data () {
@@ -159,7 +160,7 @@ export default {
       .catch(err => {
         console.log('Error: ', err)
       })
-
+    console.log('Cashdrop: ', cashDropCovenant())
     console.log('Pubkey: ', localStorage.getItem('pubkey'))
   }
 }
@@ -184,6 +185,7 @@ p {
   width: 100%;
   top: 0pt;
   left: 0pt;
+  bottom: 0pt;
   z-index: 3000;
   border-radius: 0;
 }

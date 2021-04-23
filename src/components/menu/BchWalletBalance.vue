@@ -4,17 +4,17 @@
       <div class="bch-menu-list">
         <ul>
           <li>
-            <a href="#?">Receive</a>
+            <a href="#?"><strong>Receive</strong></a>
             <div class="divider"></div>
           </li>
           <li>
-            <a href="#?">Balance</a>
+            <a href="#?" class="active"><strong>Balance</strong></a>
             <div class="divider"></div>
           </li>
-          <li><a href="#?">Send</a></li>
+          <li><a href="#?"><strong>Send</strong></a></li>
         </ul>
       </div>
-      <p class="bch-amount q-my-sm q-mt-sm" style="color: #6C9E91; font-weight: bolder;"><span style="font-family: Monospace;">{{ BCHBalance }}</span> BCH</p>
+      <p class="bch-amount q-my-sm q-mt-sm bch-balance"><span style="font-family: Monospace;">{{ BCHBalance }}</span> BCH</p>
       <!-- <p class="bch-amount q-my-none">~ X.YZ fiat</p> -->
     </div>
   </div>
@@ -49,4 +49,12 @@ export default {
 </script>
 
 <style>
+.active {
+  color: #0AC18E !important;
+}
+.bch-balance {
+  color: #6C9E91;
+  font-weight: bolder;
+  font-size: 14px;
+}
 </style>
