@@ -76,8 +76,9 @@
   </div>
 </template>
 
-<script lang="ts">
-// import Cashscript from '../../utils/p2sh.ts'
+<script>
+// import Cashscript from '../../utils/p2sh.js'
+import server from '../../utils/getAPIServer.js'
 
 export default {
   data () {
@@ -165,10 +166,14 @@ export default {
         console.log('Error: ', err)
       })
 
+    const txs = await server.bchjs.Electrumx.transactions('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5')
+    const sortedTxs = await server.bchjs.Electrumx.sortAllTxs(txs.transactions, 'ASCENDING')
+    const txHash = await server.bchjs.Electrumx.txData(sortedTxs[0].tx_hash)
+    console.log('Block height: ', txHash)
     // console.log('Cashscrpt: ', Cashscript().then(response => {
     //   // console.log('Cashscript: ', response)
     // }))
-    console.log('Pubkey: ', localStorage.getItem('pubkey'))
+    console.log('Pubkey: ', localStorage.getItem('bchAddress'))
   }
 }
 </script>

@@ -110,7 +110,7 @@ export default {
         color: '#0AC18E',
         fillColor: 'transparent'
       },
-      quests: null,
+      quests: undefined,
       activeIndex: 0,
       cashDropsCoordinates: null,
       startY: 0,
@@ -163,7 +163,7 @@ export default {
       this.activeIndex = infoIndex
     },
     removePopUpinfo () {
-      if (this.quests !== null) {
+      if (this.quests !== undefined) {
         if (this.quests[this.activeIndex].infoWinOpen === true) {
           document.getElementsByClassName('leaflet-popup-close-button')[0].click()
         }

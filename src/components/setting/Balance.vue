@@ -1,14 +1,22 @@
 <template>
   <div id="setting">
-    <div class="col-12">
-      <h5 class="text-white text-center setting-caption q-mt-md q-mb-none">Setting</h5>
-
-      <p class="mnemonic text-left q-px-md q-mb-none q-mt-md"><strong>Mnemonic:</strong></p>
-      <div class="row justify-evenly q-pa-md text-center q-gutter-md">
-        <q-badge color="teal" v-for="(seed, index) in seedPhrase" class="text-center" :key="index">
-          {{ seed }}
-        </q-badge>
-      </div>
+    <div class="q-px-md q-mt-lg">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6 quest-caption">
+            Setting
+          </div>
+        </q-card-section>
+        <q-separator />
+        <q-card-section>
+          <p class="mnemonic text-left q-mb-none q-mt-md"><strong>Mnemonic:</strong></p>
+          <div class="row justify-between q-py-md q-gutter-sm">
+            <div class="seed__phrase text-center text-white q-py-xs q-px-md shadow-2" v-for="(seed, index) in seedPhrase" :key="index">
+              {{ seed }}
+            </div>
+          </div>
+        </q-card-section>
+      </q-card>
 
     </div>
   </div>
@@ -30,7 +38,6 @@ export default {
 
 <style scoped>
 .setting-caption {
-  margin-top: 90px;
   color: #0AC18E !important;
 }
 .mnemonic {
@@ -38,5 +45,9 @@ export default {
 }
 .bg-notify-purelypeer {
   background-color: #0AC18E;
+}
+.seed__phrase {
+  border-radius: 10px;
+  background: #0AC18E;
 }
 </style>

@@ -46,13 +46,6 @@
         </q-item>
 
         <q-item clickable v-ripple>
-          <q-item-section class="text-left"><strong>Defaults</strong></q-item-section>
-          <q-item-section avatar>
-            <span style="font-size: 18px">&#9881;</span>
-          </q-item-section>
-        </q-item>
-
-        <q-item clickable v-ripple>
           <q-item-section class="text-left"><strong>About</strong></q-item-section>
           <q-item-section avatar>
             <span style="font-size: 18px">&#x2139;&#xFE0F;</span>

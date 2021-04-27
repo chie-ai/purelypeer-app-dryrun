@@ -12,7 +12,7 @@
 
           <q-separator ref="cardSeparator"/>
 
-          <q-card-section class="q-pt-sm">
+          <q-card-section class="q-pt-sm no-shadow">
             <div>
               <div class="row q-mb-md">
                 <div class="col-12 q-pt-md">
@@ -32,22 +32,8 @@
                     <q-select ref="presenceModel" bg-color="input-bg" filled color="input-color" :dense="true" v-model="presenceModel"
                       :options="presence.options" label="Physical Presence"
                       lazy-rules :rules="[val => !!val || 'Physical presence is required']" />
-                      <q-badge class="slider-badge text-caption">
-                        <b>Number of cashdrops : {{ cashDropCountModel }}</b>
-                      </q-badge>
-                    <q-slider class="q-mt-none q-mb-sm amount-range-slider"
-                        :value="2"
-                        v-model="cashDropCountModel"
-                        :min="2"
-                        :max="100"
-                        :step="1"
-                      label/>
-                    <q-input ref="amount" bg-color="input-bg" filled color="input-color" :dense="true" outlined label="Amount for the cashdrops" type="text"
-                    v-model="amount2" mask="#.########" fill-mask="0.00000000"
-                    lazy-rules :rules="[val => val > 0.00000000 || 'Amount field is required to be set']"
-                    input-class="text-right" />
                     <q-badge class="slider-badge text-caption">
-                      <b>Set amount for cashdrops</b>
+                      <b>Quest amount value</b>
                     </q-badge>
                     <q-slider class="q-mt-none q-mb-none amount-range-slider"
                       :value="amount"
@@ -58,9 +44,35 @@
                       label
                       :label-value="amount"
                     />
+                    <q-input ref="amount" bg-color="input-bg" filled color="input-color" :dense="true" outlined label="Amount for the cashdrops" type="text"
+                    v-model="amount2" mask="#.########" fill-mask="0.00000000"
+                    lazy-rules :rules="[val => val > 0.00000000 || 'Amount field is required to be set']"
+                    input-class="text-right" />
+                      <q-badge class="slider-badge text-caption">
+                        <b>Number of cashdrops : {{ cashDropCountModel }}</b>
+                      </q-badge>
+                    <q-slider class="q-mt-none q-mb-sm amount-range-slider"
+                        :value="2"
+                        v-model="cashDropCountModel"
+                        :min="2"
+                        :max="100"
+                        :step="1"
+                      label/>
                     <q-input bg-color="input-bg" filled color="input-color" :dense="true" outlined
                           v-model="feeBreakdown" mask="#.########" fill-mask="0.00000000" label="Fee Breakdown"
-                          input-class="text-right" readonly />
+                          input-class="text-right" class="q-mb-lg" readonly />
+
+                    <q-input ref="password" bg-color="input-bg" filled color="input-color" :type="isPwd ? 'password' : 'text'" :dense="true" bottom-slots label="Password"
+                    lazy-rules :rules="[val => !!val || 'Password is required']" v-model="password" >
+
+                      <template v-slot:append>
+                        <q-icon
+                          :name="isPwd ? 'visibility' : 'visibility_off'"
+                          class="cursor-pointer"
+                          @click="isPwd = !isPwd"
+                        />
+                      </template>
+                    </q-input>
                     <q-btn :label="'Cash Drop \uD83D\uDCA7'" type="submit" class="full-width q-mt-md quest-btn"/>
                   </q-form>
                 </div>
@@ -129,7 +141,9 @@ export default {
       price: null,
       questCoordinates: null,
       loading: false,
-      privKey: null
+      privKey: null,
+      password: null,
+      isPwd: true
     }
   },
   components: {
@@ -219,6 +233,7 @@ export default {
             acceptance_tier: this.cashDropFormModels.tier,
             coors: coordinates,
             radius: this.cashDropFormModels.radius,
+            claim_passcode: this.password,
             total_cashdrops: this.cashDropCountModel,
             has_physical_presence: this.questPresence,
             amount: this.amount.toFixed(8),
@@ -226,11 +241,12 @@ export default {
             pubkey: localStorage.getItem('pubkey') /* localStorage.getItem('pubkey') */
           }
 
-          const overAllAmount = (Number(this.amount.toFixed(8)) + Number(this.feeBreakdown))
+          // const overAllAmount = (Number(this.amount.toFixed(8)) + Number(this.feeBreakdown))
+          const overAllAmount = this.amount.toFixed(8)
 
           this.$emit('routeStatus', false)
 
-          // Check the BCH Address if has a balance before proceeding to creation of quest
+          // Check the BCH Address balance if sufficient before proceeding to creation of quest
           server.bchjs.Electrumx.balance('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5').then(res => { /* bchAddress */
             const sumSatoshis = res.balance.confirmed + res.balance.unconfirmed
             const balance = (server.bchjs.BitcoinCash.toBitcoinCash(sumSatoshis)).toFixed(8)
