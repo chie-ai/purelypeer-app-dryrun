@@ -71,12 +71,10 @@ body #q-app {
 
 // App Logo
 #logo {
-    min-width: 60px !important;
-    max-width: 60px !important;
-    max-height: 60px;
+  min-width: 60px !important;
+  max-width: 60px !important;
+  max-height: 60px;
   background: #0AC18E;
-  // box-shadow: inset 6px 6px 12px #09b384,
-  //             inset -6px -6px 12px #0bcf98;
 }
 
 // Explore mode
@@ -84,7 +82,6 @@ body #q-app {
   position: relative !important;
   margin-top: 60px;
   width: 100%;
-  // overflow: auto;
   // box-shadow: inset 6px 6px 12px #b3d5e8,
   //             inset -6px -6px 12px #cdf5ff;
 }
@@ -122,7 +119,8 @@ p, div > span {
 .quest-list {
   background: #B5ECDD;
   border-radius: 14px;
-  border: 2px solid #84C2B1;
+  border: 2px solid #0AC18E;
+  // border: 2px solid #84C2B1;
 }
 // table tbody.quest-table tr.quest-row {
 //   margin: 0px !important;
@@ -131,15 +129,8 @@ p, div > span {
 .quest-main {
   height: 200px;
   overflow: auto;
-  margin-bottom: 10px !important;
   // border-top: 1px solid #B2B2B2;
   // border-bottom: 1px solid #B2B2B2;
-}
-.quest-visible {
-  height: inherit !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
 }
 #ratio-option ul {
   display: inline-block;
@@ -162,8 +153,7 @@ p, div > span {
   line-height: 56px;
   text-align: center;
   background: #B5ECDD;
-  border: 1px solid #9DD0C2;
-  // border-width: 2px 2px 2px 2px !important;
+  border: 2px solid #0AC18E;
   text-decoration: none;
   border-radius: 10px;
   width: 90% !important;

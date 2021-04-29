@@ -12,7 +12,7 @@
 
           <q-separator ref="cardSeparator"/>
 
-          <q-card-section class="q-pt-sm no-shadow">
+          <q-card-section class="q-pt-sm">
             <div>
               <div class="row q-mb-md">
                 <div class="col-12 q-pt-md">
@@ -33,7 +33,7 @@
                       :options="presence.options" label="Physical Presence"
                       lazy-rules :rules="[val => !!val || 'Physical presence is required']" />
                     <q-badge class="slider-badge text-caption">
-                      <b>Quest amount value</b>
+                      <b>Quest amount</b>
                     </q-badge>
                     <q-slider class="q-mt-none q-mb-none amount-range-slider"
                       :value="amount"
@@ -62,12 +62,12 @@
                           v-model="feeBreakdown" mask="#.########" fill-mask="0.00000000" label="Fee Breakdown"
                           input-class="text-right" class="q-mb-lg" readonly />
 
-                    <q-input ref="password" bg-color="input-bg" filled color="input-color" :type="isPwd ? 'password' : 'text'" :dense="true" bottom-slots label="Password"
+                    <q-input ref="password" bg-color="input-bg" filled color="input-color" :type="isPwd ? 'password' : 'text'" :dense="true" label="Password"
                     lazy-rules :rules="[val => !!val || 'Password is required']" v-model="password" >
 
                       <template v-slot:append>
                         <q-icon
-                          :name="isPwd ? 'visibility' : 'visibility_off'"
+                          :name="isPwd ? 'visibility_off' : 'visibility'"
                           class="cursor-pointer"
                           @click="isPwd = !isPwd"
                         />
@@ -318,6 +318,7 @@ export default {
 
         for (let i = 0; this.refModels.length > i; i++) {
           this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
+          this[this.refModels[i]] = this.refModels[i] === 'radiusModel' ? '15 min \uD83D\uDD7A\u267F\uD83D\uDC83' : null
           this.$refs[this.refModels[i]].resetValidation()
         }
 
@@ -404,8 +405,10 @@ export default {
       this.$emit('changeQuestRadius', radius)
     },
     toggleQuestList (e) { // toggles between full size and normal size of the quest list
-      this.$refs.formCard.$el.classList.toggle('card-expander')
-      this.questExpanderIcon = this.$refs.formCard.$el.classList.contains('card-expander') ? 'mdi-arrow-collapse-all' : 'mdi-arrow-expand-all'
+      const formCard = this.$refs.formCard.$el.classList
+      formCard.toggle('card-expander')
+      formCard.toggle('no-shadow')
+      this.questExpanderIcon = formCard.contains('card-expander') ? 'mdi-arrow-collapse-all' : 'mdi-arrow-expand-all'
       this.$refs.questCardHeader.$el.classList.toggle('card-header')
       this.$refs.cardSeparator.$el.classList.toggle('card-ceparator')
     }
@@ -418,7 +421,48 @@ export default {
       this.questCoordinates = [position.coords.latitude, position.coords.longitude]
     }).catch(error => console.log('Unable to retreive your location: ', error))
 
+    const utxo = await server.bchjs.Utxo.get(bchAddress)
+    const totalBal = utxo[0].bchUtxos[0].value + utxo[0].bchUtxos[1].value
+
+    console.log('Bal: ', totalBal)
+
+    const rootSeed = await server.bchjs.Mnemonic.toSeed(localStorage.getItem('seedPhrase'))
+
+    // create HDNode from root seed
+    const hdNode = server.bchjs.HDNode.fromSeed(rootSeed)
+    const keyPair = server.bchjs.HDNode.toKeyPair(hdNode)
+    const redeemScript = null
+    const byteCount = server.bchjs.BitcoinCash.getByteCount({ P2PKH: 1 }, { P2PKH: 1 })
+    const amount = utxo[0].bchUtxos[1].value - byteCount
+
+    const transactionBuilder = new server.bchjs.TransactionBuilder()
+
+    console.log('tx hash: ', utxo[0].bchUtxos[0].tx_hash)
+
+    // transactionBuilder.addInput(utxo[0].bchUtxos[1].tx_hash, utxo[0].bchUtxos[1].tx_pos)
+    transactionBuilder.addOutput(localStorage.getItem('bchAddress'), amount)
+    // transactionBuilder.sign(0, keyPair, redeemScript, transactionBuilder.hashTypes.SIGHASH_ALL, totalBal)
+
+    const mapUtxo = utxo[0].bchUtxos
+    mapUtxo.map(function (utxo, index) {
+      console.log('utxos: ', utxo)
+
+      transactionBuilder.addInput(
+        utxo.tx_hash,
+        utxo.tx_pos
+      )
+      const sighash = transactionBuilder.hashTypes.SIGHASH_SINGLE | transactionBuilder.hashTypes.SIGHASH_ANYONECANPAY
+      transactionBuilder.sign(index, keyPair, redeemScript, sighash, utxo.value)
+    })
+
+    const tx = transactionBuilder.transaction.buildIncomplete()
+
+    console.log('transaction: ', tx)
+
+    // this.signUtxos(addr, this.privkey, addr, amountFunding)
+
     // console.log('UTXO: ', await server.bchjs.Utxo.get(bchAddress))
+    console.log('Balance: ', await server.bchjs.Electrumx.balance(localStorage.getItem('bchAddress')))
   }
 }
 </script>

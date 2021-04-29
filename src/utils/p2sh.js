@@ -1,9 +1,7 @@
 // import path from 'path'
-import { CashCompiler } from 'cashscript'
+import { compileString } from 'cashscript'
 
-// const sample = async function run () {
-//   console.log('Path: ', path)
-//   console.log('CashCompiler: ', CashCompiler)
-// }
-
-export default { CashCompiler }
+export default async function () {
+  // console.log('Path: ', path)
+  console.log('CashCompiler: ', await compileString)
+}

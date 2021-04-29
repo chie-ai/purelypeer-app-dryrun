@@ -13,14 +13,15 @@
 
           <q-separator ref="cardSeparator"/>
 
-          <q-card-section class="q-pt-none q-pb-xs shadow-4" style="height: 75%">
-            <div class="quest-main q-pb-xs" ref="questMain">
+          <q-card-section class="q-pt-none q-mb-none q-pb-none shadow-4" ref="cardQuestList">
+            <div class="quest-main q-pb-sm" ref="questMain">
 
-              <div v-if="questListLoader" class="text-center" style="line-height: inherit; padding-top: 30%">
+              <div v-if="questListLoader" class="text-center" ref="questListLoader" style="height: 200px; line-height: 200px;">
                 <q-spinner
                   color="purelypeer"
                   size="3em"
                   :thickness="3"
+                  style="vertical-align: middle"
                 />
               </div>
 
@@ -49,8 +50,8 @@
               </div>
             </div>
           </q-card-section>
-          <q-card-section ref="questCardFooter" style="background: white !important">
-            <q-separator ref="cardSeparatorBottom"  style="position: absolute; display: block; left: 0pt; width: 100%;"/>
+          <q-card-section class="q-pt-xs q-mt-none shadow-up-2" ref="questCardFooter" style="background: white !important">
+            <q-separator ref="cardSeparatorBottom" class="card-bottom-separator"/>
             <div id="ratio-option" class="q-mb-sm q-mt-md">
               <ul>
                 <li class="text-left"><a href="#?" class="fs-2" @click="changeTier"><span v-html="purelyPeertier.options[purelyPeertier.number]"></span></a></li>
@@ -77,8 +78,8 @@
 </template>
 
 <script>
-// import Cashscript from '../../utils/p2sh.js'
-import server from '../../utils/getAPIServer.js'
+// import CompileCovenant from '../../utils/p2sh.js'
+// import server from '../../utils/getAPIServer.js'
 
 export default {
   data () {
@@ -146,33 +147,39 @@ export default {
       this.questRadius.number = this.questRadius.number === 5 ? 0 : this.questRadius.number
     },
     toggleQuestList () {
+      const expanded = this.$refs.questListCard.$el.classList.contains('card-expander')
       this.$refs.questListCard.$el.classList.toggle('card-expander')
       this.$refs.questListCard.$el.classList.toggle('no-shadow')
-      this.questExpanderIcon = this.$refs.questListCard.$el.classList.contains('card-expander') ? 'mdi-arrow-collapse-all' : 'mdi-arrow-expand-all'
-      this.$refs.questMain.classList.toggle('quest-visible')
+      this.questExpanderIcon = expanded ? 'mdi-arrow-collapse-all' : 'mdi-arrow-expand-all'
       this.$refs.questCardHeader.$el.classList.toggle('card-header')
       this.$refs.cardSeparator.$el.classList.toggle('card-ceparator')
       this.$refs.questCardFooter.$el.classList.toggle('card-footer')
+      const screenHeight = screen.height
+      const newHeight = screenHeight - 61
+      if (!expanded) {
+        this.$refs.questMain.setAttribute('style', 'height: ' + (newHeight - 156) + 'px !important')
+        if (this.questListLoader) {
+          this.$refs.questListLoader.setAttribute('style', 'height: ' + (newHeight - 150) + 'px !important; line-height:' + (newHeight - 150) + 'px !important;')
+        }
+      } else {
+        this.$refs.questMain.setAttribute('style', 'height: 200px !important')
+        if (this.questListLoader) {
+          this.$refs.questListLoader.setAttribute('style', 'height: 200px !important; line-height: 200px !important;')
+        }
+      }
     }
   },
   async mounted () {
     await this.$store.dispatch('cashdrop/fetchQuestList')
       .then(res => {
-        this.quests = res.data.results.map(quest => ({ ...quest, btnLabel: 'Show more info' }))
-        this.questListLoader = false
+        this.quests = res.data.results
+        this.questListLoader = !(this.quests.length > 0)
         console.log('Quest: ', this.quests)
       })
       .catch(err => {
         console.log('Error: ', err)
       })
-
-    const txs = await server.bchjs.Electrumx.transactions('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5')
-    const sortedTxs = await server.bchjs.Electrumx.sortAllTxs(txs.transactions, 'ASCENDING')
-    const txHash = await server.bchjs.Electrumx.txData(sortedTxs[0].tx_hash)
-    console.log('Block height: ', txHash)
-    // console.log('Cashscrpt: ', Cashscript().then(response => {
-    //   // console.log('Cashscript: ', response)
-    // }))
+    // console.log('Cashscrpt: ', CompileCovenant)
     console.log('Pubkey: ', localStorage.getItem('bchAddress'))
   }
 }
@@ -202,11 +209,11 @@ p {
   border-radius: 0;
 }
 .card-header {
-  position: fixed;
+  position: absolute;
   top: 0pt;
   height: 61px;
   width: 100%;
-  background: white;
+  background: transparent;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   box-shadow: none;
   z-index: 3000;
@@ -215,7 +222,7 @@ p {
   margin-top: 60px;
 }
 .text-purelypeer {
-  color: rgb(197, 206, 203)
+  color: rgb(197, 206, 203) !important;
 }
 .card-footer {
   position: absolute;
@@ -227,5 +234,12 @@ p {
 }
 .text-input-color {
   color: #0AC18E;
+}
+.card-bottom-separator {
+  position: absolute;
+  display: block;
+  left: 0pt;
+  top: 0pt;
+  width: 100%;
 }
 </style>
