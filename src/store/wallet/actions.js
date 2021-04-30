@@ -25,8 +25,8 @@ export function createWallet ({ commit }, wallet) {
   return new Promise((resolve, reject) => {
     axios.post('https://staging.purelypeer.cash/api/wallet/', wallet)
       .then(response => {
-        console.log('BCH: ', response.data.addresses[0].bch_address)
-        console.log('SLP: ', response.data.addresses[0].slp_address)
+        // console.log('BCH: ', response.data.addresses[0].bch_address)
+        // console.log('SLP: ', response.data.addresses[0].slp_address)
         // commit('mutateAddresses', response.data.addresses)
         commit('mutateKeys', response.data)
 

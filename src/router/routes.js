@@ -58,6 +58,10 @@ const routes = [
       { path: '', component: () => import('pages/menu/Index.vue') }
     ]
   },
+  {
+    path: '/qrcode',
+    component: () => import('layouts/qrcode.vue')
+  },
 
   // Always leave this as last one,
   // but you can also remove it

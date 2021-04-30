@@ -18,7 +18,6 @@ export default {
 @font-face {
   font-family: PurelyPeer-Regular;
   src: url(../../assets/static/Comfortaa-Regular.ttf) format('truetype');
-
 }
 body {
   font-family: PurelyPeer-Regular;

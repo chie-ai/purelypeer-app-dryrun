@@ -25,7 +25,7 @@
                 />
               </div>
 
-              <div class="col-12 q-py-md q-mt-sm quest-list q-px-sm" v-for="(quest, questIndex) in quests" :key="questIndex"
+              <div class="col-12 q-py-md q-mt-sm quest-list q-px-sm" ripple v-for="(quest, questIndex) in quests" :key="questIndex"
                 @click="showQuestCoordinatesOnMap(quest, questIndex)">
                 <div class="row">
                   <div class="col-12 q-px-sm">
@@ -54,9 +54,9 @@
             <q-separator ref="cardSeparatorBottom" class="card-bottom-separator"/>
             <div id="ratio-option" class="q-mb-sm q-mt-md">
               <ul>
-                <li class="text-left"><a href="#?" class="fs-2" @click="changeTier"><span v-html="purelyPeertier.options[purelyPeertier.number]"></span></a></li>
-                <li class="text-center"><a href="#?" class="fs-2" @click="changePhysicalPresence">&#129521;<span v-html="phyicalPresence.options[phyicalPresence.number]"></span></a></li>
-                <li class="text-right"><a href="#?" class="fs-2" @click="changeQuestRadius"><span v-html="questRadius.options[questRadius.number]"></span></a></li>
+                <li class="text-left"><a href="#?" class="fs-2" v-wave="{ color: '#0AC18E', initialOpacity: 0.5, easing: 'ease-in' }" @click="changeTier"><span v-html="purelyPeertier.options[purelyPeertier.number]"></span></a></li>
+                <li class="text-center"><a href="#?" class="fs-2" v-wave="{ color: '#0AC18E', initialOpacity: 0.5, easing: 'ease-in' }" @click="changePhysicalPresence">&#129521;<span v-html="phyicalPresence.options[phyicalPresence.number]"></span></a></li>
+                <li class="text-right"><a href="#?" class="fs-2" v-wave="{ color: '#0AC18E', initialOpacity: 0.5, easing: 'ease-in' }" @click="changeQuestRadius"><span v-html="questRadius.options[questRadius.number]"></span></a></li>
               </ul>
             </div>
             <div>
@@ -133,18 +133,24 @@ export default {
       }
     },
     changeTier () {
-      this.purelyPeertier.number++
-      if (this.purelyPeertier.number === 4) {
-        this.purelyPeertier.number = 0
-      }
+      setTimeout(() => {
+        this.purelyPeertier.number++
+        if (this.purelyPeertier.number === 4) {
+          this.purelyPeertier.number = 0
+        }
+      }, 300)
     },
     changePhysicalPresence () {
-      this.phyicalPresence.number++
-      this.phyicalPresence.number = this.phyicalPresence.number === 3 ? 0 : this.phyicalPresence.number
+      setTimeout(() => {
+        this.phyicalPresence.number++
+        this.phyicalPresence.number = this.phyicalPresence.number === 3 ? 0 : this.phyicalPresence.number
+      }, 300)
     },
     changeQuestRadius () {
-      this.questRadius.number++
-      this.questRadius.number = this.questRadius.number === 5 ? 0 : this.questRadius.number
+      setTimeout(() => {
+        this.questRadius.number++
+        this.questRadius.number = this.questRadius.number === 5 ? 0 : this.questRadius.number
+      }, 300)
     },
     toggleQuestList () {
       const expanded = this.$refs.questListCard.$el.classList.contains('card-expander')
@@ -241,5 +247,11 @@ p {
   left: 0pt;
   top: 0pt;
   width: 100%;
+}
+[ripple] .ripple--container .ripple--body {
+  opacity: 0.2 !important;
+  background-color: rgba(10, 193, 142, 0.1) !important;
+  -webkit-animation: rippler 500ms;
+          animation: rippler 500ms;
 }
 </style>
