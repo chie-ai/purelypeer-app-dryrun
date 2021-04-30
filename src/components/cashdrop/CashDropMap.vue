@@ -12,6 +12,7 @@
             :options="mapOptions"
             style="height: 334px"
             @update:center="centerUpdate"
+            @update:zoom="zoomUpdate"
             @ready="readyMap"
             @move="updateMarkerCoordinates"
             ref="myPurelyPeerMap"
@@ -105,7 +106,7 @@ export default {
       this.icon = icon({
         iconUrl: newTier.tierIcon,
         iconSize: [newTier.tier !== 'inactive' ? 30 : 50, newTier.tier !== 'inactive' ? 40 : 51],
-        iconAnchor: [newTier.tier !== 'inactive' ? 2 : 12, newTier.tier !== 'inactive' ? 39 : 46]
+        iconAnchor: [newTier.tier !== 'inactive' ? 1 : 12, newTier.tier !== 'inactive' ? 40 : 46]
       })
     },
     mapVisibility (newBoolean, oldBoolean) {
@@ -115,6 +116,9 @@ export default {
   methods: {
     currentLocation () {
       this.center = this.staticLocation
+    },
+    zoomUpdate (scale) {
+      this.zoomScale = scale
     },
     centerUpdate (center) {
       this.center = center

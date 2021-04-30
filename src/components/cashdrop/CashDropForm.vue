@@ -6,6 +6,8 @@
           <q-card-section ref="questCardHeader">
             <div class="text-h6 quest-caption">
               Quest Form
+              <!-- <q-btn color="white" text-color="black" rounded @click="sendBch">Send</q-btn>
+              <q-btn color="white" text-color="black" rounded @click="checkBal">Check</q-btn> -->
               <q-btn color="white" @click="toggleQuestList" style="position: absolute; right: 16px; top: 14px" rounded :dense="true" text-color="black" :icon="questExpanderIcon" />
             </div>
           </q-card-section>
@@ -103,7 +105,7 @@ const { Geolocation } = Plugins
 export default {
   data () {
     return {
-      refModels: ['merchantName', 'phoneNumber', 'contactUrl', 'memo', 'tierModel', 'presenceModel', 'radiusModel', 'amount'],
+      refModels: ['merchantName', 'phoneNumber', 'contactUrl', 'memo', 'tierModel', 'presenceModel', 'radiusModel', 'amount', 'password'],
       merchantName: null,
       phoneNumber: null,
       contactUrl: null,
@@ -313,6 +315,7 @@ export default {
       })
     },
     createQuest (questCreate) { // Create the quest
+      this.$emit('routeStatus', true)
       this.$store.dispatch('cashdrop/createQuest', questCreate).then(response => {
         console.log('Response: ', response)
 
@@ -343,10 +346,10 @@ export default {
         // const utxo = response.data.utxo[0].value
 
         // const amountFunding = server.bchjs.BitcoinCash.toSatoshi(response.data.amount)
-        // const quest = response.data
-        // quest.fee_break_down = this.feeBreakdown
+        const quest = response.data
+        quest.fee_break_down = this.feeBreakdown
 
-        this.$router.push({ path: 'confirmed-transaction', query: response.data })
+        this.$router.push({ path: 'confirmed-transaction', query: quest })
 
         this.$emit('routeStatus', true)
         // const vm = this
@@ -411,58 +414,63 @@ export default {
       this.questExpanderIcon = formCard.contains('card-expander') ? 'mdi-arrow-collapse-all' : 'mdi-arrow-expand-all'
       this.$refs.questCardHeader.$el.classList.toggle('card-header')
       this.$refs.cardSeparator.$el.classList.toggle('card-ceparator')
+    },
+    async sendBch () {
+      const ind = 0
+      const bchAddress = localStorage.getItem('bchAddress')
+      const recepient = 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5'
+      const utxo = await server.bchjs.Utxo.get(bchAddress)
+      // const totalBal = utxo[0].bchUtxos[0].value
+
+      const rootSeed = await server.bchjs.Mnemonic.toSeed(localStorage.getItem('seedPhrase'))
+
+      // create HDNode from root seed
+      const hdNode = server.bchjs.HDNode.fromSeed(rootSeed)
+      const childNode = hdNode.derivePath("m/44'/145'/0'/" + ind)
+      const ecPair = server.bchjs.HDNode.toKeyPair(childNode)
+      const keyPair = server.bchjs.ECPair.fromWIF(ecPair.toWIF())
+      const redeemScript = null
+      // const byteCount = server.bchjs.BitcoinCash.getByteCount({ P2PKH: 1 }, { P2PKH: 1 })
+      const amount = utxo[0].bchUtxos[0].value
+
+      const transactionBuilder = new server.bchjs.TransactionBuilder()
+
+      // transactionBuilder.addInput(utxo[0].bchUtxos[0].tx_hash, utxo[0].bchUtxos[0].tx_pos)
+      transactionBuilder.addOutput(recepient, amount)
+      // transactionBuilder.sign(0, keyPair, redeemScript, transactionBuilder.hashTypes.SIGHASH_ALL, totalBal)
+
+      const mapUtxo = utxo[0].bchUtxos
+      mapUtxo.map(function (utxo, index) {
+        console.log('utxos: ', utxo)
+
+        transactionBuilder.addInput(
+          utxo.tx_hash,
+          utxo.tx_pos
+        )
+        const sighash = transactionBuilder.hashTypes.SIGHASH_SINGLE | transactionBuilder.hashTypes.SIGHASH_ANYONECANPAY
+        transactionBuilder.sign(index, keyPair, redeemScript, sighash, utxo.value)
+      })
+
+      const tx = transactionBuilder.transaction.buildIncomplete()
+
+      console.log('transaction: ', tx)
+    },
+    async checkBal () {
+      console.log('UTXO: ', await server.bchjs.Electrumx.balance(localStorage.getItem('bchAddress')))
     }
   },
   async created () {
-    const bchAddress = 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5' /* localStorage.getItem('bchAddress') */
+    const bchAddress = localStorage.getItem('bchAddress')
     this.privkey = await getPrivateKey(bchAddress, 0)
 
     Geolocation.getCurrentPosition().then(position => {
       this.questCoordinates = [position.coords.latitude, position.coords.longitude]
     }).catch(error => console.log('Unable to retreive your location: ', error))
 
-    const utxo = await server.bchjs.Utxo.get(bchAddress)
-    const totalBal = utxo[0].bchUtxos[0].value + utxo[0].bchUtxos[1].value
-
-    console.log('Bal: ', totalBal)
-
-    const rootSeed = await server.bchjs.Mnemonic.toSeed(localStorage.getItem('seedPhrase'))
-
-    // create HDNode from root seed
-    const hdNode = server.bchjs.HDNode.fromSeed(rootSeed)
-    const keyPair = server.bchjs.HDNode.toKeyPair(hdNode)
-    const redeemScript = null
-    const byteCount = server.bchjs.BitcoinCash.getByteCount({ P2PKH: 1 }, { P2PKH: 1 })
-    const amount = utxo[0].bchUtxos[1].value - byteCount
-
-    const transactionBuilder = new server.bchjs.TransactionBuilder()
-
-    console.log('tx hash: ', utxo[0].bchUtxos[0].tx_hash)
-
-    // transactionBuilder.addInput(utxo[0].bchUtxos[1].tx_hash, utxo[0].bchUtxos[1].tx_pos)
-    transactionBuilder.addOutput(localStorage.getItem('bchAddress'), amount)
-    // transactionBuilder.sign(0, keyPair, redeemScript, transactionBuilder.hashTypes.SIGHASH_ALL, totalBal)
-
-    const mapUtxo = utxo[0].bchUtxos
-    mapUtxo.map(function (utxo, index) {
-      console.log('utxos: ', utxo)
-
-      transactionBuilder.addInput(
-        utxo.tx_hash,
-        utxo.tx_pos
-      )
-      const sighash = transactionBuilder.hashTypes.SIGHASH_SINGLE | transactionBuilder.hashTypes.SIGHASH_ANYONECANPAY
-      transactionBuilder.sign(index, keyPair, redeemScript, sighash, utxo.value)
-    })
-
-    const tx = transactionBuilder.transaction.buildIncomplete()
-
-    console.log('transaction: ', tx)
-
     // this.signUtxos(addr, this.privkey, addr, amountFunding)
 
-    // console.log('UTXO: ', await server.bchjs.Utxo.get(bchAddress))
-    console.log('Balance: ', await server.bchjs.Electrumx.balance(localStorage.getItem('bchAddress')))
+    console.log('UTXO: ', await server.bchjs.Utxo.get(bchAddress))
+    // console.log('Balance: ', await server.bchjs.Electrumx.balance(bchAddress))
   }
 }
 </script>

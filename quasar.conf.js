@@ -24,7 +24,8 @@ module.exports = function (/* ctx */) {
       'axios',
       'vue-browser-geolocation',
       'googlemap',
-      'vue-qrcode'
+      'vue-qrcode',
+      'ripple'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
