@@ -70,9 +70,9 @@ export default {
       },
       center: latLng(0, 0),
       icon: icon({
-        iconUrl: 'PurelyPeer-icon-black.png',
-        iconSize: [50, 51],
-        iconAnchor: [12, 46]
+        iconUrl: 'PurelyPeer-location-blue.png',
+        iconSize: [30, 40],
+        iconAnchor: [1, 40]
       }),
       markerLocation: latLng(0, 0),
       circle: {

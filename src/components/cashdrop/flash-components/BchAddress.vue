@@ -14,7 +14,7 @@
       </q-card>
       </div>
       <div class="q-px-lg q-pt-none">
-        <div class="col qr-code q-pl-xs q-pr-xs q-mt-md">
+        <div class="col qr-code q-pl-xs q-pr-xs q-mt-md shadow-3">
           <div class="row text-center q-mt-xs q-mx-xs q-px-md q-py-md">
             <div class="col row justify-center q-my-lg q-mx-lg">
               <qr-code :text="bchAddress" color="#404543" :size="220" error-level="H" class="seed-phrase q-mt-none"></qr-code>
@@ -69,8 +69,9 @@ export default {
 .qr-code {
     width: 100%;
     border-radius: 16px;
-    box-shadow: 1px 2px 6px 1px rgba(99, 103, 103, .2);
-    border: 4px solid rgba(10, 193, 142, .3);
+    /* box-shadow: 1px 2px 6px 1px rgba(99, 103, 103, .2); */
+    /* border: 4px solid rgba(10, 193, 142, .3); */
+    border: 4px solid #0AC18E;
     background: white;
 }
 .btn-copy-address {

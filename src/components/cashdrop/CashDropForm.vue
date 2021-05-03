@@ -6,8 +6,7 @@
           <q-card-section ref="questCardHeader">
             <div class="text-h6 quest-caption">
               Quest Form
-              <!-- <q-btn color="white" text-color="black" rounded @click="sendBch">Send</q-btn>
-              <q-btn color="white" text-color="black" rounded @click="checkBal">Check</q-btn> -->
+              <!-- <q-btn color="white" text-color="black" rounded @click="checkBal">Check</q-btn> -->
               <q-btn color="white" @click="toggleQuestList" style="position: absolute; right: 16px; top: 14px" rounded :dense="true" text-color="black" :icon="questExpanderIcon" />
             </div>
           </q-card-section>
@@ -35,7 +34,7 @@
                       :options="presence.options" label="Physical Presence"
                       lazy-rules :rules="[val => !!val || 'Physical presence is required']" />
                     <q-badge class="slider-badge text-caption">
-                      <b>Quest amount</b>
+                      <b>Total value</b>
                     </q-badge>
                     <q-slider class="q-mt-none q-mb-none amount-range-slider"
                       :value="amount"
@@ -46,7 +45,7 @@
                       label
                       :label-value="amount"
                     />
-                    <q-input ref="amount" bg-color="input-bg" filled color="input-color" :dense="true" outlined label="Amount for the cashdrops" type="text"
+                    <q-input ref="amount" bg-color="input-bg" filled color="input-color" :dense="true" outlined label="Total value" type="text"
                     v-model="amount2" mask="#.########" fill-mask="0.00000000"
                     lazy-rules :rules="[val => val > 0.00000000 || 'Amount field is required to be set']"
                     input-class="text-right" />
@@ -98,7 +97,6 @@ import BCHAddress from '../../components/cashdrop/flash-components/BchAddress.vu
 import Confirmation from '../../components/cashdrop/flash-components/Confirmation.vue'
 import Confirmation2 from '../../components/cashdrop/flash-components/Confirmation2.vue'
 import server from '../../utils/getAPIServer.js'
-import { getPrivateKey, signInputs } from '../../utils/buildTransaction.js'
 
 const { Geolocation } = Plugins
 
@@ -143,7 +141,6 @@ export default {
       price: null,
       questCoordinates: null,
       loading: false,
-      privKey: null,
       password: null,
       isPwd: true
     }
@@ -194,19 +191,15 @@ export default {
     cancelQuest () { // cancels the quest form by refreshing each input
       this.toggleCashDropForm()
       this.$emit('routeStatus', true)
-      for (let i = 0; this.refModels.length > i; i++) {
-        this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
-        this.$refs[this.refModels[i]].resetValidation()
-      }
-      this.$q.notify({ message: 'The quest has been canceled!', color: 'alert-color', position: 'bottom', timeout: 3000 })
+      // for (let i = 0; this.refModels.length > i; i++) {
+      //   this[this.refModels[i]] = this.refModels[i] === 'amount' ? 0.00000000 : null
+      //   this.$refs[this.refModels[i]].resetValidation()
+      // }
+      // this.$q.notify({ message: 'The quest has been canceled!', color: 'alert-color', position: 'bottom', timeout: 3000 })
       clearInterval(this.balanceWatcher)
     },
-    async signUtxos (bchAddress, privkey, contract, amount) { // signs the transaction of each cashdrop of the created quest
-      console.log('sign')
-      signInputs(bchAddress, privkey, contract, amount)
-    },
     onSubmitQuest (evt) { // checks the validity of the data given in the form before proceeding in creating the quest
-      // const bchAddress = 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5'
+      const bchAddress = localStorage.getItem('bchAddress')
       this.$refs.questForm.validate().then(success => {
         if (success) {
           const balanceLoader = this.$q.dialog({
@@ -239,7 +232,7 @@ export default {
             total_cashdrops: this.cashDropCountModel,
             has_physical_presence: this.questPresence,
             amount: this.amount.toFixed(8),
-            payment_address: 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5', /* bchAddress */
+            payment_address: bchAddress, /* bchAddress */
             pubkey: localStorage.getItem('pubkey') /* localStorage.getItem('pubkey') */
           }
 
@@ -248,8 +241,8 @@ export default {
 
           this.$emit('routeStatus', false)
 
-          // Check the BCH Address balance if sufficient before proceeding to creation of quest
-          server.bchjs.Electrumx.balance('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5').then(res => { /* bchAddress */
+          // Check the user's wallet balance if sufficient before proceeding to creation of quest
+          server.bchjs.Electrumx.balance(bchAddress).then(res => { /* bchAddress */
             const sumSatoshis = res.balance.confirmed + res.balance.unconfirmed
             const balance = (server.bchjs.BitcoinCash.toBitcoinCash(sumSatoshis)).toFixed(8)
             console.log('Balance: ', balance)
@@ -271,7 +264,6 @@ export default {
                 this.$emit('routeStatus', true)
               })
             } else {
-              this.$q.loading.hide()
               this.$refs.questList.classList.add('hidden')
               document.getElementById('nav-menu').classList.add('hidden')
               document.getElementsByClassName('exploreMap')[0].classList.add('hidden')
@@ -282,7 +274,7 @@ export default {
               }, 5000)
 
               const pollingBalance = () => {
-                server.bchjs.Electrumx.balance('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5').then(res => {
+                server.bchjs.Electrumx.balance(bchAddress).then(res => {
                   const sumSatoshis = res.balance.confirmed + res.balance.unconfirmed
                   const balance = (server.bchjs.BitcoinCash.toBitcoinCash(sumSatoshis)).toFixed(8)
                   console.log('Balance: ', balance)
@@ -325,42 +317,23 @@ export default {
           this.$refs[this.refModels[i]].resetValidation()
         }
 
-        // this.timer = setTimeout(() => {
-        //   this.loading = false
-        //   this.timer = undefined
-        //   this.$q.notify({
-        //     message: 'Your quest has been successfully created!',
-        //     color: 'notify-color',
-        //     position: 'center',
-        //     timeout: 2000
-        //   })
-        //   this.$refs.questList.classList.remove('hidden')
-        //   document.getElementById('nav-menu').classList.remove('hidden')
-        //   document.getElementsByClassName('exploreMap')[0].classList.remove('hidden')
-        // }, 1000)
-
-        // const signtX = {
-        //   signed_txn_hex: response.data.utxo[0].value,
-        //   quest_id: response.data.id
-        // }
-        // const utxo = response.data.utxo[0].value
-
-        // const amountFunding = server.bchjs.BitcoinCash.toSatoshi(response.data.amount)
+        this.$emit('routeStatus', true)
         const quest = response.data
         quest.fee_break_down = this.feeBreakdown
-
         this.$router.push({ path: 'confirmed-transaction', query: quest })
-
-        this.$emit('routeStatus', true)
-        // const vm = this
-        // this.signUtxos('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5', this.privkey, 'bitcoincash:qp3et5cla7jju6z2lfc5v9nr0r4q54edqqpylqnfvx', amountFunding)
-        //   .then(function (signedUtxos) {
-        //     // console.log('TX_HEX: ', signedUtxos)
-        //     // this.$store.dispatch('cashdrop/signedTransaction', signtX)
-        //     vm.$router.push({ path: 'confirmed-transaction', query: quest })
-        //   })
       }).catch(error => {
         console.log('Error in creating: ', error)
+        this.$refs.questList.classList.remove('hidden')
+        document.getElementById('nav-menu').classList.remove('hidden')
+        document.getElementsByClassName('exploreMap')[0].classList.remove('hidden')
+        this.loading = false
+
+        this.$q.notify({
+          message: error.coors,
+          color: 'red',
+          position: 'top',
+          timeout: 2000
+        })
       })
     },
     changeTier () { // To emit the changes of tier in the form to the map
@@ -415,62 +388,18 @@ export default {
       this.$refs.questCardHeader.$el.classList.toggle('card-header')
       this.$refs.cardSeparator.$el.classList.toggle('card-ceparator')
     },
-    async sendBch () {
-      const ind = 0
-      const bchAddress = localStorage.getItem('bchAddress')
-      const recepient = 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5'
-      const utxo = await server.bchjs.Utxo.get(bchAddress)
-      // const totalBal = utxo[0].bchUtxos[0].value
-
-      const rootSeed = await server.bchjs.Mnemonic.toSeed(localStorage.getItem('seedPhrase'))
-
-      // create HDNode from root seed
-      const hdNode = server.bchjs.HDNode.fromSeed(rootSeed)
-      const childNode = hdNode.derivePath("m/44'/145'/0'/" + ind)
-      const ecPair = server.bchjs.HDNode.toKeyPair(childNode)
-      const keyPair = server.bchjs.ECPair.fromWIF(ecPair.toWIF())
-      const redeemScript = null
-      // const byteCount = server.bchjs.BitcoinCash.getByteCount({ P2PKH: 1 }, { P2PKH: 1 })
-      const amount = utxo[0].bchUtxos[0].value
-
-      const transactionBuilder = new server.bchjs.TransactionBuilder()
-
-      // transactionBuilder.addInput(utxo[0].bchUtxos[0].tx_hash, utxo[0].bchUtxos[0].tx_pos)
-      transactionBuilder.addOutput(recepient, amount)
-      // transactionBuilder.sign(0, keyPair, redeemScript, transactionBuilder.hashTypes.SIGHASH_ALL, totalBal)
-
-      const mapUtxo = utxo[0].bchUtxos
-      mapUtxo.map(function (utxo, index) {
-        console.log('utxos: ', utxo)
-
-        transactionBuilder.addInput(
-          utxo.tx_hash,
-          utxo.tx_pos
-        )
-        const sighash = transactionBuilder.hashTypes.SIGHASH_SINGLE | transactionBuilder.hashTypes.SIGHASH_ANYONECANPAY
-        transactionBuilder.sign(index, keyPair, redeemScript, sighash, utxo.value)
-      })
-
-      const tx = transactionBuilder.transaction.buildIncomplete()
-
-      console.log('transaction: ', tx)
-    },
     async checkBal () {
-      console.log('UTXO: ', await server.bchjs.Electrumx.balance(localStorage.getItem('bchAddress')))
+      // console.log('UTXO: ', await server.bchjs.Electrumx.balance('bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5'))
+      console.log('UTXO: ', await server.bchjs.Utxo.get(localStorage.getItem('bchAddress')))
     }
   },
   async created () {
-    const bchAddress = localStorage.getItem('bchAddress')
-    this.privkey = await getPrivateKey(bchAddress, 0)
-
     Geolocation.getCurrentPosition().then(position => {
       this.questCoordinates = [position.coords.latitude, position.coords.longitude]
     }).catch(error => console.log('Unable to retreive your location: ', error))
 
-    // this.signUtxos(addr, this.privkey, addr, amountFunding)
-
-    console.log('UTXO: ', await server.bchjs.Utxo.get(bchAddress))
-    // console.log('Balance: ', await server.bchjs.Electrumx.balance(bchAddress))
+    // console.log('UTXO: ', await server.bchjs.Utxo.get(bchAddress))
+    // console.log('Balance: ', await server.bchjs.Electrumx.balance(localStorage.getItem('bchAddress')))
   }
 }
 </script>

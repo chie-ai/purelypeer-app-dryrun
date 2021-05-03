@@ -23,15 +23,14 @@ export function createQuest (context, questCreate) {
         resolve(response)
       })
       .catch(error => {
-        console.log('Error: ', error)
-        reject(error)
+        reject(error.response.data)
       })
   })
 }
 
-export function signedTransaction (context, transaction) {
+export function broadcastSignedTransaction (context, transaction) {
   return new Promise((resolve, reject) => {
-    axios.post('http://staging.purelypeer.cash/api/quests/sign_txn/', transaction)
+    axios.post('https://staging.purelypeer.cash/api/quests/sign_txn/', transaction)
       .then(response => {
         console.log('Success :', response)
         resolve(response)

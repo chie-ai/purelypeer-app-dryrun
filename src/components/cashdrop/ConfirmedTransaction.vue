@@ -1,7 +1,7 @@
 <template>
-  <div class="q-mt-lg q-px-lg text-center" style="width: 100%">
+  <div class="q-mt-md q-px-lg text-center" style="width: 100%">
     <span class="mdi mdi-check-circle mdi-48px" style="color: #0AC18E"></span>
-    <p><strong>The quest has been created!</strong></p>
+    <p><strong>Your quest has been created!</strong></p>
     <div class="col-12 text-left q-mt-md">
       <q-card class="my-card q-px-sm q-pt-sm">
         <q-card-section>
@@ -21,6 +21,8 @@
             <p class="q-mb-xs"><span class="text-subtitle2 quest-label text-weight-bold">{{ quest.contact_url ? quest.contact_url : '--' }}</span></p>
             <span class="fnt-10">Memo: </span>
             <p class="q-mb-xs"><span class="text-subtitle2 quest-label text-weight-bold">{{ quest.memo ? quest.memo : '--' }}</span></p>
+            <span class="fnt-10">Total value: </span>
+            <p class="q-mb-xs"><span class="text-subtitle2 quest-label text-weight-bold">{{ quest.amount }}</span></p>
           </div>
         </q-card-section>
         <q-separator class="q-mx-md"/>
@@ -33,22 +35,95 @@
           </div>
         </q-card-section>
       </q-card>
-      <q-btn :label="'Pay \uD83D\uDCB5'" type="submit" class="full-width q-mt-md quest-btn"/>
-      <q-btn label="Cancel" type="submit" class="full-width q-mt-md"/>
+      <div class="row">
+        <div class="col-6 q-pr-sm">
+          <q-btn :label="'Pay \uD83D\uDCB5'" @click="createTransaction" type="submit" class="full-width q-mt-md quest-btn"/>
+        </div>
+        <div class="col-6 q-pl-sm">
+          <q-btn label="Cancel" type="submit" class="full-width q-mt-md"/>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getPrivateKey, signInputs } from '../../utils/buildTransaction.js'
+import server from '../../utils/getAPIServer.js'
 
 export default {
   data () {
     return {
-      quest: null
+      quest: null,
+      providedUtxo: null,
+      privkey: null
     }
   },
-  mounted () {
+  methods: {
+    async signUtxos (bchAddress, privkey, contract, amount) { // signs the transaction of each cashdrop of the created quest
+      console.log('sign')
+      signInputs(bchAddress, privkey, contract, amount)
+        .then(res => {
+          console.log('Hexo: ', res)
+          const transaction = {
+            quest_id: this.quest.id,
+            signed_txn_hex: res
+          }
+          this.$store.dispatch('cashdrop/signedTransaction', transaction)
+        })
+    },
+    async createTransaction () {
+      const indx = 0
+      const bchAddress = localStorage.getItem('bchAddress')
+      const recepient = 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5'
+      const utxo = await server.bchjs.Utxo.get(bchAddress)
+      // const totalBal = utxo[0].bchUtxos[0].value
+
+      const rootSeed = await server.bchjs.Mnemonic.toSeed(localStorage.getItem('seedPhrase'))
+
+      // create HDNode from root seed
+      const hdNode = server.bchjs.HDNode.fromSeed(rootSeed)
+      const childNode = hdNode.derivePath("m/44'/145'/0'/" + indx)
+      const ecPair = server.bchjs.HDNode.toKeyPair(childNode)
+      const keyPair = server.bchjs.ECPair.fromWIF(ecPair.toWIF())
+      const redeemScript = null
+      const byteCount = server.bchjs.BitcoinCash.getByteCount({ P2PKH: 1 }, { P2PKH: 1 })
+      const amount = server.bchjs.BitcoinCash.toSatoshi(this.quest.amount) - byteCount
+
+      console.log('Amount: ', amount)
+
+      const transactionBuilder = new server.bchjs.TransactionBuilder()
+
+      transactionBuilder.addOutput(recepient, amount)
+
+      const mapUtxo = utxo[0].bchUtxos
+      mapUtxo.map(function (utxo, index) {
+        console.log('utxos: ', utxo)
+
+        transactionBuilder.addInput(
+          utxo.tx_hash,
+          utxo.tx_pos
+        )
+        const sighash = transactionBuilder.hashTypes.SIGHASH_SINGLE | transactionBuilder.hashTypes.SIGHASH_ANYONECANPAY
+        transactionBuilder.sign(index, keyPair, redeemScript, sighash, utxo.value)
+      })
+
+      const tx = transactionBuilder.transaction.buildIncomplete()
+      console.log('transaction Hex: ', tx.toHex())
+
+      const transaction = {
+        quest_id: this.quest.id,
+        signed_txn_hex: tx.toHex()
+      }
+      this.$store.dispatch('cashdrop/broadcastSignedTransaction', transaction)
+    }
+  },
+  async created () {
     this.quest = this.$route.query
+    this.$route.query.utxos.forEach((utxo, index) => {
+      this.providedUtxo += Number(utxo.value)
+    })
+    this.privkey = await getPrivateKey(localStorage.getItem('seedPhrase'), 0)
   }
 }
 </script>

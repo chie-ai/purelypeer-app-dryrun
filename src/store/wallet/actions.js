@@ -28,6 +28,7 @@ export function createWallet ({ commit }, wallet) {
         // console.log('BCH: ', response.data.addresses[0].bch_address)
         // console.log('SLP: ', response.data.addresses[0].slp_address)
         // commit('mutateAddresses', response.data.addresses)
+        console.log('Response of created wallet: ', response)
         commit('mutateKeys', response.data)
 
         resolve(response)

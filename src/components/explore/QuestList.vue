@@ -25,7 +25,7 @@
                 />
               </div>
 
-              <div class="col-12 q-py-md q-mt-sm quest-list q-px-sm" ripple v-for="(quest, questIndex) in quests" :key="questIndex"
+              <div class="col-12 q-py-md q-mt-sm quest-list q-px-sm shadow-2" ripple v-for="(quest, questIndex) in quests" :key="questIndex"
                 @click="showQuestCoordinatesOnMap(quest, questIndex)">
                 <div class="row">
                   <div class="col-12 q-px-sm">
@@ -174,6 +174,13 @@ export default {
         }
       }
     }
+  },
+  created () {
+    console.log('Seed phrase: ', localStorage.getItem('seedPhrase'))
+    console.log('Seed hash: ', localStorage.getItem('seedHash'))
+    console.log('Pubkey: ', localStorage.getItem('pubkey'))
+    console.log('Bch Address: ', localStorage.getItem('bchAddress'))
+    console.log('slp address: ', localStorage.getItem('slpAddress'))
   },
   async mounted () {
     await this.$store.dispatch('cashdrop/fetchQuestList')

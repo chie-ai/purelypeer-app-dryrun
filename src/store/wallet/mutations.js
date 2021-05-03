@@ -8,7 +8,7 @@ export function mutateSeedPhrase (state, seedPhrase) {
 //   state.wallet.addresses[0].slp = addresses[0].slp_address
 // }
 
-// export function mutateKeys (state, data) {
-//   state.seedhash = data.seed_hash
-//   state.pubKey = data.pubkey
-// }
+export function mutateKeys (state, data) {
+  state.seedhash = data.seed_hash
+  state.pubKey = data.pubkey
+}

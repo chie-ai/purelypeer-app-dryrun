@@ -9,7 +9,7 @@ async function getPrivateKey (seed, index) {
   return ecPair.toWIF()
 }
 
-async function signInputs (address, wif, contract, amountPerCashDrop) {
+async function signInputs (address, wif, contract, amount) {
   const bchjs = server.bchjs
 
   const getUtxos = await bchjs.Utxo.get(address)
@@ -21,7 +21,7 @@ async function signInputs (address, wif, contract, amountPerCashDrop) {
   // Add the funding of the contract as output
   transactionBuilder.addOutput(
     contract,
-    amountPerCashDrop
+    amount
   )
 
   // Add inputs
