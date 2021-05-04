@@ -75,9 +75,16 @@ export default {
     async createTransaction () {
       const indx = 0
       const bchAddress = localStorage.getItem('bchAddress')
-      const recepient = 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5'
-      const utxo = await server.bchjs.Utxo.get(bchAddress)
+      const recepient = this.quest.funding_cov_address
+      // const recepient = 'bitcoincash:qzuna0c5tvpzne7gennzzl73pr6pd0pzqqzvjlmgq5'
+      // const utxo = await server.bchjs.Utxo.get(bchAddress)
+      const utxo = this.quest.utxos
       // const totalBal = utxo[0].bchUtxos[0].value
+
+      let originalAmount = 0
+      for (let i = 0; utxo.length > i; i++) {
+        originalAmount += utxo[i].value
+      }
 
       const rootSeed = await server.bchjs.Mnemonic.toSeed(localStorage.getItem('seedPhrase'))
 
@@ -87,22 +94,27 @@ export default {
       const ecPair = server.bchjs.HDNode.toKeyPair(childNode)
       const keyPair = server.bchjs.ECPair.fromWIF(ecPair.toWIF())
       const redeemScript = null
-      const byteCount = server.bchjs.BitcoinCash.getByteCount({ P2PKH: 1 }, { P2PKH: 1 })
-      const amount = server.bchjs.BitcoinCash.toSatoshi(this.quest.amount) - byteCount
+      const byteCount = server.bchjs.BitcoinCash.getByteCount({ P2PKH: utxo.length }, { P2SH: 2 })
+      const txFee = Math.floor(byteCount * 1.2)
+      const satoshisToSend = server.bchjs.BitcoinCash.toSatoshi(this.quest.amount) - Math.floor(byteCount * 1.2)
 
-      console.log('Amount: ', amount)
+      const remainder = originalAmount - satoshisToSend - txFee
 
       const transactionBuilder = new server.bchjs.TransactionBuilder()
 
-      transactionBuilder.addOutput(recepient, amount)
+      console.log('Sat Unit 1: ', satoshisToSend)
+      console.log('Sat Unit 2: ', remainder)
 
-      const mapUtxo = utxo[0].bchUtxos
+      transactionBuilder.addOutput(recepient, satoshisToSend)
+      transactionBuilder.addOutput(bchAddress, remainder)
+
+      const mapUtxo = utxo
       mapUtxo.map(function (utxo, index) {
         console.log('utxos: ', utxo)
 
         transactionBuilder.addInput(
-          utxo.tx_hash,
-          utxo.tx_pos
+          utxo.txid,
+          utxo.vout
         )
         const sighash = transactionBuilder.hashTypes.SIGHASH_SINGLE | transactionBuilder.hashTypes.SIGHASH_ANYONECANPAY
         transactionBuilder.sign(index, keyPair, redeemScript, sighash, utxo.value)

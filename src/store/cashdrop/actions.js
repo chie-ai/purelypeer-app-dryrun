@@ -23,6 +23,7 @@ export function createQuest (context, questCreate) {
         resolve(response)
       })
       .catch(error => {
+        console.log('Error: ', error.response.data)
         reject(error.response.data)
       })
   })

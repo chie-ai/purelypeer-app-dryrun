@@ -1,5 +1,5 @@
 <template>
-  <div class="row animate-in-load justify-center">
+  <div class="row justify-center animate-in-load">
     <ConfirmedTransaction />
   </div>
 </template>
