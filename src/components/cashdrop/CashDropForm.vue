@@ -1,8 +1,8 @@
 <template>
   <div id="quest-list">
-    <div class="col-12 quest-container q-mt-none q-mb-none q-pt-lg q-pt-xs" ref="questList">
-      <div class="q-px-md">
-        <q-card class="my-card q-mx-none q-mb-md" ref="formCard">
+    <div class="col-12 quest-container q-mt-none q-mb-none" ref="questList">
+      <div class="q-px-none bg-grey-2">
+        <q-card class="my-card q-pt-xs q-mx-none bg-grey-2 q-mb-md no-shadow" ref="formCard">
           <q-card-section ref="questCardHeader">
             <div class="text-h6 quest-caption">
               Quest Form
@@ -11,9 +11,9 @@
             </div>
           </q-card-section>
 
-          <q-separator ref="cardSeparator"/>
+          <q-separator class="q-mx-md" ref="cardSeparator"/>
 
-          <q-card-section class="q-pt-sm">
+          <q-card-section class="q-pt-sm bg-grey-2">
             <div>
               <div class="row q-mb-md">
                 <div class="col-12 q-pt-md">
@@ -126,8 +126,8 @@ export default {
           '15 min \uD83D\uDD7A\u267F\uD83D\uDC83', 'Urban \uD83C\uDFD9\uFE0F', 'Regional \uD83D\uDEE3\uFE0F', 'Continental \uD83C\uDF10'
         ]
       },
-      amount: 0.00000000,
-      amount2: 0.00000000,
+      amount: 0.00390000,
+      amount2: 0.00390000,
       cashDropCountModel: 2,
       cashDropFormModels: {
         tier: 'Upcoming',
@@ -383,7 +383,6 @@ export default {
     toggleQuestList (e) { // toggles between full size and normal size of the quest list
       const formCard = this.$refs.formCard.$el.classList
       formCard.toggle('card-expander')
-      formCard.toggle('no-shadow')
       this.questExpanderIcon = formCard.contains('card-expander') ? 'mdi-arrow-collapse-all' : 'mdi-arrow-expand-all'
       this.$refs.questCardHeader.$el.classList.toggle('card-header')
       this.$refs.cardSeparator.$el.classList.toggle('card-ceparator')
@@ -399,7 +398,7 @@ export default {
     }).catch(error => console.log('Unable to retreive your location: ', error))
 
     // console.log('UTXO: ', await server.bchjs.Utxo.get(bchAddress))
-    // console.log('Balance: ', await server.bchjs.Electrumx.balance(localStorage.getItem('bchAddress')))
+    console.log('Balance: ', await server.bchjs.Electrumx.balance(localStorage.getItem('bchAddress')))
   }
 }
 </script>
@@ -432,10 +431,11 @@ export default {
   color: white;
 }
 .bg-input-bg {
-  background: #B5ECDD !important;
+  /* background: #B5ECDD !important; */
+  background: white !important;
 }
 .text-input-color {
-  color: #089C73;
+  color: #0AC18E;
 }
 .card-expander {
   position: absolute;

@@ -116,50 +116,10 @@ p, div > span {
   // background: #B5ECDD;
   height: 100%;
 }
-.quest-list {
-  background: #B5ECDD;
-  border-radius: 14px;
-  border: 2px solid #0AC18E;
-  // border: 2px solid #84C2B1;
-}
 // table tbody.quest-table tr.quest-row {
 //   margin: 0px !important;
 //   border: 1px solid green !important;
 // }
-.quest-main {
-  height: 200px;
-  overflow: auto;
-  // border-top: 1px solid #B2B2B2;
-  // border-bottom: 1px solid #B2B2B2;
-}
-#ratio-option ul {
-  display: inline-block;
-  list-style: none;
-  height: 66px;
-  padding-right: 0;
-  padding-left: 0;
-  margin: 0;
-  width: 100%;
-  text-align: center;
-}
-#ratio-option ul li {
-  display: inline-block;
-  padding: 4px 0 0 0;
-  width: 33.33%;
-  margin-right: 0;
-}
-#ratio-option ul li a {
-  display: inline-block;
-  height: 56px;
-  line-height: 56px;
-  text-align: center;
-  background: #B5ECDD;
-  border: 2px solid #0AC18E;
-  text-decoration: none;
-  border-radius: 10px;
-  width: 90% !important;
-  box-shadow: 1px 2px 2px #bbbbbb;
-}
 #menu-list {
   // height: 450px;
   width: 100%;

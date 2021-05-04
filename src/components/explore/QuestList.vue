@@ -1,5 +1,5 @@
 <template>
-  <div id="quest-list">
+  <div id="quest-list" class="bg-grey-2">
     <div class="col-12 quest-container q-mt-none q-mb-none q-pt-lg q-pt-xs">
 
       <div class="q-px-md q-mb-md">
@@ -13,8 +13,8 @@
 
           <q-separator ref="cardSeparator"/>
 
-          <q-card-section class="q-pt-none q-mb-none q-pb-none shadow-4" ref="cardQuestList">
-            <div class="quest-main q-pb-sm" ref="questMain">
+          <q-card-section class="q-pt-none q-mb-none q-pb-none q-px-none shadow-4" ref="cardQuestList">
+            <div class="quest-main q-pb-sm q-px-md" ref="questMain">
 
               <div v-if="questListLoader" class="text-center" ref="questListLoader" style="height: 200px; line-height: 200px;">
                 <q-spinner
@@ -25,20 +25,24 @@
                 />
               </div>
 
-              <div class="col-12 q-py-md q-mt-sm quest-list q-px-sm shadow-2" ripple v-for="(quest, questIndex) in quests" :key="questIndex"
+              <div class="col-12 q-py-md q-mt-sm q-px-sm shadow-1 quest-list"
+                :class="[ quest.acceptance_tier === 'Direct' ? 'bdr-direct' : '',
+                          quest.acceptance_tier === 'Indirect' ? 'bdr-indirect' : '',
+                           quest.acceptance_tier === 'Upcoming' ? 'bdr-upcoming' : '']"
+                v-for="(quest, questIndex) in quests" :key="questIndex"
                 @click="showQuestCoordinatesOnMap(quest, questIndex)">
                 <div class="row">
                   <div class="col-12 q-px-sm">
-                    <p class="q-mb-none"><span>Quest Name: </span><span class="text-subtitle2 quest-label text-weight-bold">{{ quest.name }}</span></p>
-                    <p class="q-mb-none"><span>X/Y: </span><span class="text-subtitle2 quest-label text-weight-bold">{{ quest.cashdrops_remaining + '/' + quest.total_cashdrops }}</span></p>
-                    <p class="q-mb-none" v-if="quest.phone_no"><span>Phone Number: </span><span class="text-subtitle2 quest-label text-weight-bold">{{ quest.phone_no }}</span></p>
-                    <p class="q-mb-none" v-if="quest.contactUrl"><span>Contact URL: </span><a href="www.facebook.com" class="text-caption quest-label text-weight-bold">{{ quest.contactUrl }}</a></p>
+                    <p class="q-mb-none" style="color: #0e3247"><span>Quest Name: </span><span class="text-subtitle2 text-weight-bold">{{ quest.name }}</span></p>
+                    <p class="q-mb-none" style="color: #0e3247"><span>X/Y: </span><span class="text-subtitle2 text-weight-bold">{{ quest.cashdrops_remaining + '/' + quest.total_cashdrops }}</span></p>
+                    <p class="q-mb-none" style="color: #0e3247" v-if="quest.phone_no"><span>Phone Number: </span><span class="text-subtitle2 text-weight-bold">{{ quest.phone_no }}</span></p>
+                    <p class="q-mb-none" style="color: #0e3247" v-if="quest.contactUrl"><span>Contact URL: </span><a href="www.facebook.com" class="text-caption text-weight-bold">{{ quest.contactUrl }}</a></p>
 
                     <div class="questMoreInfo" :ref="questIndex">
-                      <p class="q-mb-none"><span v-if="quest.memo">Memo: </span><span class="quest-label text-weight-bold">{{ quest.memo }}</span></p>
-                      <p class="q-mb-none"><span>PurelyPeer Tier | Presence | Radius: </span>
+                      <p class="q-mb-none" style="color: #0e3247"><span v-if="quest.memo">Memo: </span><span class="text-weight-bold">{{ quest.memo }}</span></p>
+                      <p class="q-mb-none" style="color: #0e3247"><span>PurelyPeer Tier | Presence | Radius: </span>
                       <br>
-                        <span class="quest-label text-weight-bold">
+                        <span class="text-weight-bold" style="color: #0e3247">
                           {{ quest.acceptance_tier === 'Direct' ? 'Direct \uD83D\uDC9A' : quest.acceptance_tier === 'Indirect' ? 'Indirect \uD83E\uDDE1' : quest.acceptance_tier === 'Upcoming' ? 'Upcoming \uD83D\uDC99' : 'Inactive \uD83D\uDDA4' }}
                           | {{ quest.has_physical_presence ? 'Yes \uD83E\uDDF1\u2714\uFE0F' : 'No \uD83E\uDDF1\u274C' }}
                           | {{ (quest.radius === 1500 ? '15 min \uD83D\uDD7A\u267F\uD83D\uDC83' : quest.radius === 15000 ? 'Urban \uD83C\uDFD9\uFE0F' : quest.radius === 15000 ? 'Regional \uD83D\uDEE3\uFE0F' : 'Continental \uD83C\uDF10' ) }}
@@ -54,15 +58,15 @@
             <q-separator ref="cardSeparatorBottom" class="card-bottom-separator"/>
             <div id="ratio-option" class="q-mb-sm q-mt-md">
               <ul>
-                <li class="text-left"><a href="#?" class="fs-2" v-wave="{ color: '#0AC18E', initialOpacity: 0.5, easing: 'ease-in' }" @click="changeTier"><span v-html="purelyPeertier.options[purelyPeertier.number]"></span></a></li>
-                <li class="text-center"><a href="#?" class="fs-2" v-wave="{ color: '#0AC18E', initialOpacity: 0.5, easing: 'ease-in' }" @click="changePhysicalPresence">&#129521;<span v-html="phyicalPresence.options[phyicalPresence.number]"></span></a></li>
-                <li class="text-right"><a href="#?" class="fs-2" v-wave="{ color: '#0AC18E', initialOpacity: 0.5, easing: 'ease-in' }" @click="changeQuestRadius"><span v-html="questRadius.options[questRadius.number]"></span></a></li>
+                <li class="text-left"><a href="#?" class="fs-2" v-wave="{ color: '#bbbbbb', initialOpacity: 0.5, easing: 'ease-in', duration: 0.3 }" @click="changeTier"><span v-html="purelyPeertier.options[purelyPeertier.number]"></span></a></li>
+                <li class="text-center"><a href="#?" class="fs-2" v-wave="{ color: '#bbbbbb', initialOpacity: 0.5, easing: 'ease-in', duration: 0.3 }" @click="changePhysicalPresence">&#129521;<span v-html="phyicalPresence.options[phyicalPresence.number]"></span></a></li>
+                <li class="text-right"><a href="#?" class="fs-2" v-wave="{ color: '#bbbbbb', initialOpacity: 0.5, easing: 'ease-in', duration: 0.3 }" @click="changeQuestRadius"><span v-html="questRadius.options[questRadius.number]"></span></a></li>
               </ul>
             </div>
             <div>
               <div class="row justify-center">
                 <div class="col-12 q-mb-sm">
-                  <q-input :dense="true" bg-color="input-bg" outlined color="input-color" label="Search. . .">
+                  <q-input :dense="true" color="input-color" outlined label="Search. . .">
                         <template v-slot:append>
                           <q-icon name="search" />
                         </template>
@@ -181,6 +185,12 @@ export default {
     console.log('Pubkey: ', localStorage.getItem('pubkey'))
     console.log('Bch Address: ', localStorage.getItem('bchAddress'))
     console.log('slp address: ', localStorage.getItem('slpAddress'))
+
+    // localStorage.setItem('seedPhrase', 'badge neither such situate six pause movie together place dream sand crew')
+    // localStorage.setItem('seedHash', '72b63b7c5c4eb5e6840db4d83bcd59703d9993c934b282d9ab2c085f9ca9a047')
+    // localStorage.setItem('pubkey', '030f9e9ca2d3d1f35129aadb21d22c8c579b874f18dafdd78cb0abb0bdc1559270')
+    // localStorage.setItem('bchAddress', 'bitcoincash:qry9xpxa4ngk9mpk63sfjx0ksaex9mpqeufxf6fugp')
+    // localStorage.setItem('slpAddress', 'simpleledger:qry9xpxa4ngk9mpk63sfjx0ksaex9mpqeu9azpuukl')
   },
   async mounted () {
     await this.$store.dispatch('cashdrop/fetchQuestList')
@@ -199,11 +209,61 @@ export default {
 </script>
 
 <style>
+.quest-main {
+  height: 200px;
+  overflow: auto;
+  padding-bottom: 80px;
+  /* border-top: 1px solid #B2B2B2;
+  border-bottom: 1px solid #B2B2B2; */
+}
+.quest-list {
+  /* border-left: 2px solid #0AC18E; */
+  /* background: #B5ECDD; */
+  border-radius: 4px;
+  /* border: 2px solid #84C2B1; */
+}
+.bdr-direct {
+  border-left: 2px solid #0ac18e;
+}
+.bdr-indirect {
+  border-left: 2px solid #f09e0e;
+}
+.bdr-upcoming {
+  border-left: 2px solid #0e3247;
+}
 .questMoreInfo {
   display: none;
 }
 .showMorequestInfo {
   display: block;
+}
+#ratio-option ul {
+  display: inline-block;
+  list-style: none;
+  height: 66px;
+  padding-right: 0;
+  padding-left: 0;
+  margin: 0;
+  width: 100%;
+  text-align: center;
+}
+#ratio-option ul li {
+  display: inline-block;
+  padding: 4px 0 0 0;
+  width: 33.33%;
+  margin-right: 0;
+}
+#ratio-option ul li a {
+  display: inline-block;
+  height: 56px;
+  line-height: 56px;
+  text-align: center;
+  /* background: #B5ECDD; */
+  border: 1px solid #bbbbbb;
+  text-decoration: none;
+  border-radius: 8px;
+  width: 90% !important;
+  box-shadow: 1px 2px 2px #bbbbbb;
 }
 .bg-purelypeer {
   background-color: #0AC18E;
@@ -242,9 +302,9 @@ p {
   bottom: 0pt;
   width: 100%;
 }
-.bg-input-bg {
+/* .bg-input-bg {
   background: #B5ECDD !important;
-}
+} */
 .text-input-color {
   color: #0AC18E;
 }
@@ -254,11 +314,5 @@ p {
   left: 0pt;
   top: 0pt;
   width: 100%;
-}
-[ripple] .ripple--container .ripple--body {
-  opacity: 0.2 !important;
-  background-color: rgba(10, 193, 142, 0.1) !important;
-  -webkit-animation: rippler 500ms;
-          animation: rippler 500ms;
 }
 </style>

@@ -3,8 +3,8 @@
         <q-page-container>
             <div id="explore-map" class="row">
               <div class="example-custom-control q-mt-md zoom-controls">
-                  <span class="q-mr-sm q-pa-sm bg-white" style="border-radius: 8px; box-shadow: 0px 1px 1px 1px #D9D9D9;" @click="zoomScale++">&#10133;</span>
-                  <span class="q-pa-sm bg-white" style="border-radius: 8px; box-shadow: 0px 1px 1px 1px #D9D9D9;" @click="zoomScale--">&#10134;</span>
+                  <span class="q-mr-sm q-pa-sm bg-zoom-scale shadow-2" style="border-radius: 50%; padding: 10px" v-wave="{ color: '#bbbbbb', initialOpacity: 0.5, easing: 'ease-in', duration: 0.3 }" @click="zoomScale++">&#10133;</span>
+                  <span class="q-pa-sm bg-zoom-scale shadow-2" style="border-radius: 50%; padding: 10px" v-wave="{ color: '#bbbbbb', initialOpacity: 0.5, easing: 'ease-in', duration: 0.3 }" @click="zoomScale--">&#10134;</span>
               </div>
               <l-map
                 :zoom="zoomScale"
@@ -57,11 +57,11 @@
                     :visible="pin.radiusVisibility"
                     @click="toggleWindowInfo(index)" />
               </l-map>
-              <div class="adjust-map-height q-px-md">
+              <!-- <div class="adjust-map-height q-px-md">
                   <q-btn color="btn-map-resizer text-btn-color" rounded v-touch-pan.vertical.prevent.mouse="resizeMapHeight" size="sm" label="Pinch to resize" />
-              </div>
+              </div> -->
               <div class="current-location">
-                <q-btn color="btn-map-resizer text-btn-color" rounded @click="currentLocation" size="sm" label="Current location" />
+                <q-btn class="q-px-none" color="btn-map-resizer text-btn-color" icon="my_location" round @click="currentLocation" size="sm" />
               </div>
             </div>
         </q-page-container>
@@ -262,7 +262,7 @@ export default {
 .zoom-controls {
     position: absolute;
     right: 10px;
-    bottom: 23px;
+    bottom: 26px;
     z-index: 1000;
 }
 .zoom-controls span {
@@ -292,5 +292,8 @@ export default {
 }
 .text-btn-color {
     color: rgba(0, 0, 0, 0.7) !important;
+}
+.btn-zoom-scale {
+  background: rgba(255, 255, 255, 0.4);
 }
 </style>
