@@ -45,10 +45,11 @@ const routes = [
     ]
   },
   {
-    path: '/confirmed-transaction',
-    component: () => import('layouts/confirmedTxn/confirmedTransaction.vue'),
+    path: '/confirm-transaction',
+    component: () => import('layouts/confirmTxn/confirmTransaction.vue'),
     children: [
-      { path: '', component: () => import('pages/confirmedTxn/Index.vue') }
+      { path: '', component: () => import('pages/confirmTxn/Index.vue') },
+      { path: 'successful-transaction', component: () => import('pages/confirmTxn/successfulTransaction.vue') }
     ]
   },
   {
