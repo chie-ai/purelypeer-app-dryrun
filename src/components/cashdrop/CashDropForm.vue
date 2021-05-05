@@ -1,6 +1,6 @@
 <template>
   <div id="quest-list">
-    <div class="col-12 quest-container q-mt-none q-mb-none" ref="questList">
+    <div class="col-12 quest-container q-mt-none q-mb-none bg-grey-2" ref="questList">
       <div class="q-px-none bg-grey-2">
         <q-card class="my-card q-pt-xs q-mx-none bg-grey-2 q-mb-md no-shadow" ref="formCard">
           <q-card-section ref="questCardHeader">
@@ -74,7 +74,7 @@
                         />
                       </template>
                     </q-input>
-                    <q-btn :label="'Cash Drop \uD83D\uDCA7'" type="submit" class="full-width q-mt-md quest-btn"/>
+                    <q-btn :label="'Cash Drop \uD83D\uDCA7'" type="submit" class="full-width q-mt-sm quest-btn"/>
                   </q-form>
                 </div>
               </div>
@@ -85,7 +85,7 @@
     </div>
 
     <BCHAddress class="hidden" ref="bchAddress" v-on:cancelQuest="cancelQuest"/>
-    <LogoLoading v-if="loading" :animateLoader="loading" />
+    <LogoLoading class="hidden" ref="logoLoader" />
   </div>
 </template>
 
@@ -126,8 +126,8 @@ export default {
           '15 min \uD83D\uDD7A\u267F\uD83D\uDC83', 'Urban \uD83C\uDFD9\uFE0F', 'Regional \uD83D\uDEE3\uFE0F', 'Continental \uD83C\uDF10'
         ]
       },
-      amount: 0.00390000,
-      amount2: 0.00390000,
+      amount: 0.00020000,
+      amount2: 0.00020000,
       cashDropCountModel: 2,
       cashDropFormModels: {
         tier: 'Upcoming',
@@ -140,7 +140,7 @@ export default {
       questExpanderIcon: 'mdi-arrow-expand-all',
       price: null,
       questCoordinates: null,
-      loading: false,
+      // loading: null,
       password: null,
       isPwd: true
     }
@@ -258,7 +258,9 @@ export default {
                 document.getElementById('nav-menu').classList.add('hidden')
                 document.getElementsByClassName('exploreMap')[0].classList.add('hidden')
 
-                this.loading = true
+                this.$refs.logoLoader.$el.classList.remove('hidden')
+                this.$refs.logoLoader.$el.classList.add('animate-loader')
+                this.$refs.logoLoader.$el.classList.remove('animate-hiding')
                 this.createQuest(questCreate)
               }).onCancel(() => {
                 this.$emit('routeStatus', true)
@@ -288,7 +290,9 @@ export default {
                     }).onOk(() => {
                       this.$refs.bchAddress.$el.classList.add('hidden')
 
-                      this.loading = true
+                      this.$refs.logoLoader.$el.classList.remove('hidden')
+                      this.$refs.logoLoader.$el.classList.add('animate-loader')
+                      this.$refs.logoLoader.$el.classList.remove('animate-hiding')
                       this.createQuest(questCreate)
                     }).onCancel(() => {
                       this.cancelQuest()
@@ -320,19 +324,36 @@ export default {
         this.$emit('routeStatus', true)
         const quest = response.data
         quest.fee_break_down = this.feeBreakdown
-        this.$router.push({ path: 'confirmed-transaction', query: quest })
+        this.$router.push({ path: 'confirm-transaction', query: quest })
       }).catch(error => {
         console.log('Error in creating: ', error)
+
+        /** Show the map and quest form */
         this.$refs.questList.classList.remove('hidden')
         document.getElementById('nav-menu').classList.remove('hidden')
         document.getElementsByClassName('exploreMap')[0].classList.remove('hidden')
-        this.loading = false
 
+        /** Removes Logo Loading */
+        this.$refs.logoLoader.$el.classList.remove('animate-loader')
+        this.$refs.logoLoader.$el.classList.add('animate-hiding')
+        setTimeout(() => {
+          this.$refs.logoLoader.$el.classList.add('hidden')
+        }, 300)
+
+        /** Checks which part is the error */
+        let errorMsg = ''
+        if (typeof error !== 'string') {
+          errorMsg = 'amount' in error ? error.amount : 'coors' in error ? error.coors : ''
+        } else {
+          errorMsg = 'Server Error (500)'
+        }
+
+        /** Displays the error message */
         this.$q.notify({
-          message: error.coors,
+          message: errorMsg,
           color: 'red',
           position: 'top',
-          timeout: 2000
+          timeout: 3000
         })
       })
     },
@@ -455,6 +476,18 @@ export default {
   z-index: 3000;
 }
 .card-ceparator {
-  margin-top: 60px;
+  margin-top: 56px;
+}
+.animate-loader {
+  animation: 1s appear;
+}
+@keyframes appear {
+  0% {
+    opacity: 0;
+  }
+}
+.animate-hiding {
+  opacity: 0;
+  transition: opacity .5s;
 }
 </style>

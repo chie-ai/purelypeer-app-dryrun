@@ -106,7 +106,7 @@
           </div>
         </q-carousel-slide>
     </q-carousel>
-    <LogoLoading v-if="loading" :animateLoader="loading" />
+    <LogoLoading class="hidden" ref="logoLoader" />
   </div>
 </template>
 
@@ -138,6 +138,8 @@ export default {
       // Create a wallet
       createWallet().then(response => {
         console.log('Creation of wallet response: ', response)
+        this.$refs.logoLoader.$el.classList.remove('hidden')
+        this.$refs.logoLoader.$el.classList.add('animate-loader')
 
         this.$store.commit('wallet/mutateSeedPhrase', response.mnemonic)
 

@@ -180,17 +180,17 @@ export default {
     }
   },
   created () {
-    console.log('Seed phrase: ', localStorage.getItem('seedPhrase'))
-    console.log('Seed hash: ', localStorage.getItem('seedHash'))
-    console.log('Pubkey: ', localStorage.getItem('pubkey'))
-    console.log('Bch Address: ', localStorage.getItem('bchAddress'))
-    console.log('slp address: ', localStorage.getItem('slpAddress'))
+    // console.log('Seed phrase: ', localStorage.getItem('seedPhrase'))
+    // console.log('Seed hash: ', localStorage.getItem('seedHash'))
+    // console.log('Pubkey: ', localStorage.getItem('pubkey'))
+    // console.log('Bch Address: ', localStorage.getItem('bchAddress'))
+    // console.log('slp address: ', localStorage.getItem('slpAddress'))
 
-    // localStorage.setItem('seedPhrase', 'badge neither such situate six pause movie together place dream sand crew')
-    // localStorage.setItem('seedHash', '72b63b7c5c4eb5e6840db4d83bcd59703d9993c934b282d9ab2c085f9ca9a047')
-    // localStorage.setItem('pubkey', '030f9e9ca2d3d1f35129aadb21d22c8c579b874f18dafdd78cb0abb0bdc1559270')
-    // localStorage.setItem('bchAddress', 'bitcoincash:qry9xpxa4ngk9mpk63sfjx0ksaex9mpqeufxf6fugp')
-    // localStorage.setItem('slpAddress', 'simpleledger:qry9xpxa4ngk9mpk63sfjx0ksaex9mpqeu9azpuukl')
+    localStorage.setItem('seedPhrase', 'badge neither such situate six pause movie together place dream sand crew')
+    localStorage.setItem('seedHash', '72b63b7c5c4eb5e6840db4d83bcd59703d9993c934b282d9ab2c085f9ca9a047')
+    localStorage.setItem('pubkey', '030f9e9ca2d3d1f35129aadb21d22c8c579b874f18dafdd78cb0abb0bdc1559270')
+    localStorage.setItem('bchAddress', 'bitcoincash:qry9xpxa4ngk9mpk63sfjx0ksaex9mpqeufxf6fugp')
+    localStorage.setItem('slpAddress', 'simpleledger:qry9xpxa4ngk9mpk63sfjx0ksaex9mpqeu9azpuukl')
   },
   async mounted () {
     await this.$store.dispatch('cashdrop/fetchQuestList')
@@ -219,17 +219,17 @@ export default {
 .quest-list {
   /* border-left: 2px solid #0AC18E; */
   /* background: #B5ECDD; */
-  border-radius: 4px;
+  border-radius: 3px;
   /* border: 2px solid #84C2B1; */
 }
 .bdr-direct {
-  border-left: 2px solid #0ac18e;
+  border-left: 3px solid #0ac18e;
 }
 .bdr-indirect {
-  border-left: 2px solid #f09e0e;
+  border-left: 3px solid #f09e0e;
 }
 .bdr-upcoming {
-  border-left: 2px solid #0e3247;
+  border-left: 3px solid #0e3247;
 }
 .questMoreInfo {
   display: none;
