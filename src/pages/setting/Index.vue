@@ -1,15 +1,15 @@
 <template>
-  <div class="row animate-in-load">
-    <Balance />
+  <div class="row">
+    <Settings />
   </div>
 </template>
 
 <script>
-import Balance from '../../components/setting/Balance.vue'
+import Settings from '../../components/setting/Settings.vue'
 
 export default {
   components: {
-    Balance
+    Settings
   }
 }
 </script>

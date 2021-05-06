@@ -8,69 +8,69 @@
           <q-card-section>
             <div class="q-pa-none row">
               <div class="col-6">
-                <span class="fnt-10 info">Quest Name :</span>
+                <span class="fnt-10 info-label">Quest Name :</span>
               </div>
               <div class="col-6">
-                <span class="text-subtitle2 info text-weight-bold">{{ quest.name }}</span>
+                <span class="text-subtitle2 info">{{ quest.name }}</span>
               </div>
               <div class="col-6">
-                <span class="fnt-10 info">Cashdrops :</span>
+                <span class="fnt-10 info-label">Cashdrops :</span>
               </div>
               <div class="col-6">
-                <span class="text-subtitle2 info text-weight-bold">{{ quest.total_cashdrops }}</span>
+                <span class="text-subtitle2 info">{{ quest.total_cashdrops }}</span>
               </div>
               <div class="col-6">
-                <span class="fnt-10 info">PurelyPeer Tier : </span>
+                <span class="fnt-10 info-label">PurelyPeer Tier : </span>
               </div>
               <div class="col-6">
-                <span class="text-subtitle2 info text-weight-bold">{{ quest.acceptance_tier === 'Direct' ? '\uD83D\uDC9A Direct' : quest.acceptance_tier === 'Indirect' ? '\uD83E\uDDE1 Indirect' : quest.acceptance_tier === 'Upcoming' ? '\uD83D\uDC99 Upcoming' : '\uD83D\uDDA4 Inactive' }}</span>
+                <span class="text-subtitle2 info">{{ quest.acceptance_tier === 'Direct' ? '\uD83D\uDC9A Direct' : quest.acceptance_tier === 'Indirect' ? '\uD83E\uDDE1 Indirect' : quest.acceptance_tier === 'Upcoming' ? '\uD83D\uDC99 Upcoming' : '\uD83D\uDDA4 Inactive' }}</span>
               </div>
               <div class="col-6">
-                <span class="fnt-10 info">Presence : </span>
+                <span class="fnt-10 info-label">Presence : </span>
               </div>
               <div class="col-6">
-                <span class="text-subtitle2 info text-weight-bold">{{ quest.has_physical_presence ? '\uD83E\uDDF1\u2714\uFE0F Yes' : '\uD83E\uDDF1\u274C No' }} </span>
+                <span class="text-subtitle2 info">{{ quest.has_physical_presence ? '\uD83E\uDDF1\u2714\uFE0F Yes' : '\uD83E\uDDF1\u274C No' }} </span>
               </div>
               <div class="col-6">
-                <span class="fnt-10 info">Radius : </span>
+                <span class="fnt-10 info-label">Radius : </span>
               </div>
               <div class="col-6">
-                <span class="text-subtitle2 info text-weight-bold">{{ (quest.radius === 1500 ? '\uD83D\uDD7A\u267F\uD83D\uDC83 15 min' : quest.radius === 15000 ? '\uD83C\uDFD9\uFE0F Urban' : quest.radius === 15000 ? '\uD83D\uDEE3\uFE0F Regional' : '\uD83C\uDF10 Continental' ) }}</span>
+                <span class="text-subtitle2 info">{{ (quest.radius === 1500 ? '\uD83D\uDD7A\u267F\uD83D\uDC83 15 min' : quest.radius === 15000 ? '\uD83C\uDFD9\uFE0F Urban' : quest.radius === 15000 ? '\uD83D\uDEE3\uFE0F Regional' : '\uD83C\uDF10 Continental' ) }}</span>
               </div>
               <div class="col-6">
-                <span class="fnt-10 info">Phone Number : </span>
+                <span class="fnt-10 info-label">Phone Number : </span>
               </div>
               <div class="col-6">
-                <span class="text-subtitle2 info text-weight-bold">{{ quest.phone_no ? quest.phone_no : '--' }}</span>
+                <span class="text-subtitle2 info">{{ quest.phone_no ? quest.phone_no : '--' }}</span>
               </div>
             </div>
             <div class="q-pa-none">
-              <span class="fnt-10 info">Contact URL: </span>
-              <p class="q-mb-xs"><span class="text-subtitle2 info text-weight-bold">{{ quest.contact_url ? quest.contact_url : '--' }}</span></p>
-              <span class="fnt-10 info">Memo: </span>
-              <p class="q-mb-none"><span class="text-subtitle2 info text-weight-bold">{{ quest.memo ? quest.memo : '--' }}</span></p>
+              <span class="fnt-10 info-label">Contact URL: </span>
+              <p class="q-mb-xs"><span class="text-subtitle2 info">{{ quest.contact_url ? quest.contact_url : '--' }}</span></p>
+              <span class="fnt-10 info-label">Memo: </span>
+              <p class="q-mb-none"><span class="text-subtitle2 info">{{ quest.memo ? quest.memo : '--' }}</span></p>
             </div>
           </q-card-section>
           <q-separator class="q-mx-md"/>
           <q-card-section>
             <div class="q-pa-none row">
               <div class="col-6">
-                <span class="fnt-10 info">Total Value : </span>
+                <span class="fnt-10 info-label">Total Value : </span>
               </div>
               <div class="col-6">
-                <span class="text-subtitle2 info text-weight-bold">{{ quest.amount.toFixed(8) }} BCH</span>
+                <span class="text-subtitle2 info"><span style="font-family: Monospace;">{{ amount }}</span> satB</span>
               </div>
               <div class="col-6">
-                <span class="fnt-10 info">Processing : </span>
+                <span class="fnt-10 info-label">Processing : </span>
               </div>
               <div class="col-6">
-                <span class="text-subtitle2 info text-weight-bold">{{ quest.fee_break_down.toFixed(8) }} BCH</span>
+                <span class="text-subtitle2 info"><span style="font-family: Monospace;">{{ process }}</span> satB</span>
               </div>
               <div class="col-6">
-                <span class="fnt-10 info">1 Cashdrop : </span>
+                <span class="fnt-10 info-label">1 Cashdrop : </span>
               </div>
               <div class="col-6">
-                <span class="text-subtitle2 info text-weight-bold">{{ amountPerCashdrop.toFixed(8) }} BCH</span>
+                <span class="text-subtitle2 info"><span style="font-family: Monospace;">{{ amountPerCashdrop }}</span> satB</span>
               </div>
             </div>
           </q-card-section>
@@ -99,7 +99,8 @@ export default {
     return {
       quest: null,
       providedUtxo: null,
-      // privkey: null,
+      amount: null,
+      process: null,
       amountPerCashdrop: null
     }
   },
@@ -199,7 +200,9 @@ export default {
     this.$route.query.utxos.forEach((utxo, index) => {
       this.providedUtxo += Number(utxo.value)
     })
-    this.amountPerCashdrop = (Number(this.quest.amount) - Number(this.quest.fee_break_down)) / Number(this.quest.total_cashdrops)
+    this.amount = server.bchjs.BitcoinCash.toSatoshi(this.quest.amount)
+    this.process = server.bchjs.BitcoinCash.toSatoshi(this.quest.fee_break_down)
+    this.amountPerCashdrop = server.bchjs.BitcoinCash.toSatoshi((Number(this.quest.amount) - Number(this.quest.fee_break_down)) / Number(this.quest.total_cashdrops))
   }
 }
 </script>
@@ -220,7 +223,10 @@ export default {
   opacity: 0;
   transition: opacity .5s;
 }
-.info {
+.info-label {
   color: #0e3247 !important
+}
+.info {
+  color: #0AC18E !important
 }
 </style>

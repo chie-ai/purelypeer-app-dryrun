@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-center animate-in-load">
+  <div class="row justify-center">
     <ConfirmTransaction v-on:routeStatus="updateRouteStatus" />
   </div>
 </template>

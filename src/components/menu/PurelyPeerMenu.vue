@@ -1,23 +1,10 @@
 <template>
-  <div class="q-pa-md" style="width: 100% !important">
-
-        <q-card class="my-card" ref="questListCard" style="margin-top: 60px;">
-          <q-card-section class="q-px-none q-py-none" ref="questCardHeader">
-            <div class="text-h6 quest-caption">
-              <BchWalletBalance />
-            </div>
-          </q-card-section>
-
-          <q-separator ref="cardSeparator"/>
-
-          <q-card-section class="q-pt-none q-pb-md q-pt-md q-px-none">
-            <PurelyPeerMenu />
-          </q-card-section>
-        </q-card>
-    <!-- <div class="menu-main-container q-pb-lg">
+  <div class="q-px-md bg-grey-2" ref="menu" style="width: 100% !important; margin-top: 60px;">
+    <div class="quest-caption q-pb-none q-mb-md">
       <BchWalletBalance />
-      <PurelyPeerMenu />
-    </div> -->
+    </div>
+    <q-separator ref="cardSeparator"/>
+    <PurelyPeerMenu />
   </div>
 </template>
 
@@ -32,15 +19,17 @@ export default {
   components: {
     BchWalletBalance,
     PurelyPeerMenu
+  },
+  mounted () {
+    const screenHeight = screen.height
+    const newHeight = screenHeight - 61
+
+    console.log('height: ', newHeight)
+
+    this.$refs.menu.setAttribute('style', 'height: ' + newHeight + 'px !important; width: 100% !important; margin-top: 60px;')
   }
 }
 </script>
 
 <style>
-/* .menu-main-container {
-  border-radius: 20px;
-  background: #B5ECDD;
-  margin-top: 60px;
-  border: 2px solid #84C2B1;
-} */
 </style>

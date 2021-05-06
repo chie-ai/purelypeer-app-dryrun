@@ -1,5 +1,5 @@
 <template>
-  <div class="row explore-body animate-in-load">
+  <div class="row explore-body">
     <ExploreMap :move-to-the-quest-coordinates="coordinates" />
     <QuestList v-on:moveToTheQuestCoordinates="questCoordinates" />
   </div>

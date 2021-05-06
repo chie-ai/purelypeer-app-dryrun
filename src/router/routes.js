@@ -26,6 +26,7 @@ const routes = [
     component: () => import('layouts/setting/SettingLayout.vue'),
     children: [
       { path: '', component: () => import('pages/setting/Index.vue') },
+      { path: 'recovery-seed', component: () => import('pages/setting/RecoverySeed.vue') },
       { path: 'receive', component: () => import('pages/setting/Receive.vue') }
     ]
   },

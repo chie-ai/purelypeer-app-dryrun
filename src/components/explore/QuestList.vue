@@ -39,14 +39,34 @@
                     <p class="q-mb-none" style="color: #0e3247" v-if="quest.contactUrl"><span>Contact URL: </span><a href="www.facebook.com" class="text-caption text-weight-bold">{{ quest.contactUrl }}</a></p>
 
                     <div class="questMoreInfo" :ref="questIndex">
-                      <p class="q-mb-none" style="color: #0e3247"><span v-if="quest.memo">Memo: </span><span class="text-weight-bold">{{ quest.memo }}</span></p>
-                      <p class="q-mb-none" style="color: #0e3247"><span>PurelyPeer Tier | Presence | Radius: </span>
-                      <br>
-                        <span class="text-weight-bold" style="color: #0e3247">
-                          {{ quest.acceptance_tier === 'Direct' ? 'Direct \uD83D\uDC9A' : quest.acceptance_tier === 'Indirect' ? 'Indirect \uD83E\uDDE1' : quest.acceptance_tier === 'Upcoming' ? 'Upcoming \uD83D\uDC99' : 'Inactive \uD83D\uDDA4' }}
-                          | {{ quest.has_physical_presence ? 'Yes \uD83E\uDDF1\u2714\uFE0F' : 'No \uD83E\uDDF1\u274C' }}
-                          | {{ (quest.radius === 1500 ? '15 min \uD83D\uDD7A\u267F\uD83D\uDC83' : quest.radius === 15000 ? 'Urban \uD83C\uDFD9\uFE0F' : quest.radius === 15000 ? 'Regional \uD83D\uDEE3\uFE0F' : 'Continental \uD83C\uDF10' ) }}
-                        </span>
+                      <p class="q-mb-none" style="color: #0e3247">
+                        <span v-if="quest.memo">Memo: </span>
+                        <span class="text-weight-bold">{{ quest.memo }}</span>
+                      </p>
+                      <p class="q-mb-none" style="color: #0e3247">
+                        <span>PurelyPeer Tier: </span>
+                        <span class="text-weight-bold">{{ quest.acceptance_tier === 'Direct' ? 'Direct \uD83D\uDC9A' : quest.acceptance_tier === 'Indirect' ? 'Indirect \uD83E\uDDE1' : quest.acceptance_tier === 'Upcoming' ? 'Upcoming \uD83D\uDC99' : 'Inactive \uD83D\uDDA4' }}</span>
+                      </p>
+                      <p class="q-mb-none" style="color: #0e3247">
+                        <span>Presence: </span>
+                        <span class="text-weight-bold">{{ quest.has_physical_presence ? 'Yes \uD83E\uDDF1\u2714\uFE0F' : 'No \uD83E\uDDF1\u274C' }}</span>
+                      </p>
+                      <p class="q-mb-none" style="color: #0e3247">
+                        <span>Radius: </span>
+                        <span class="text-weight-bold">{{ (quest.radius === 1500 ? '15 min \uD83D\uDD7A\u267F\uD83D\uDC83' : quest.radius === 15000 ? 'Urban \uD83C\uDFD9\uFE0F' : quest.radius === 15000 ? 'Regional \uD83D\uDEE3\uFE0F' : 'Continental \uD83C\uDF10' ) }}</span>
+                      </p>
+                      <q-separator class="q-my-sm" />
+                      <p class="q-mb-none" style="color: #0e3247">
+                        <span>Total Value: </span>
+                        <span class="text-weight-bold">{{ quest.amount.toFixed(8) }} BCH</span>
+                      </p>
+                      <p class="q-mb-none" style="color: #0e3247">
+                        <span>Processing: </span>
+                        <span class="text-weight-bold">{{ (quest.cashdrops.length * 0.00002000).toFixed(8) }} BCH</span>
+                      </p>
+                      <p class="q-mb-none" style="color: #0e3247">
+                        <span>1 Cashdrop: </span>
+                        <span class="text-weight-bold">{{ ((Number(quest.amount) - Number((quest.cashdrops.length * 0.00002000).toFixed(8))) / Number(quest.total_cashdrops)).toFixed(8) }} BCH</span>
                       </p>
                     </div>
                   </div>
@@ -186,11 +206,11 @@ export default {
     // console.log('Bch Address: ', localStorage.getItem('bchAddress'))
     // console.log('slp address: ', localStorage.getItem('slpAddress'))
 
-    localStorage.setItem('seedPhrase', 'badge neither such situate six pause movie together place dream sand crew')
-    localStorage.setItem('seedHash', '72b63b7c5c4eb5e6840db4d83bcd59703d9993c934b282d9ab2c085f9ca9a047')
-    localStorage.setItem('pubkey', '030f9e9ca2d3d1f35129aadb21d22c8c579b874f18dafdd78cb0abb0bdc1559270')
-    localStorage.setItem('bchAddress', 'bitcoincash:qry9xpxa4ngk9mpk63sfjx0ksaex9mpqeufxf6fugp')
-    localStorage.setItem('slpAddress', 'simpleledger:qry9xpxa4ngk9mpk63sfjx0ksaex9mpqeu9azpuukl')
+    // localStorage.setItem('seedPhrase', 'badge neither such situate six pause movie together place dream sand crew')
+    // localStorage.setItem('seedHash', '72b63b7c5c4eb5e6840db4d83bcd59703d9993c934b282d9ab2c085f9ca9a047')
+    // localStorage.setItem('pubkey', '030f9e9ca2d3d1f35129aadb21d22c8c579b874f18dafdd78cb0abb0bdc1559270')
+    // localStorage.setItem('bchAddress', 'bitcoincash:qry9xpxa4ngk9mpk63sfjx0ksaex9mpqeufxf6fugp')
+    // localStorage.setItem('slpAddress', 'simpleledger:qry9xpxa4ngk9mpk63sfjx0ksaex9mpqeu9azpuukl')
   },
   async mounted () {
     await this.$store.dispatch('cashdrop/fetchQuestList')

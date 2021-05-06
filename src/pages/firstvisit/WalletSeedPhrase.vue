@@ -1,5 +1,5 @@
 <template>
-  <div class="row animate-in-load">
+  <div class="row">
     <WalletSeedPhrase />
   </div>
 </template>

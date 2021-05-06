@@ -14,14 +14,14 @@
           <li><a href="#?"><strong>Send</strong></a></li>
         </ul>
       </div>
-      <p class="bch-amount q-my-sm q-mt-sm bch-balance"><span style="font-family: Monospace;">{{ BCHBalance }}</span> BCH</p>
+      <p class="bch-amount q-my-sm q-mt-xs bch-balance"><span style="font-family: Monospace;">{{ BCHBalance }}</span> satB ~ </p>
       <!-- <p class="bch-amount q-my-none">~ X.YZ fiat</p> -->
     </div>
   </div>
 </template>
 
 <script>
-import bchjs from '../../utils/getAPIServer.js'
+import server from '../../utils/getAPIServer.js'
 import checkBCHBalance from '../../utils/check_bchbalance.js'
 
 export default {
@@ -32,7 +32,7 @@ export default {
   },
   computed: {
     BCHBalance () {
-      return bchjs.bchjs.BitcoinCash.toBitcoinCash(Number(this.balance))
+      return server.bchjs.BitcoinCash.toSatoshi(server.bchjs.BitcoinCash.toBitcoinCash(Number(this.balance)))
     }
   },
   created () {
@@ -50,11 +50,45 @@ export default {
 
 <style>
 .active {
-  color: #0AC18E !important;
+  color: #0e3247 !important;
+  font-family: PurelyPeer-Bold;
 }
 .bch-balance {
-  color: #6C9E91;
-  font-weight: bolder;
+  color: #7F7F7F;
   font-size: 14px;
+}
+#bch-balance {
+  width: 100%;
+}
+.bch-menu-list ul {
+  display: block;
+  list-style: none;
+  height: 30px;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  text-align: center;
+}
+.bch-menu-list ul li {
+  position: relative;
+  display: inline-block;
+  line-height: 24px;
+}
+.bch-menu-list ul li a {
+  display: block;
+  color: #7F7F7F;
+  text-align: center;
+  text-decoration: none;
+  padding: 4px 26px 2px 26px;
+  font-size: 15px;
+  width: 100%;
+}
+.divider {
+  position: absolute;
+  height: 14px;
+  border-left: 2px solid #54796F;
+  right: -.45px;
+  top: 6px;
+  z-index: 11;
 }
 </style>

@@ -5,11 +5,11 @@
       <!-- <span class="mdi mdi-cash-check"></span> -->
       <p style="font-size: 150px"><span>&#x1F4B8;</span></p>
       <p class="text-h5" style="color: #0AC18E; font-family: PurelyPeer-Bold;">Yay, It's Done!</p>
-      <p style="color: #0e3247">Payment successful! We are glad you have made your quest.</p>
+      <p style="color: #0e3247 !important">Payment successful! We are glad you have made your quest.</p>
     </div>
 
     <div class="q-px-lg">
-      <q-btn label="Go create quest" type="submit" @click="backToCreate" class="full-width q-mt-md quest-btn"/>
+      <q-btn label="Back to create quest" type="submit" @click="backToCreate" class="full-width q-mt-md quest-btn"/>
     </div>
   </div>
 </template>
