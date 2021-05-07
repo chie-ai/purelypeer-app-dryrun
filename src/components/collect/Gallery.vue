@@ -1,6 +1,8 @@
 <template>
-  <div class="full-width q-px-md q-py-md">
-    <q-card ref="galleryListCard">
+  <div class="full-width q-px-md q-py-lg text-center">
+
+    <p class="text-h5 q-mt-lg">Gallery coming soon...</p>
+    <!-- <q-card ref="galleryListCard">
       <q-card-section ref="questCardHeader">
         <div class="text-h6 quest-caption">
           Gallery
@@ -29,7 +31,7 @@
           </div>
         </div>
       </q-card-section>
-    </q-card>
+    </q-card> -->
   </div>
 </template>
 

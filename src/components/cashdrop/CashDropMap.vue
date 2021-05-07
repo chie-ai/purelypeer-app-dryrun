@@ -170,6 +170,12 @@ export default {
     Geolocation.getCurrentPosition().then(position => {
       console.log('Location: ', position)
     }).catch(error => console.log('Unable to retreive your location: ', error))
+  },
+  mounted () {
+    this.geoId = Geolocation.watchPosition({}, (position, err) => {
+      console.log('New GPS position: ', position)
+      this.position = position
+    })
   }
 }
 </script>

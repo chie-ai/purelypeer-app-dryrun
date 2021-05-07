@@ -58,15 +58,11 @@
                       <q-separator class="q-my-sm" />
                       <p class="q-mb-none" style="color: #0e3247">
                         <span>Total Value: </span>
-                        <span class="text-weight-bold">{{ quest.amount.toFixed(8) }} BCH</span>
-                      </p>
-                      <p class="q-mb-none" style="color: #0e3247">
-                        <span>Processing: </span>
-                        <span class="text-weight-bold">{{ (quest.cashdrops.length * 0.00002000).toFixed(8) }} BCH</span>
+                        <span class="text-weight-bold">{{ serverBch.bchjs.BitcoinCash.toSatoshi(quest.amount.toFixed(8)) }} satB</span>
                       </p>
                       <p class="q-mb-none" style="color: #0e3247">
                         <span>1 Cashdrop: </span>
-                        <span class="text-weight-bold">{{ ((Number(quest.amount) - Number((quest.cashdrops.length * 0.00002000).toFixed(8))) / Number(quest.total_cashdrops)).toFixed(8) }} BCH</span>
+                        <span class="text-weight-bold">{{ serverBch.bchjs.BitcoinCash.toSatoshi(((Number(quest.amount) - Number((quest.cashdrops.length * 0.00002000).toFixed(8))) / Number(quest.total_cashdrops)).toFixed(8)) }} satB</span>
                       </p>
                     </div>
                   </div>
@@ -103,7 +99,7 @@
 
 <script>
 // import CompileCovenant from '../../utils/p2sh.js'
-// import server from '../../utils/getAPIServer.js'
+import server from '../../utils/getAPIServer.js'
 
 export default {
   data () {
@@ -123,7 +119,10 @@ export default {
       quests: null,
       questIndexer: null,
       questExpanderIcon: 'mdi-arrow-expand-all',
-      questListLoader: true
+      questListLoader: true,
+      questAmount: null,
+      cashDropAmount: null,
+      serverBch: server
     }
   },
   methods: {

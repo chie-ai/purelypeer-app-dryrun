@@ -21,17 +21,17 @@ public class MainActivity extends BridgeActivity {
     if (BuildConfig.DEBUG) {
       EnableHttpsSelfSigned.enable(this.bridge);
     }
-      
-              
 
-              
 
-              
 
-              
 
-              
 
-              
+
+
+
+
+
+
+
   }
 }
