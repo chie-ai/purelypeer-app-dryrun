@@ -40,7 +40,7 @@ export default {
     checkBCHBalance(localStorage.getItem('bchAddress')).then(response => {
       console.log('Success: ', response)
       // this.balance = Number((response.balance.confirmed).toFixed(4)).toLocaleString(undefined, { minimumFractionDigits: 2 })
-      this.balance = response.balance.confirmed
+      this.balance = Number(response.balance.confirmed) + Number(response.balance.unconfirmed)
     }).catch(error => {
       console.log('Failed: ', error)
     })

@@ -1,8 +1,8 @@
 <template>
   <div id="setting">
     <div class="col-12 q-pt-xs">
-      <div class="text-center">
-        <p class="q-my-md text-h5" style="color: #0ac18e">Settings</p>
+      <div class="">
+        <p class="q-mb-sm q-mt-md text-h5" style="color: #0AC18E"><strong>Settings</strong></p>
       </div>
       <p class="security text-subtitle1 text-left q-mb-none q-mt-md"><strong>Security:</strong></p>
       <div class="security-menu-list q-pt-sm">
@@ -37,7 +37,7 @@ export default {
   data () {
     return {
       seedPhrase: null,
-      value: true
+      value: false
     }
   },
   methods: {

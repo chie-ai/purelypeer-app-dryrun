@@ -160,14 +160,21 @@ export default {
 
       const mapUtxo = utxo
       mapUtxo.map(function (utxo, index) {
-        console.log('utxos: ', utxo)
+        console.log('Utxo: ', utxo.value)
 
         transactionBuilder.addInput(
           utxo.txid,
           utxo.vout
         )
+        console.log('Vout: ', utxo.vout)
         const sighash = transactionBuilder.hashTypes.SIGHASH_SINGLE | transactionBuilder.hashTypes.SIGHASH_ANYONECANPAY
-        transactionBuilder.sign(index, keyPair, redeemScript, sighash, utxo.value)
+        console.log('Txid: ', utxo.txid)
+        try {
+          transactionBuilder.sign(index, keyPair, redeemScript, sighash, utxo.value)
+        } catch (err) {
+          console.log('Error: ', err.toString())
+        }
+        console.log('Sign')
       })
 
       const tx = transactionBuilder.transaction.buildIncomplete()

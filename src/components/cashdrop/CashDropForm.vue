@@ -64,7 +64,7 @@
                           input-class="text-right" class="q-mb-lg" readonly />
 
                     <q-input ref="password" bg-color="input-bg" filled color="input-color" :type="isPwd ? 'password' : 'text'" :dense="true" label="Password"
-                    lazy-rules :rules="[val => !!val || 'Password is required']" v-model="password" >
+                    lazy-rules v-model="password" >
 
                       <template v-slot:append>
                         <q-icon
@@ -341,12 +341,14 @@ export default {
         }, 300)
 
         /** Checks which part is the error */
-        let errorMsg = ''
+        let errorMsg = error.toString()
         if (typeof error !== 'string') {
           errorMsg = 'amount' in error ? error.amount : 'coors' in error ? error.coors : ''
         } else {
           errorMsg = 'Server Error (500)'
         }
+
+        console.log('Error msg: ', error.toString())
 
         /** Displays the error message */
         this.$q.notify({
@@ -419,7 +421,8 @@ export default {
     }).catch(error => console.log('Unable to retreive your location: ', error))
 
     // console.log('UTXO: ', await server.bchjs.Utxo.get(bchAddress))
-    console.log('Balance: ', await server.bchjs.Electrumx.balance(localStorage.getItem('bchAddress')))
+    const bal = await server.bchjs.Electrumx.balance(localStorage.getItem('bchAddress'))
+    console.log('Balance: ', (Number(bal.balance.confirmed) + Number(bal.balance.unconfirmed)))
   }
 }
 </script>
