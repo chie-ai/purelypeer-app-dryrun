@@ -7,6 +7,7 @@ export function createUser ({ dispatch }, wallet) {
       .then(response => {
         console.log('Success in creating UUID')
         wallet.user = response.data.id
+        console.log('User id: ', response.data.id)
         localStorage.setItem('user_id', response.data.id)
         dispatch('createWallet', wallet)
           .then(res => {
