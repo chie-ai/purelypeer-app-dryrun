@@ -14,7 +14,7 @@
           <li><a href="#?"><strong>Send</strong></a></li>
         </ul>
       </div>
-      <p class="bch-amount q-my-sm q-mt-xs bch-balance"><span style="font-family: Monospace;">{{ BCHBalance }}</span> satB ~ </p>
+      <p class="bch-amount q-my-sm q-mt-xs bch-balance"><span class="numeric">{{ BCHBalance }}</span> sat&#x20BF; ~ <span class="numeric">{{ fiat }}</span> USD</p>
       <!-- <p class="bch-amount q-my-none">~ X.YZ fiat</p> -->
     </div>
   </div>
@@ -23,24 +23,31 @@
 <script>
 import server from '../../utils/getAPIServer.js'
 import checkBCHBalance from '../../utils/check_bchbalance.js'
+import { satoshisToFiat } from 'bitcoin-conversion'
 
 export default {
   data () {
     return {
-      balance: null
+      satBalance: null,
+      fiat: null
     }
   },
   computed: {
     BCHBalance () {
-      return server.bchjs.BitcoinCash.toSatoshi(server.bchjs.BitcoinCash.toBitcoinCash(Number(this.balance)))
+      return server.bchjs.BitcoinCash.toSatoshi(server.bchjs.BitcoinCash.toBitcoinCash(Number(this.satBalance)))
     }
   },
-  created () {
+  async created () {
     console.log('BCH Add: ', localStorage.getItem('bchAddress'))
     checkBCHBalance(localStorage.getItem('bchAddress')).then(response => {
       console.log('Success: ', response)
-      // this.balance = Number((response.balance.confirmed).toFixed(4)).toLocaleString(undefined, { minimumFractionDigits: 2 })
-      this.balance = Number(response.balance.confirmed) + Number(response.balance.unconfirmed)
+      this.satBalance = Number(response.balance.confirmed) + Number(response.balance.unconfirmed)
+      // convert satoshi to {fiat}
+      satoshisToFiat(this.satBalance, 'USD')
+        .then(res => {
+          console.log('Conversion: ', res)
+          this.fiat = res
+        })
     }).catch(error => {
       console.log('Failed: ', error)
     })
@@ -49,6 +56,9 @@ export default {
 </script>
 
 <style>
+.numeric {
+  font-family: Monospace;
+}
 .active {
   color: #0e3247 !important;
   font-family: PurelyPeer-Bold;

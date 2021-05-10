@@ -64,6 +64,7 @@
         </div>
       </div>
     </q-page-container>
+    <q-btn label="Websocket" @click="websocket"></q-btn>
   </q-layout>
 </template>
 
@@ -115,7 +116,8 @@ export default {
       cashDropsCoordinates: null,
       startY: 0,
       counter: 0,
-      mapHeight: 0
+      mapHeight: 0,
+      socketMessage: null
     }
   },
   props: ['moveToTheQuestCoordinates'],
@@ -174,6 +176,9 @@ export default {
       }
 
       // this.markerLocation = this.$refs.myPurelyPeerMap.mapObject.getCenter()
+    },
+    websocket () {
+      this.$store.dispatch('sendMessage', 'Hello')
     }
     // resizeMapHeight ({ evt, ...info }) {
     //   const map = this.$refs.myPurelyPeerMap.$el
@@ -201,13 +206,26 @@ export default {
     //   this.$refs.myPurelyPeerMap.mapObject.invalidateSize()
     // }
   },
-  async mounted () {
+  async created () {
     await this.$store.dispatch('cashdrop/fetchQuestList').then(res => {
       this.quests = res.data.results.length > 0 ? res.data.results.map(quest => ({ ...quest, infoWinOpen: false, radiusVisibility: false })) : ''
     }).catch(err => {
       console.log('Error: ', err)
     })
+    this.$store.dispatch('connectWebSocket')
+    this.$options.sockets.onmessage = (data) => {
+      console.log('Socket response: ', data)
+    }
+  },
+  beforeDestroy () {
+    this.$store.dispatch('disconnectWebSocket')
   }
+  // mounted () {
+  //   this.geoId = Geolocation.watchPosition({}, (position, err) => {
+  //     console.log('New GPS position: ', position)
+  //     this.position = position
+  //   })
+  // }
 }
 </script>
 

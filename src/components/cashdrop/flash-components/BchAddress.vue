@@ -15,17 +15,18 @@
       </div>
       <div class="q-px-lg q-pt-none">
         <div class="col qr-code q-pl-xs q-pr-xs q-mt-md shadow-3">
-          <div class="row text-center q-mt-xs q-mx-xs q-px-md q-py-md">
+          <div class="row text-center q-mt-xs q-mx-xs q-px-md q-pt-md q-pb-none">
             <div class="col row justify-center q-my-lg q-mx-lg">
               <qr-code :text="bchAddress" color="#404543" :size="220" error-level="H" class="seed-phrase q-mt-none"></qr-code>
             </div>
-            <p class="q-my-none ellipsis" id="bch-address-text" style="font-size: 14px;"><b>{{ bchAddress }}</b></p>
+          </div>
+          <div class="text-center q-mb-lg q-px-md" style="word-wrap: break-word;">
+            <p class="q-my-none" style="font-size: 14px; color: #0e3247"><b>{{ bchAddress }}</b></p>
           </div>
         </div>
       </div>
-      <div class="q-px-lg q-mt-md">
+      <div class="q-px-lg q-my-md">
         <q-btn
-          rounded
           class="btn-copy-address text-white q-mt-none"
           size="md"
           label="copy address"

@@ -74,7 +74,7 @@
                         />
                       </template>
                     </q-input>
-                    <q-btn :label="'Cash Drop \uD83D\uDCA7'" type="submit" class="full-width q-mt-sm quest-btn"/>
+                    <q-btn :label="'Cash Drop \uD83D\uDCA7'" type="submit" class="full-width q-mt-lg quest-btn"/>
                   </q-form>
                 </div>
               </div>

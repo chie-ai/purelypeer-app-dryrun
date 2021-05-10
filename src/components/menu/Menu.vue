@@ -40,7 +40,7 @@
         </q-item>
 
         <q-item clickable v-ripple>
-          <q-item-section class="text-left">Back Up</q-item-section>
+          <q-item-section class="text-left">Security</q-item-section>
           <q-item-section avatar>
             <span style="font-size: 18px">&#x1F510;</span>
           </q-item-section>

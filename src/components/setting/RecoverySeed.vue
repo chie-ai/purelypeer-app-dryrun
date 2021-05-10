@@ -6,15 +6,10 @@
     </div>
     <div class="row q-col-gutter-sm q-mt-xs">
       <div class="col-4 q-my-xs" style="height: 44px; line-height: 44px; color: #0e3247" v-for="(seed, index) in seedPhrase" :key="index">
-        <div class="q-pl-md" style="border-radius: 10px; border: 1.5px solid rgb(197, 206, 203)">
-          <span style="color: #7F7F7F; font-family: Monospace;">{{ index }}.</span> {{ seed }}
+        <div class="q-pl-sm phrase-text">
+          <span class="phrase-index">{{ index + 1 }}.</span> {{ seed }}
         </div>
       </div>
-      <!-- <div class="row justify-between q-py-md q-gutter-sm">
-        <div class="seed__phrase text-center text-white q-py-xs q-px-md shadow-2" v-for="(seed, index) in seedPhrase" :key="index">
-          {{ seed }}
-        </div>
-      </div> -->
     </div>
   </div>
 </template>
@@ -48,5 +43,13 @@ export default {
 }
 .recovery-phrase-caption {
   color: #0e3247;
+}
+.phrase-index {
+  color: #7F7F7F;
+  font-family: Monospace;
+}
+.phrase-text {
+  border-radius: 10px;
+  border: 1.5px solid rgb(197, 206, 203);
 }
 </style>
