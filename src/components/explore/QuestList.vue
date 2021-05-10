@@ -58,11 +58,11 @@
                       <q-separator class="q-my-sm" />
                       <p class="q-mb-none" style="color: #0e3247">
                         <span>Total Value: </span>
-                        <span class="text-weight-bold">{{ serverBch.bchjs.BitcoinCash.toSatoshi(quest.amount.toFixed(8)) }} satB</span>
+                        <span class="text-weight-bold">{{ serverBch.bchjs.BitcoinCash.toSatoshi(quest.amount.toFixed(8)) }} sat&#x20BF;</span>
                       </p>
                       <p class="q-mb-none" style="color: #0e3247">
                         <span>1 Cashdrop: </span>
-                        <span class="text-weight-bold">{{ serverBch.bchjs.BitcoinCash.toSatoshi(((Number(quest.amount) - Number((quest.cashdrops.length * 0.00002000).toFixed(8))) / Number(quest.total_cashdrops)).toFixed(8)) }} satB</span>
+                        <span class="text-weight-bold">{{ serverBch.bchjs.BitcoinCash.toSatoshi(((Number(quest.amount) - Number((quest.cashdrops.length * 0.00002000).toFixed(8))) / Number(quest.total_cashdrops)).toFixed(8)) }} sat&#x20BF;</span>
                       </p>
                     </div>
                   </div>
@@ -100,7 +100,7 @@
 <script>
 // import CompileCovenant from '../../utils/p2sh.js'
 import server from '../../utils/getAPIServer.js'
-import sha256 from 'js-sha256'
+// import sha256 from 'js-sha256'
 
 export default {
   data () {
@@ -212,21 +212,6 @@ export default {
     // localStorage.setItem('bchAddress', 'bitcoincash:qry9xpxa4ngk9mpk63sfjx0ksaex9mpqeufxf6fugp')
     // localStorage.setItem('slpAddress', 'simpleledger:qry9xpxa4ngk9mpk63sfjx0ksaex9mpqeu9azpuukl')
 
-    // const seedBuffer = await server.bchjs.Mnemonic.toSeed('add cushion broom reward quiz trial dismiss just poet wall lawsuit polar')
-    // const seedHash = sha256('add cushion broom reward quiz trial dismiss just poet wall lawsuit polar')
-    // console.log('Seed hash generated', seedHash)
-    // const masterHDNode = server.NETWORK === 'mainnet' ? server.bchjs.HDNode.fromSeed(seedBuffer) : server.bchjs.HDNode.fromSeed(seedBuffer, 'testnet')
-    // // const xPubKey = bchjs.HDNode.toXPub(masterHDNode)
-    // const childNode = masterHDNode.derivePath("m/44'/145'/0'/" + 0)
-    // // const bchAddress = server.bchjs.HDNode.toCashAddress(childNode)
-    // const slpAddress = server.bchjs.SLP.HDNode.toSLPAddress(childNode)
-    // const publicKey = server.bchjs.HDNode.toPublicKey(childNode).toString('hex')
-
-    // localStorage.setItem('seedPhrase', 'add cushion broom reward quiz trial dismiss just poet wall lawsuit polar')
-    // localStorage.setItem('seedHash', seedHash)
-    // localStorage.setItem('pubkey', publicKey)
-    // localStorage.setItem('bchAddress', 'bitcoincash:qrcsz3f3rcu2xa4chjfc8q7y9yezqlme3vra7zge34')
-    // localStorage.setItem('slpAddress', slpAddress)
   },
   async mounted () {
     await this.$store.dispatch('cashdrop/fetchQuestList')
@@ -239,9 +224,6 @@ export default {
         console.log('Error: ', err)
       })
     // console.log('Cashscrpt: ', CompileCovenant)
-    localStorage.setItem('bchAddress', 'bitcoincash:qrg205dn0sgm2elamklh95wyqxf76wgltgadsdgax0')
-    console.log('bch: ', 'bitcoincash:qrg205dn0sgm2elamklh95wyqxf76wgltgadsdgax0')
-    console.log('Pubkey: ', localStorage.getItem('bchAddress'))
   }
 }
 </script>

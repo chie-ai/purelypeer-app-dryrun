@@ -3,8 +3,8 @@
     <q-page-container>
       <div id="explore-map" class="row">
         <div class="example-custom-control q-mt-md zoom-controls">
-            <span class="q-mr-sm q-pa-sm bg-white" style="border-radius: 50%; padding: 10px 9.5px 10px 9.5px" v-wave="{ color: '#bbbbbb', initialOpacity: 0.5, easing: 'ease-in', duration: 0.3 }" @click="zoomScale++">&#10133;</span>
-            <span class="q-pa-sm bg-white" style="border-radius: 50%; padding: 10px 9.5px 10px 9.5px" v-wave="{ color: '#bbbbbb', initialOpacity: 0.5, easing: 'ease-in', duration: 0.3 }" @click="zoomScale--">&#10134;</span>
+            <span class="q-mr-sm q-pa-sm shadow-2" style="border-radius: 50%; padding: 10px 9.5px 10px 9.5px" v-wave="{ color: '#bbbbbb', initialOpacity: 0.5, easing: 'ease-in', duration: 0.3 }" @click="zoomScale++">&#10133;</span>
+            <span class="q-pa-sm shadow-2" style="border-radius: 50%; padding: 10px 9.5px 10px 9.5px" v-wave="{ color: '#bbbbbb', initialOpacity: 0.5, easing: 'ease-in', duration: 0.3 }" @click="zoomScale--">&#10134;</span>
         </div>
         <l-map
           :zoom="zoomScale"

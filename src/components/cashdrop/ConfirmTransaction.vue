@@ -58,19 +58,19 @@
                 <span class="fnt-10 info-label">Total Value : </span>
               </div>
               <div class="col-6">
-                <span class="text-subtitle2 info"><span style="font-family: Monospace;">{{ amount }}</span> satB</span>
+                <span class="text-subtitle2 info"><span style="font-family: Monospace;">{{ amount }}</span> sat&#x20BF;</span>
               </div>
               <div class="col-6">
                 <span class="fnt-10 info-label">Processing : </span>
               </div>
               <div class="col-6">
-                <span class="text-subtitle2 info"><span style="font-family: Monospace;">{{ process }}</span> satB</span>
+                <span class="text-subtitle2 info"><span style="font-family: Monospace;">{{ process }}</span> sat&#x20BF;</span>
               </div>
               <div class="col-6">
                 <span class="fnt-10 info-label">1 Cashdrop : </span>
               </div>
               <div class="col-6">
-                <span class="text-subtitle2 info"><span style="font-family: Monospace;">{{ amountPerCashdrop }}</span> satB</span>
+                <span class="text-subtitle2 info"><span style="font-family: Monospace;">{{ amountPerCashdrop }}</span> sat&#x20BF;</span>
               </div>
             </div>
           </q-card-section>
