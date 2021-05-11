@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import VueNativeSock from 'vue-native-websocket-es5'
+import VueNativeSock from 'vue-native-websocket'
 const userId = localStorage.getItem('user_id')
 
 export default ({ store }) => {
@@ -7,9 +7,6 @@ export default ({ store }) => {
     {
       store: store,
       format: 'json',
-      connectManually: true,
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 3000
+      connectManually: true
     })
 }

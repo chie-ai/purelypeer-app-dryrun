@@ -11,40 +11,13 @@
           :center="center"
           :options="mapOptions"
           style="height: 334px"
-          @update:center="centerUpdate"
           @ready="readyMap"
-          @click="removePopUpinfo"
-          @move="removePopUpinfo"
           ref="myPurelyPeerMap"
         >
 
           <l-tile-layer :url="url" :attribution="attribution" />
 
           <l-marker :icon="icon" :lat-lng="markerLocation"></l-marker>
-
-          <l-marker v-for="(mark, markerIndex) in quests" :key="markerIndex+'marker'"
-          :lat-lng="mark.coors" @click="toggleWindowInfo(markerIndex)">
-            <l-popup :options="popUpOptions" @remove="removePopUpinfo" ref="pops">
-            <div class="infowindow">
-              <p class="text-h6 info-header"><strong>Quest Info</strong></p>
-              <p><strong>Quest Name: </strong>{{ mark.name }}</p>
-              <p><strong>PurelyPeer Tier: </strong>{{ (mark.acceptance_tier).charAt(0).toUpperCase()+(mark.acceptance_tier).slice(1) }}</p>
-              <p><strong>Remaining Cash Drop: </strong>{{ mark.cashdrops_remaining }}</p>
-              <p><strong>Cash Drop Count: </strong>{{ mark.total_cashdrops }}</p>
-            </div>
-          </l-popup>
-          <l-icon
-              :icon-size="[mark.active === true ? 30 : 50, mark.active === true ? 40 : 50]"
-              :icon-anchor="[mark.active === true ? 1 : 12, mark.active === true ? 40 : 44]"
-              :icon-url="(mark.active === true ? (mark.acceptance_tier === 'Upcoming' ? 'PurelyPeer-location-blue.png' : (mark.acceptance_tier === 'Direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')" />
-          </l-marker>
-
-          <l-marker :lat-lng="cashDropCoor.coors" v-for="(cashDropCoor, cashDropsIndex) in cashDropsCoordinates" :key="cashDropsIndex+'dropMarker'">
-            <l-icon
-                :icon-size="[30, 30]"
-                :icon-anchor="[40, 54]"
-                :icon-url="'PurelyPeer-location-current-B.png'" />
-          </l-marker>
 
           <l-circle
             v-for="(pin, index) in quests" :key="index"
@@ -59,19 +32,19 @@
         <!-- <div class="adjust-map-height q-px-md">
             <q-btn color="btn-map-resizer text-btn-color" rounded v-touch-pan.vertical.prevent.mouse="resizeMapHeight" size="sm" label="Pinch to resize" />
         </div> -->
+
         <div class="current-location">
           <q-btn class="q-px-none" color="btn-map-resizer text-btn-color" icon="my_location" round @click="currentLocation" size="sm" />
         </div>
       </div>
     </q-page-container>
-    <q-btn label="Websocket" @click="websocket"></q-btn>
   </q-layout>
 </template>
 
 <script>
 import { Plugins } from '@capacitor/core'
 import { latLng, icon } from 'leaflet'
-import { LMap, LTileLayer, LMarker, LCircle, LPopup, LIcon } from 'vue2-leaflet'
+import { LMap, LTileLayer, LMarker, LCircle } from 'vue2-leaflet'
 import 'leaflet/dist/leaflet.css'
 
 const { Geolocation } = Plugins
@@ -82,9 +55,7 @@ export default {
     LMap,
     LTileLayer,
     LMarker,
-    LCircle,
-    LPopup,
-    LIcon
+    LCircle
   },
   data () {
     return {
@@ -117,7 +88,8 @@ export default {
       startY: 0,
       counter: 0,
       mapHeight: 0,
-      socketMessage: null
+      socketMessage: null,
+      coors: null
     }
   },
   props: ['moveToTheQuestCoordinates'],
@@ -136,9 +108,6 @@ export default {
     },
     zoomUpdate (scale) {
       this.zoomScale = scale
-    },
-    centerUpdate (center) {
-      this.center = center
     },
     readyMap () {
       Geolocation.getCurrentPosition().then(position => {
@@ -163,22 +132,6 @@ export default {
       this.quests[infoIndex].radiusVisibility = !this.quests[infoIndex].radiusVisibility
       this.cashDropsCoordinates = this.quests[infoIndex].infoWinOpen === true ? this.quests[infoIndex].cashdrops : ''
       this.activeIndex = infoIndex
-    },
-    removePopUpinfo () {
-      if (this.quests !== undefined) {
-        if (this.quests[this.activeIndex].infoWinOpen === true) {
-          document.getElementsByClassName('leaflet-popup-close-button')[0].click()
-        }
-        this.quests[this.activeIndex].infoWinOpen = false
-        this.quests[this.activeIndex].radiusVisibility = false
-        this.cashDropsCoordinates = null
-        this.$refs['markerIndexer' + this.activeIndex][0].mapObject.closePopup()
-      }
-
-      // this.markerLocation = this.$refs.myPurelyPeerMap.mapObject.getCenter()
-    },
-    websocket () {
-      this.$store.dispatch('sendMessage', 'Hello')
     }
     // resizeMapHeight ({ evt, ...info }) {
     //   const map = this.$refs.myPurelyPeerMap.$el
@@ -206,26 +159,57 @@ export default {
     //   this.$refs.myPurelyPeerMap.mapObject.invalidateSize()
     // }
   },
+  beforeDestroy () {
+    // this.$socket.onopen = () => {}
+    this.$store.dispatch('disconnectWebSocket')
+    delete this.$options.sockets.onmessage
+  },
   async created () {
     await this.$store.dispatch('cashdrop/fetchQuestList').then(res => {
       this.quests = res.data.results.length > 0 ? res.data.results.map(quest => ({ ...quest, infoWinOpen: false, radiusVisibility: false })) : ''
     }).catch(err => {
       console.log('Error: ', err)
     })
+  },
+  mounted () {
     this.$store.dispatch('connectWebSocket')
+
     this.$options.sockets.onmessage = (data) => {
       console.log('Socket response: ', data)
+
+      switch (data.operation) {
+        case 'cashdrop_claim':
+          if (data.data.type === 'passcode_sig') {
+
+          } else if (data.data.type === 'sig_only') {
+
+          }
+          break
+        case 'reveal_cashdrop':
+          break
+      }
     }
-  },
-  beforeDestroy () {
-    this.$store.dispatch('disconnectWebSocket')
+    // this.$socket.onopen = () => {
+    //   console.log('Socket opened')
+    // }
+    setInterval(() => {
+      this.geoId = Geolocation.watchPosition({}, (position, err) => {
+        this.coors = position ? [(position.coords.latitude).toFixed(8), (position.coords.longitude).toFixed(8)] : this.coors
+        this.center = this.coors
+        this.circle.center = this.coors
+        this.markerLocation = this.coors
+      })
+      let data = {
+        operation: 'user_loc_tracking',
+        data: {
+          data: [this.coors],
+          type: 'info'
+        }
+      }
+      data = JSON.stringify(data)
+      this.$store.dispatch('sendMessage', data)
+    }, 10000)
   }
-  // mounted () {
-  //   this.geoId = Geolocation.watchPosition({}, (position, err) => {
-  //     console.log('New GPS position: ', position)
-  //     this.position = position
-  //   })
-  // }
 }
 </script>
 
