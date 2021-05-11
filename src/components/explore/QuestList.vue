@@ -45,15 +45,15 @@
                       </p>
                       <p class="q-mb-none" style="color: #0e3247">
                         <span>PurelyPeer Tier: </span>
-                        <span class="text-weight-bold">{{ quest.acceptance_tier === 'Direct' ? 'Direct \uD83D\uDC9A' : quest.acceptance_tier === 'Indirect' ? 'Indirect \uD83E\uDDE1' : quest.acceptance_tier === 'Upcoming' ? 'Upcoming \uD83D\uDC99' : 'Inactive \uD83D\uDDA4' }}</span>
+                        <span class="text-weight-bold">{{ quest.acceptance_tier === 'Direct' ? '\uD83D\uDC9A Direct' : quest.acceptance_tier === 'Indirect' ? '\uD83E\uDDE1 Indirect' : quest.acceptance_tier === 'Upcoming' ? '\uD83D\uDC99 Upcoming' : '\uD83D\uDDA4 Inactive' }}</span>
                       </p>
                       <p class="q-mb-none" style="color: #0e3247">
                         <span>Presence: </span>
-                        <span class="text-weight-bold">{{ quest.has_physical_presence ? 'Yes \uD83E\uDDF1\u2714\uFE0F' : 'No \uD83E\uDDF1\u274C' }}</span>
+                        <span class="text-weight-bold">{{ quest.has_physical_presence ? '\uD83E\uDDF1\u2714\uFE0F Yes' : '\uD83E\uDDF1\u274C No' }}</span>
                       </p>
                       <p class="q-mb-none" style="color: #0e3247">
                         <span>Radius: </span>
-                        <span class="text-weight-bold">{{ (quest.radius === 1500 ? '15 min \uD83D\uDD7A\u267F\uD83D\uDC83' : quest.radius === 15000 ? 'Urban \uD83C\uDFD9\uFE0F' : quest.radius === 15000 ? 'Regional \uD83D\uDEE3\uFE0F' : 'Continental \uD83C\uDF10' ) }}</span>
+                        <span class="text-weight-bold">{{ (quest.radius === 1500 ? '\uD83D\uDD7A\u267F\uD83D\uDC83 15 min' : quest.radius === 15000 ? '\uD83C\uDFD9\uFE0F Urban' : quest.radius === 15000 ? '\uD83D\uDEE3\uFE0F Regional' : '\uD83C\uDF10 Continental' ) }}</span>
                       </p>
                       <q-separator class="q-my-sm" />
                       <p class="q-mb-none" style="color: #0e3247">
@@ -147,14 +147,7 @@ export default {
       this.showMorequestInfo(index)
     },
     showMorequestInfo (ref) {
-      const classList = this.$refs[ref][0].classList
       this.$refs[ref][0].classList.toggle('showMorequestInfo')
-
-      if (classList.value.match(/showMorequestInfo/gi) === null) {
-        this.quests[ref].btnLabel = 'Show more info'
-      } else {
-        this.quests[ref].btnLabel = 'Hide other info'
-      }
     },
     changeTier () {
       setTimeout(() => {
@@ -199,7 +192,7 @@ export default {
       }
     }
   },
-  async created () {
+  created () {
     // console.log('Seed phrase: ', localStorage.getItem('seedPhrase'))
     // console.log('Seed hash: ', localStorage.getItem('seedHash'))
     // console.log('Pubkey: ', localStorage.getItem('pubkey'))
@@ -211,7 +204,6 @@ export default {
     // localStorage.setItem('pubkey', '030f9e9ca2d3d1f35129aadb21d22c8c579b874f18dafdd78cb0abb0bdc1559270')
     // localStorage.setItem('bchAddress', 'bitcoincash:qry9xpxa4ngk9mpk63sfjx0ksaex9mpqeufxf6fugp')
     // localStorage.setItem('slpAddress', 'simpleledger:qry9xpxa4ngk9mpk63sfjx0ksaex9mpqeu9azpuukl')
-
   },
   async mounted () {
     await this.$store.dispatch('cashdrop/fetchQuestList')

@@ -20,9 +20,17 @@ Vue.use(Vuex)
 const vm = new Vue()
 const userId = localStorage.getItem('user_id')
 const connectWS = () => {
-  vm.$connect(`wss://staging.purelypeer.cash/ws/${userId}/`, { format: 'json' })
+  console.log('Connected')
+  vm.$connect(`wss://staging.purelypeer.cash/ws/${userId}/`,
+    {
+      format: 'json',
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 3000
+    })
 }
 const disconnectWS = () => {
+  console.log('Socket disconnected')
   vm.$disconnect()
 }
 
@@ -46,8 +54,10 @@ export default function (/* { ssrContext } */) {
       SOCKET_ONOPEN (state, event) {
         Vue.prototype.$socket = event.currentTarget
         state.socket.isConnected = true
+        console.log('Connection open')
       },
       SOCKET_ONCLOSE (state, event) {
+        console.log('Socket close')
         state.socket.isConnected = false
       },
       SOCKET_ONERROR (state, event) {
@@ -73,6 +83,7 @@ export default function (/* { ssrContext } */) {
         disconnectWS()
       },
       sendMessage: function (context, message) {
+        console.log('Sent')
         Vue.prototype.$socket.send(message)
       }
     },

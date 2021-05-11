@@ -14,7 +14,7 @@
           <li><a href="#?"><strong>Send</strong></a></li>
         </ul>
       </div>
-      <p class="bch-amount q-my-sm q-mt-xs bch-balance"><span class="numeric">{{ BCHBalance }}</span> sat&#x20BF; ~ <span class="numeric">{{ fiat }}</span> USD</p>
+      <p class="bch-amount q-my-sm q-mt-xs bch-balance"><span class="numeric">{{ satBalance !== null ? satBalance : '-' }}</span> sat&#x20BF; ~ <span class="numeric">{{ fiat !== null ? fiat : '-' }}</span> USD</p>
       <!-- <p class="bch-amount q-my-none">~ X.YZ fiat</p> -->
     </div>
   </div>
@@ -41,12 +41,11 @@ export default {
     console.log('BCH Add: ', localStorage.getItem('bchAddress'))
     checkBCHBalance(localStorage.getItem('bchAddress')).then(response => {
       console.log('Success: ', response)
-      this.satBalance = Number(response.balance.confirmed) + Number(response.balance.unconfirmed)
+      this.satBalance = server.bchjs.BitcoinCash.toSatoshi(Number(response.balance.confirmed) + Number(response.balance.unconfirmed))
       // convert satoshi to {fiat}
       satoshisToFiat(this.satBalance, 'USD')
-        .then(res => {
-          console.log('Conversion: ', res)
-          this.fiat = res
+        .then(value => {
+          this.fiat = value
         })
     }).catch(error => {
       console.log('Failed: ', error)

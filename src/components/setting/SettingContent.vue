@@ -5,7 +5,7 @@
         <p class="q-mb-sm q-mt-md text-h5" style="color: #0AC18E"><strong>Settings</strong></p>
       </div>
       <p class="security text-subtitle1 text-left q-mb-none q-mt-lg"><strong>Security:</strong></p>
-      <div class="security-menu-list q-pt-xs">
+      <div class="q-pt-xs q-mb-sm">
         <div class="security-menu" @click="redirectToRecoverySeed">
           <span class="security-menu-label" v-wave="{ color: '#bbbbbb', initialOpacity: 0.5, easing: 'ease-in', duration: 0.3 }">My Recovery Phrase</span>
           <span class="mdi mdi-chevron-right mdi-18px chevron-custon-css"></span>
@@ -18,15 +18,18 @@
           color="green"
           />
         </div>
-        <!-- <div class="security-menu">
-          <p class="security-menu-label">App Lock</p>
-        </div> -->
       </div>
-      <!-- <div class="row justify-between q-py-md q-gutter-sm">
-        <div class="seed__phrase text-center text-white q-py-xs q-px-md shadow-2" v-for="(seed, index) in seedPhrase" :key="index">
-          {{ seed }}
+      <p class="security text-subtitle1 text-left q-mb-none q-mt-lg"><strong>Helo & Support:</strong></p>
+      <div class="q-pt-xs">
+        <div class="security-menu">
+          <span class="security-menu-label">About</span>
+          <span class="mdi mdi-chevron-right mdi-18px chevron-custon-css"></span>
         </div>
-      </div> -->
+        <div class="security-menu">
+          <span class="security-menu-label">Tour</span>
+          <span class="mdi mdi-chevron-right mdi-18px chevron-custon-css"></span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
