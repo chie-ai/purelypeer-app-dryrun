@@ -43,7 +43,7 @@
                 <l-marker :lat-lng="cashDropCoor.coors" v-for="(cashDropCoor, cashDropsIndex) in cashDropsCoordinates" :key="cashDropsIndex+'dropMarker'">
                     <l-icon
                         :icon-size="[30, 30]"
-                        :icon-anchor="[40, 54]"
+                        :icon-anchor="[15, 15]"
                         :icon-url="'PurelyPeer-location-current-B.png'" />
                 </l-marker>
 

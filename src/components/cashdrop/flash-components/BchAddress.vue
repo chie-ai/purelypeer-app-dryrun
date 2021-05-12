@@ -56,8 +56,12 @@ export default {
 
       Clipboard.write({ string: this.bchAddress })
 
-      const result = await Clipboard.read()
-      console.log('Got', result.type, 'from clipboard:', result.value)
+      await Clipboard.read()
+
+      this.$q.notify({
+        message: 'Copied...',
+        timeout: 2000
+      })
     }
   },
   created () {

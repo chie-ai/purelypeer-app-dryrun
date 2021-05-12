@@ -42,3 +42,17 @@ export function broadcastSignedTransaction (context, transaction) {
       })
   })
 }
+
+export function claimCashdrop (context, claim) {
+  return new Promise((resolve, reject) => {
+    axios.post('https://staging.purelypeer.cash/api/cashdrops/verify_passcode/', claim)
+      .then(response => {
+        console.log('Success :', response)
+        resolve(response)
+      })
+      .catch(error => {
+        console.log('Error: ', error)
+        reject(error)
+      })
+  })
+}

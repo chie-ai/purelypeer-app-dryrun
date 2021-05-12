@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import server from '../../utils/getAPIServer.js'
+// import server from '../../utils/getAPIServer.js'
 import checkBCHBalance from '../../utils/check_bchbalance.js'
 import { satoshisToFiat } from 'bitcoin-conversion'
 
@@ -32,16 +32,12 @@ export default {
       fiat: null
     }
   },
-  computed: {
-    BCHBalance () {
-      return server.bchjs.BitcoinCash.toSatoshi(server.bchjs.BitcoinCash.toBitcoinCash(Number(this.satBalance)))
-    }
-  },
   async created () {
     console.log('BCH Add: ', localStorage.getItem('bchAddress'))
     checkBCHBalance(localStorage.getItem('bchAddress')).then(response => {
       console.log('Success: ', response)
-      this.satBalance = server.bchjs.BitcoinCash.toSatoshi(Number(response.balance.confirmed) + Number(response.balance.unconfirmed))
+      this.satBalance = Number(response.balance.confirmed) + Number(response.balance.unconfirmed)
+      console.log('Satoshi bal: ', this.satBalance)
       // convert satoshi to {fiat}
       satoshisToFiat(this.satBalance, 'USD')
         .then(value => {

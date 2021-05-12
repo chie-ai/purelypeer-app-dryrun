@@ -18,10 +18,10 @@ Vue.use(Vuex)
  */
 
 const vm = new Vue()
-const userId = localStorage.getItem('user_id')
+const userID = localStorage.getItem('user_id')
 const connectWS = () => {
   console.log('Connected')
-  vm.$connect(`wss://staging.purelypeer.cash/ws/${userId}/`,
+  vm.$connect(`wss://${process.env.socketUrl}/${userID}/`,
     {
       format: 'json',
       reconnection: true,

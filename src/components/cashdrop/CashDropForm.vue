@@ -64,7 +64,7 @@
                           input-class="text-right" class="q-mb-lg" readonly />
 
                     <q-input ref="password" bg-color="input-bg" filled color="input-color" :type="isPwd ? 'password' : 'text'" :dense="true" label="Password"
-                    lazy-rules v-model="password" >
+                    v-model="password" >
 
                       <template v-slot:append>
                         <q-icon
