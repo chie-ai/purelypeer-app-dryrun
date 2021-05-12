@@ -26,7 +26,7 @@ module.exports = function (/* ctx */) {
       'googlemap',
       'vue-qrcode',
       'ripple',
-      'web-socketio'
+      'vue-native-websocket'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -77,6 +77,9 @@ module.exports = function (/* ctx */) {
           loader: 'eslint-loader',
           exclude: /node_modules/
         })
+      },
+      env: {
+        socketUrl: 'staging.purelypeer.cash/ws'
       }
     },
 

@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import VueNativeSock from 'vue-native-websocket'
-const userId = localStorage.getItem('user_id')
+const userID = localStorage.getItem('user_id')
 
 export default ({ store }) => {
-  Vue.use(VueNativeSock, `wss://staging.purelypeer.cash/ws/${userId}/`,
+  Vue.use(VueNativeSock, `wss://${process.env.socketUrl}/${userID}/`,
     {
       store: store,
       format: 'json',
