@@ -47,11 +47,11 @@ export function claimCashdrop (context, claim) {
   return new Promise((resolve, reject) => {
     axios.post('https://staging.purelypeer.cash/api/cashdrops/verify_passcode/', claim)
       .then(response => {
-        console.log('Success :', response)
+        console.log('Success in claiming :', response)
         resolve(response)
       })
       .catch(error => {
-        console.log('Error: ', error)
+        // console.log('Error in claiming: ', error)
         reject(error)
       })
   })
