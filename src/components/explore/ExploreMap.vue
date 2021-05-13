@@ -40,12 +40,12 @@
                         :icon-url="(mark.active === true ? (mark.acceptance_tier === 'Upcoming' ? 'PurelyPeer-location-blue.png' : (mark.acceptance_tier === 'Direct' ? 'PurelyPeer-location-green.png' : 'PurelyPeer-location-orange.png')) : 'PurelyPeer-icon-black.png')" />
                 </l-marker>
 
-                <l-marker :lat-lng="cashDropCoor.coors" v-for="(cashDropCoor, cashDropsIndex) in cashDropsCoordinates" :key="cashDropsIndex+'dropMarker'">
+                <!-- <l-marker :lat-lng="cashDropCoor.coors" v-for="(cashDropCoor, cashDropsIndex) in cashDropsCoordinates" :key="cashDropsIndex+'dropMarker'">
                     <l-icon
                         :icon-size="[30, 30]"
                         :icon-anchor="[15, 15]"
                         :icon-url="'PurelyPeer-location-current-B.png'" />
-                </l-marker>
+                </l-marker> -->
 
                 <l-circle
                     v-for="(pin, index) in quests" :key="index"
@@ -114,7 +114,7 @@ export default {
       },
       quests: null,
       activeIndex: 0,
-      cashDropsCoordinates: null,
+      // cashDropsCoordinates: null,
       startY: 0,
       counter: 0,
       mapHeight: 0,
@@ -189,7 +189,7 @@ export default {
       }
       this.quests[infoIndex].infoWinOpen = !this.quests[infoIndex].infoWinOpen
       this.quests[infoIndex].radiusVisibility = !this.quests[infoIndex].radiusVisibility
-      this.cashDropsCoordinates = this.quests[infoIndex].infoWinOpen === true ? this.quests[infoIndex].cashdrops : ''
+      // this.cashDropsCoordinates = this.quests[infoIndex].infoWinOpen === true ? this.quests[infoIndex].cashdrops : ''
       this.activeIndex = infoIndex
     },
     removePopUpinfo () {
@@ -199,7 +199,7 @@ export default {
         }
         this.quests[this.activeIndex].infoWinOpen = false
         this.quests[this.activeIndex].radiusVisibility = false
-        this.cashDropsCoordinates = null
+        // this.cashDropsCoordinates = null
         this.$refs['markerIndexer' + this.activeIndex][0].mapObject.closePopup()
       }
 

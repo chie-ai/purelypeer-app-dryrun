@@ -24,6 +24,7 @@
 // import server from '../../utils/getAPIServer.js'
 import checkBCHBalance from '../../utils/check_bchbalance.js'
 import { satoshisToFiat } from 'bitcoin-conversion'
+import { addSymbol } from 'current-currency'
 
 export default {
   data () {
@@ -41,7 +42,7 @@ export default {
       // convert satoshi to {fiat}
       satoshisToFiat(this.satBalance, 'USD')
         .then(value => {
-          this.fiat = value
+          this.fiat = addSymbol('USD', value.toFixed(2), 'post')
         })
     }).catch(error => {
       console.log('Failed: ', error)

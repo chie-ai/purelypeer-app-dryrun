@@ -3,8 +3,8 @@
     <q-card class="q-dialog-plugin">
 
       <q-card-section>
-        <p class="text-h5"><strong>Confirmation</strong></p>
-        <p class="q-my-none">Sufficient wallet balance is confirmed. Do you wish to proceed creating the quest?</p>
+        <p class="text-h5" style="color: #0AC18E"><strong>Confirmation</strong></p>
+        <p class="q-my-none" style="color: #0e3247">Sufficient wallet balance is confirmed. Do you wish to proceed creating the quest?</p>
       </q-card-section>
 
       <q-card-actions align="right">

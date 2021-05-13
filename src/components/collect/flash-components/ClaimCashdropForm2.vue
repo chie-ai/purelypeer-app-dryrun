@@ -7,7 +7,7 @@
         <p class="q-my-sm" style="color: #0e3247">You are within the claim radius of the cashdrop. You may claim it now!</p>
         <p class="q-mb-sm" style="color: #0e3247">Enter passcode to claim the cashdrop.</p>
         <q-form ref="claimForm" class="q-gutter-y-sm q-mx-none q-mt-sm" method="post" @submit="submitClaimCashdrop" >
-          <q-btn :label="'Claim'" type="submit" class="full-width q-mt-none quest-btn"/>
+          <q-btn :label="'Claim'" type="claim" class="full-width q-mt-none quest-btn"/>
         </q-form>
       </q-card-section>
     </q-card>
@@ -32,14 +32,11 @@ export default {
       this.$emit('hide')
     },
     submitClaimCashdrop () {
-      this.$store.dispatch('cashdrop/claimCashdrop')
-        .then(res => {
-          this.$emit('ok')
-          this.hide()
-        })
+      this.$emit('ok')
+      this.hide()
     },
     onOKClick () {
-      this.$ref.claimForm.submit()
+      this.$refs.claimForm.submit()
     },
     onCancelClick () {
       this.hide()
@@ -49,13 +46,9 @@ export default {
 </script>
 
 <style>
-.quest-btn {
+.claim-btn {
   background-color: #0AC18E;
   color: white;
-}
-.bg-input-bg {
-  /* background: #B5ECDD !important; */
-  background: white !important;
 }
 .text-input-color {
   color: #0AC18E;

@@ -2,9 +2,10 @@
   <div id="menu-list" ref="menuList">
     <div class="col-12 q-pt-xs">
       <div class="">
-        <p class="q-mb-sm q-mt-md text-h5" style="color: #0AC18E"><strong>Menu</strong></p>
+        <p class="q-mb-md q-mt-md text-h5" style="color: #0AC18E"><strong>Menu</strong></p>
       </div>
-      <div class="security-menu-list q-pt-xs">
+      <q-separator />
+      <div class="security-menu-list">
         <div class="security-menu">
           <span class="security-menu-label">Explore</span>
           <span class="custom-icon-css">&#128220;</span>

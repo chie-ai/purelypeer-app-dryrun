@@ -77,16 +77,23 @@
         </div>
       </div>
     </q-page-container>
+    <q-btn ref="btnClaimNotifier" @click="openClaimableCashdrop" round color="alert-color" icon="view_list" style="position: fixed; bottom: 100px; right: 10px;" />
   </q-layout>
 </template>
 
 <script>
 import { Plugins } from '@capacitor/core'
+import { QSpinner } from 'quasar'
 import { latLng, icon } from 'leaflet'
 import { LMap, LTileLayer, LMarker, LCircle, LPopup, LIcon } from 'vue2-leaflet'
 import 'leaflet/dist/leaflet.css'
+
+import ClaimableAlert from '../../components/collect/flash-components/ClaimableAlert.vue'
+import ClaimableCashdropList from '../../components/collect/flash-components/ClaimableCashdropList.vue'
 import ClaimForm from '../../components/collect/flash-components/ClaimCashdropForm.vue'
-import ClaimForm2 from '../../components/collect/flash-components/ClaimCashdropForm2.vue'
+// import ClaimForm2 from '../../components/collect/flash-components/ClaimCashdropForm2.vue'
+import ClaimSuccess from '../../components/collect/flash-components/ClaimSuccess.vue'
+import { signCoordinates } from '../../utils/signMessage.js'
 
 const { Geolocation } = Plugins
 
@@ -141,7 +148,10 @@ export default {
       mapHeight: 0,
       socketMessage: null,
       coors: [0, 0],
-      filteredRevealCashdrop: []
+      filteredRevealCashdrop: [],
+      claimLoader: null,
+      claimableCashdrop: [],
+      claimableAlertCount: 0
     }
   },
   props: ['moveToTheQuestCoordinates'],
@@ -194,6 +204,74 @@ export default {
         this.$refs['markerIndexer' + this.activeIndex][0].mapObject.closePopup()
       }
       // this.markerLocation = this.$refs.myPurelyPeerMap.mapObject.getCenter()
+    },
+    openClaimableCashdrop () {
+      this.$emit('routeStatus', false)
+      const cashdropList = this.claimableCashdrop
+      this.$q.dialog({
+        component: ClaimableCashdropList,
+        parent: this,
+        cashdropList
+      }).onOk(() => {
+        this.$emit('routeStatus', true)
+      }).onCancel(() => {})
+    },
+    openClaimForm (cashdrop, passcodeStats) {
+      // used to pass the concatenated coors as prop to the 'ClaimForm' component
+      const concatCoors = cashdrop.data.data.cashdrop_coors ? (cashdrop.data.data.cashdrop_coors[0]).toString() + (cashdrop.data.data.cashdrop_coors[1]).toString() : null
+      this.$q.dialog({
+        component: ClaimForm,
+        parent: this,
+        passcodeStats
+        // concatCoors : used as prop
+      }).onOk((passcode) => {
+        this.claimLoader = this.$q.dialog({
+          message: 'Claiming is on process...',
+          progress: {
+            spinner: QSpinner,
+            color: 'claim-spinner-color'
+          },
+          persistent: true, // we want the user to not be able to close it
+          ok: false // we want the user to not be able to close it
+        })
+        signCoordinates(concatCoors)
+          .then(sign => {
+            const claim = {
+              user_id: localStorage.getItem('user_id'),
+              user_coors: cashdrop.data.data.user_coors,
+              cashdrop_id: cashdrop.data.data.cashdrop_id,
+              passcode: passcode,
+              signature: sign
+            }
+            this.dispatchClaim(claim, cashdrop)
+          })
+      }).onCancel(() => {})
+    },
+    dispatchClaim (claim, cashdrop) {
+      this.$store.dispatch('cashdrop/claimCashdrop', claim)
+        .then(res => {
+          console.log('Success in claiming: ', res)
+          this.claimLoader.hide()
+
+          this.$q.dialog({
+            component: ClaimSuccess,
+            parent: this
+          }).onOk(() => {
+            // notify that the claiming process is successful
+            this.$q.notify({
+              message: 'Look again for more cashdrops near you to claim the prize!',
+              color: 'alert-color',
+              position: 'top',
+              timeout: 4000
+            })
+            this.$emit('routeStatus', true)
+          }).onCancel(() => {})
+        })
+        .catch(_err => {
+          console.log('Error in claiming: ', _err)
+          this.claimLoader.hide()
+          this.openClaimForm(cashdrop, true/* stands for passcodeStats **/)
+        })
     }
   },
   beforeDestroy () {
@@ -213,30 +291,38 @@ export default {
 
     this.$options.sockets.onmessage = (data) => {
       const cashdrop = JSON.parse(data.data)
-
       console.log('Data: ', cashdrop)
 
       let coors = ''
       switch (cashdrop.operation) {
         case 'cashdrop_claim':
           console.log('Cashdrop claim')
+          this.claimableCashdrop.push(cashdrop.data.data)
 
           if (cashdrop.data.type === 'passcode_sig') {
-            console.log('Passcode sig')
-            this.$q.dialog({
-              component: ClaimForm,
-              parent: this
-            }).onOk(() => {
-            }).onCancel(() => {
-            })
+            this.$emit('routeStatus', false)
+            if (this.claimableAlertCount === 0) {
+              this.claimableAlertCount = 1
+              this.$q.dialog({
+                component: ClaimableAlert,
+                parent: this
+              }).onOk(() => {
+                this.$emit('routeStatus', true)
+                this.this.claimableAlertCount = 0
+              }).onCancel(() => {})
+            }
+            // this.$refs.btnClaimNotifier.$el.classList.toggle('hidden')
+
+            // this.$emit('routeStatus', false)
+            // this.openClaimForm(cashdrop, false/* stands for passcodeStats **/)
           } else if (cashdrop.data.type === 'sig_only') {
             console.log('Sig only')
-            this.$q.dialog({
-              component: ClaimForm2,
-              parent: this
-            }).onOk(() => {
-            }).onCancel(() => {
-            })
+
+            // this.$q.dialog({
+            //   component: ClaimForm2,
+            //   parent: this
+            // }).onOk(() => {
+            // }).onCancel(() => {})
           }
           break
         case 'reveal_cashdrop':
@@ -248,9 +334,10 @@ export default {
               claim_radius: cashdrop.data.data.cashdrop_claim_radius
             }
             if (!this.filteredRevealCashdrop.includes(cashdrop.data.data.cashdrop_id)) {
-              // add the cashdrop id to the array list to use for filtering cashdrop to avoid duplicates
+              // add the cashdrop id to the array to use for filtering cashdrop to avoid duplicates
               this.filteredRevealCashdrop.push(cashdrop.data.data.cashdrop_id)
-              // add the cashdrop coordinates to the array list to display on the map
+
+              // add the cashdrop coordinates to the array to display on the map
               this.cashDropsCoordinates.push(coors)
               console.log('Cashdrops: ', this.cashDropsCoordinates)
             }
@@ -263,7 +350,6 @@ export default {
       setInterval(() => {
         this.geoId = Geolocation.watchPosition({}, (position, err) => {
           this.coors = position ? [(position.coords.latitude).toFixed(8), (position.coords.longitude).toFixed(8)] : this.coors
-          this.center = this.coors
           this.circle.center = this.coors
           this.markerLocation = this.coors
         })
@@ -278,13 +364,13 @@ export default {
         console.log('data: ', data)
         data = JSON.stringify(data)
         this.$store.dispatch('sendMessage', data)
-      }, 10000)
+      }, 5000)
     }
   }
 }
 </script>
 
-<style scoped>
+<style>
 .infowindow p {
   color: #676767;
   margin: 0;
@@ -334,5 +420,14 @@ export default {
   margin-left: 10px;
   opacity: 0.5;
   padding-bottom: 0px;
+}
+.bg-alert-color {
+  background-color: #0AC18E !important;
+}
+.text-spinner-color {
+  color: #0AC18E !important;
+}
+.text-claim-spinner-color {
+  color: #0AC18E !important;
 }
 </style>

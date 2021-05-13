@@ -2,9 +2,10 @@
   <div id="setting">
     <div class="col-12 q-pt-xs">
       <div class="">
-        <p class="q-mb-sm q-mt-md text-h5" style="color: #0AC18E"><strong>Settings</strong></p>
+        <p class="q-mb-md q-mt-md text-h5" style="color: #0AC18E"><strong>Settings</strong></p>
       </div>
-      <p class="security text-subtitle1 text-left q-mb-none q-mt-lg"><strong>Security:</strong></p>
+      <q-separator />
+      <p class="security text-subtitle1 text-left q-mb-none q-mt-md"><strong>Security:</strong></p>
       <div class="q-pt-xs q-mb-sm">
         <div class="security-menu" @click="redirectToRecoverySeed">
           <span class="security-menu-label" v-wave="{ color: '#bbbbbb', initialOpacity: 0.5, easing: 'ease-in', duration: 0.3 }">&#x1F4D2; My Recovery Phrase</span>
