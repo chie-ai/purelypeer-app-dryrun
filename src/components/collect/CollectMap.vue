@@ -77,7 +77,10 @@
         </div>
       </div>
     </q-page-container>
-    <q-btn ref="btnClaimNotifier" @click="openClaimableCashdrop" round color="alert-color" icon="view_list" style="position: fixed; bottom: 100px; right: 10px;" />
+    <div class="text-center q-pt-lg">
+      <q-btn ref="btnClaimList" color="alert-color" :disable="btnClaimList" label="Claimable list" @click="openClaimableCashdrop" icon="view_list"></q-btn>
+    </div>
+    <!-- <q-btn ref="btnClaimNotifier" @click="openClaimableCashdrop" round color="alert-color" icon="view_list" style="position: fixed; bottom: 100px; right: 10px;" /> -->
   </q-layout>
 </template>
 
@@ -151,7 +154,10 @@ export default {
       filteredRevealCashdrop: [],
       claimLoader: null,
       claimableCashdrop: [],
-      claimableAlertCount: 0
+      claimableAlertStats: false,
+      socketTimer: null,
+      geoId: null,
+      btnClaimList: true
     }
   },
   props: ['moveToTheQuestCoordinates'],
@@ -208,6 +214,7 @@ export default {
     openClaimableCashdrop () {
       this.$emit('routeStatus', false)
       const cashdropList = this.claimableCashdrop
+      console.log('Cashdrops: ', cashdropList)
       this.$q.dialog({
         component: ClaimableCashdropList,
         parent: this,
@@ -275,12 +282,15 @@ export default {
     }
   },
   beforeDestroy () {
-    // this.$socket.onclose = () => { console.log('Socket closed') }
+    this.$socket.onclose = () => {
+      console.log('Socket closed')
+      Geolocation.clearWatch({ id: this.goeId }).then(() => { console.log('Cleared watch') })
+      clearInterval(this.socketTimer)
+    }
     this.$store.dispatch('disconnectWebSocket')
-    delete this.$options.sockets.onmessage
   },
-  async created () {
-    await this.$store.dispatch('cashdrop/fetchQuestList').then(res => {
+  created () {
+    this.$store.dispatch('cashdrop/fetchQuestList').then(res => {
       this.quests = res.data.results.length > 0 ? res.data.results.map(quest => ({ ...quest, infoWinOpen: false, radiusVisibility: false })) : ''
     }).catch(err => {
       console.log('Error: ', err)
@@ -298,17 +308,18 @@ export default {
         case 'cashdrop_claim':
           console.log('Cashdrop claim')
           this.claimableCashdrop.push(cashdrop.data.data)
+          this.btnClaimList = false
 
           if (cashdrop.data.type === 'passcode_sig') {
             this.$emit('routeStatus', false)
-            if (this.claimableAlertCount === 0) {
-              this.claimableAlertCount = 1
+            if (!this.claimableAlertStats) {
+              this.claimableAlertStats = true
               this.$q.dialog({
                 component: ClaimableAlert,
                 parent: this
               }).onOk(() => {
                 this.$emit('routeStatus', true)
-                this.this.claimableAlertCount = 0
+                this.claimableAlertStats = false
               }).onCancel(() => {})
             }
             // this.$refs.btnClaimNotifier.$el.classList.toggle('hidden')
@@ -327,7 +338,7 @@ export default {
           break
         case 'reveal_cashdrop':
           // console.log('Cashdrop revealed')
-          if (cashdrop.data.data.cashdrop_coors !== 'undefined') {
+          if (cashdrop.data.data.cashdrop_coors !== undefined) {
             coors = {
               coors: cashdrop.data.data.cashdrop_coors,
               reveal_radius: cashdrop.data.data.cashdrop_reveal_radius,
@@ -347,7 +358,7 @@ export default {
     }
     this.$socket.onopen = () => {
       console.log('Socket opened')
-      setInterval(() => {
+      this.socketTimer = setInterval(() => {
         this.geoId = Geolocation.watchPosition({}, (position, err) => {
           this.coors = position ? [(position.coords.latitude).toFixed(8), (position.coords.longitude).toFixed(8)] : this.coors
           this.circle.center = this.coors
@@ -361,7 +372,7 @@ export default {
             type: 'info'
           }
         }
-        console.log('data: ', data)
+        console.log('datas: ', data)
         data = JSON.stringify(data)
         this.$store.dispatch('sendMessage', data)
       }, 5000)

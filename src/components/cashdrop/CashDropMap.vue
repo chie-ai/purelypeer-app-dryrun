@@ -125,13 +125,15 @@ export default {
       this.$emit('passCoordinatesToForm', center)
     },
     readyMap () {
-      // this.$watchLocation({})
-      this.$getLocation({}).then(coordinates => {
-        const coors = latLng(coordinates.lat, coordinates.lng)
+      Geolocation.getCurrentPosition().then(position => {
+        const coors = latLng(
+          position.coords.latitude,
+          position.coords.longitude
+        )
+        console.log(coors)
         this.center = coors
         this.circle.center = coors
         this.markerLocation = coors
-        this.staticLocation = coors
       }).catch(error => {
         this.zoomScale = 1
         console.log('Unable to retreive your location: ', error)
@@ -166,10 +168,17 @@ export default {
     //   this.$refs.myPurelyPeerMap.mapObject.invalidateSize()
     // }
   },
-  created () {
-    Geolocation.getCurrentPosition().then(position => {
+  mounted () {
+    Geolocation.watchPosition({}, (position, err) => {
       console.log('Location: ', position)
-    }).catch(error => console.log('Unable to retreive your location: ', error))
+      const coors = latLng(
+        position.coords.latitude,
+        position.coords.longitude
+      )
+      this.circle.center = coors
+      this.markerLocation = coors
+      this.staticLocation = coors
+    })
   }
 }
 </script>

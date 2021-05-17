@@ -20,7 +20,7 @@ Vue.use(Vuex)
 const vm = new Vue()
 const userID = localStorage.getItem('user_id')
 const connectWS = () => {
-  console.log('Connected')
+  console.log('Socket connected')
   vm.$connect(`wss://${process.env.socketUrl}/${userID}/`,
     {
       format: 'json',

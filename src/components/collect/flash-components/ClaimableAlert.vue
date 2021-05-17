@@ -4,7 +4,7 @@
 
       <q-card-section>
         <p class="text-h5" style="color: #0AC18E"><strong>Notification</strong></p>
-        <p class="q-my-none" style="color: #0e3247">Your are within a claimable cashdrop radius. It has been added in the claimable list.</p>
+        <p class="q-my-none" style="color: #0e3247">Your are within a claimable cashdrop radius. It is now added in the claimable list.</p>
       </q-card-section>
 
       <q-card-actions align="right">

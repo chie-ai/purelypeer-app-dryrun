@@ -235,20 +235,23 @@ export default {
       console.log('Bounds: ', bounds)
     }
   },
-  created () {
-    Geolocation.getCurrentPosition()
-      .then(position => {
-      }).catch(error => {
-        this.zoomScale = 1
-        console.log('Unable to retreive your location: ', error)
-      })
-  },
   async mounted () {
     await this.$store.dispatch('cashdrop/fetchQuestList').then(res => {
       console.log('Response: ', res)
       this.quests = res.data.results.length > 0 ? res.data.results.map(quest => ({ ...quest, infoWinOpen: false, radiusVisibility: false })) : ''
     }).catch(err => {
       console.error('Error: ', err)
+    })
+    Geolocation.watchPosition({}, (position, err) => {
+      console.log('Got you location')
+      const coors = latLng(
+        position.coords.latitude,
+        position.coords.longitude
+      )
+      console.log(coors)
+      this.center = coors
+      this.circle.center = coors
+      this.markerLocation = coors
     })
   }
 }

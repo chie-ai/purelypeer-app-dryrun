@@ -184,8 +184,8 @@ export default {
       this.$refs.bchAddress.$el.classList.add('hidden')
       document.getElementById('nav-menu').classList.remove('hidden')
       document.getElementsByClassName('exploreMap')[0].classList.remove('hidden')
-      document.getElementById('nav-menu').classList.add('animate-in-load')
-      document.getElementsByClassName('cashdrop-form')[0].classList.add('animate-in-load')
+      // document.getElementById('nav-menu').classList.add('animate-in-load')
+      // document.getElementsByClassName('cashdrop-form')[0].classList.add('animate-in-load')
       document.getElementsByClassName('btn-cancel')[0].classList.add('hidden')
     },
     cancelQuest () { // cancels the quest form by refreshing each input
